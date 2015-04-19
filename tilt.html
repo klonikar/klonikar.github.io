@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="user-scalable=yes, initial-scale=0.7, maximum-scale=5.0, minimum-scale=0.5, height=device-height, width=device-width, target-densitydpi=device-dpi" />
+<title>Test tilt scroll</title>
+
+<script src="js/tiltscroll.js"></script>
+<script>
+//TiltScroll.init({noUseGyro: true});
+TiltScroll.init();
+function handleDivClick(divId, evt, scrollWindow) {
+    TiltScroll.attachTo([document.getElementById(divId)], scrollWindow);
+    if(evt)
+        evt.stopPropagation();
+}
+
+</script>
+<style>
+#masterDiv {
+	width: 750px;
+	height: 1000px;
+	overflow: scroll;
+	border: 1px solid #000;
+	white-space: nowrap;
+}
+#div2 {
+	width: 300px;
+	height: 300px;
+	overflow: scroll;
+	border: 1px solid #000;
+	white-space: nowrap;
+}
+#div1 {
+	width: 300px;
+	height: 300px;
+	overflow: scroll;
+	border: 1px solid #000;
+	white-space: nowrap;
+}
+</style>
+</head>
+<body>
+<input type="checkbox" min="0.0" max="1.0" step="0.1" value="0.2" style="position:absolute;top:60px;left:350px;width:30px;height:30px;" checked="true" onchange="TiltScroll.param('sensitivity', this.checked ? 0.3 : 0)" />
+<input type="range" min="0.0" max="1.0" step="0.1" value="0.2" style="position:absolute;top:100px;left:350px;width:80px;height:30px;" onchange="TiltScroll.param('sensitivity', Number(this.value))" />
+<div id="masterDiv" onclick="handleDivClick('masterDiv', event, true);">
+<h2>This will only work in a browser that supports the Device Orientation api (e.g. mobile safari 4.3)</h2>
+<div id="div1" onclick="handleDivClick('div1', event, false);">
+<img src="http://farm8.staticflickr.com/7386/9393368073_08e60144d3_z.jpg" height="300">
+<img src="http://farm6.staticflickr.com/5344/9384212370_26c3520264_z.jpg" height="300">
+<img src="http://farm3.staticflickr.com/2861/9398158977_1c1ce1299d_z.jpg" height="300">
+<img src="http://farm3.staticflickr.com/2879/9366589895_52fed0f6c1_z.jpg" height="300">
+<img src="http://farm6.staticflickr.com/5465/9336224849_e0aa43be84_z.jpg" height="300">
+<img src="http://farm8.staticflickr.com/7188/6841726708_523bcb642c_b.jpg" height="300">
+<img src="http://farm8.staticflickr.com/7026/6825373051_e1ac38ac17_b.jpg" height="300">
+</div>
+<h2>Tilt your device left and right to scroll images. Click on the photo set to enable auto scroll on that set</h2>
+<div id="div2" onclick="handleDivClick('div2', event, false);">
+<img src="http://farm5.staticflickr.com/4148/5177154166_8238b3274a_b.jpg" height="300">
+<img src="http://farm2.staticflickr.com/1226/5117382894_c7f8c34962_b.jpg" height="300">
+<img src="http://farm4.staticflickr.com/3244/4556683357_5c8f5d28e9_b.jpg" height="300">
+<img src="http://farm4.staticflickr.com/3185/2977987199_88d0fdd593_b.jpg" height="300">
+<img src="http://farm5.staticflickr.com/4124/4971486823_7e851bde8d_b.jpg" height="300">
+<img src="http://farm5.staticflickr.com/4153/5225168272_bc2eeb3917_b.jpg" height="300">
+<img src="http://farm6.staticflickr.com/5123/5325228930_93bd3b8905_b.jpg" height="300">
+</div>
+<a href="http://www.maxpigott.com">All images by Max Pigott</a><br>
+Description: Get the current vertical position of the scroll bar for <br>
+the first element in the set of matched elements or set the vertical position<br>
+ of the scroll bar for every matched element.<br>
+
+version added: 1.2.6.scrollTop()<br>
+This method does not accept any arguments.<br>
+The vertical scroll position is the same as the number of pixels that are hidden <br>
+from view above the scrollable area. If the scroll bar is at the very top, or if the <br>
+element is not scrollable, this number will be 0.<br>
+
+Description: Get the current vertical position of the scroll bar for <br>
+the first element in the set of matched elements or set the vertical position<br>
+ of the scroll bar for every matched element.<br>
+
+version added: 1.2.6.scrollTop()<br>
+This method does not accept any arguments.<br>
+The vertical scroll position is the same as the number of pixels that are hidden <br>
+from view above the scrollable area. If the scroll bar is at the very top, or if the <br>
+element is not scrollable, this number will be 0.<br>
+
+Description: Get the current vertical position of the scroll bar for <br>
+the first element in the set of matched elements or set the vertical position<br>
+ of the scroll bar for every matched element.<br>
+
+version added: 1.2.6.scrollTop()<br>
+This method does not accept any arguments.<br>
+The vertical scroll position is the same as the number of pixels that are hidden <br>
+from view above the scrollable area. If the scroll bar is at the very top, or if the <br>
+element is not scrollable, this number will be 0.<br>
+
+Description: Get the current vertical position of the scroll bar for <br>
+the first element in the set of matched elements or set the vertical position<br>
+ of the scroll bar for every matched element.<br>
+
+version added: 1.2.6.scrollTop()<br>
+This method does not accept any arguments.<br>
+The vertical scroll position is the same as the number of pixels that are hidden <br>
+from view above the scrollable area. If the scroll bar is at the very top, or if the <br>
+element is not scrollable, this number will be 0.<br>
+
+Description: Get the current vertical position of the scroll bar for <br>
+the first element in the set of matched elements or set the vertical position<br>
+ of the scroll bar for every matched element.<br>
+
+version added: 1.2.6.scrollTop()<br>
+This method does not accept any arguments.<br>
+The vertical scroll position is the same as the number of pixels that are hidden <br>
+from view above the scrollable area. If the scroll bar is at the very top, or if the <br>
+element is not scrollable, this number will be 0.<br>
+
+</div>
+<script type="text/javascript">
+TiltScroll.attachTo([document.getElementById('masterDiv')], true);
+</script>
+
+</body>
+</html>
