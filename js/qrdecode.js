@@ -159,6 +159,7 @@ function gotSources(sourceInfos) {
       console.log('Some other kind of source: ', sourceInfo);
     }
   }
+  setwebcam();
 }
 
 function load()
@@ -169,7 +170,7 @@ function load()
 		initCanvas(800, 600);
 		qrcode.callback = read;
 		document.getElementById("mainbody").style.display="inline";
-		setwebcam();
+		//setwebcam();
 		var videoSelect = document.querySelector('select#videoSource');
 		videoSelect.onchange = setwebcam;
 		if (typeof MediaStreamTrack === 'undefined'){
