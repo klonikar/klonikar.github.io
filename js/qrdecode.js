@@ -144,7 +144,8 @@ function gotSources(sourceInfos) {
   while(videoSelect.firstChild)
     videoSelect.removeChild(videoSelect.firstChild);
 
-  for (var i = 0; i !== sourceInfos.length; ++i) {
+  // Run the loop in the reverse order to get rear camera first
+  for (var i = sourceInfos.length - 1; i >= 0; --i) {
     var sourceInfo = sourceInfos[i];
     var option = document.createElement('option');
     option.value = sourceInfo.id;
