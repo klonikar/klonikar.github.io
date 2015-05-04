@@ -95,7 +95,7 @@ function captureToCanvas() {
     }
     else
     {
-        console.log("media not captured yet or error in capturing media");
+        console.log("Media not captured yet or Error in capturing media");
     }
 }
 
@@ -241,7 +241,7 @@ function setwebcam()
     document.getElementById("webcamimg").style.opacity=1.0;
 
     stype=1;
-    //setTimeout(captureToCanvas, 500);
+    setTimeout(captureToCanvas, 500);
 }
 
 function setimg()
