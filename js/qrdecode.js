@@ -93,6 +93,10 @@ function captureToCanvas() {
                 setTimeout(captureToCanvas, 500);
         };
     }
+    else
+    {
+        console.log("media not captured yet or error in capturing media");
+    }
 }
 
 function htmlEntities(str) {
@@ -116,7 +120,11 @@ function isCanvasSupported(){
 function success(stream) {
     window.stream = stream;
     if(webkit) {
-        v.src = window.webkitURL.createObjectURL(stream);
+        if(window.URL)
+            v.src = window.URL.createObjectURL(stream);
+        else if(window.webkitURL)
+            v.src = window.webkitURL.createObjectURL(stream);
+
         v.play();
     }
     else
