@@ -137,7 +137,7 @@ function success(stream) {
         v.src = stream;
 
     gUM=true;
-    //setTimeout(captureToCanvas, 500);
+    setTimeout(captureToCanvas, 500);
 }
 		
 function error(error) {
@@ -241,7 +241,7 @@ function setwebcam()
     document.getElementById("webcamimg").style.opacity=1.0;
 
     stype=1;
-    setTimeout(captureToCanvas, 500);
+    //setTimeout(captureToCanvas, 500);
 }
 
 function setimg()
