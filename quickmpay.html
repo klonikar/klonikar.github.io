@@ -124,6 +124,27 @@ li a{
 
 <script type="text/javascript" src="js/llqrcode.js"></script>
 <script type="text/javascript" src="js/qrdecode.js"></script>
+<script type="text/javascript">
+
+var paymentObj = null;
+function processQRDecode(a)
+{
+    paymentObj = JSON.parse(a);
+    var html = '<span style="color:blue;font-weight:bold;text-decoration:blink"> Payment summary: </span> <br/>';
+    html += "Vendor Name: " + (paymentObj.vendorName ? paymentObj.vendorName : "-") + "<br/>";
+    html += "Vendor Id: " + (paymentObj.vendorId ? paymentObj.vendorId : "-") + "<br/>";
+    html += '<span style="color:red;font-weight:bold">Amount:'  + (paymentObj.amount ? paymentObj.amount : "0.0") + '</span><br/>';
+    html += "Order Id: " + (paymentObj.orderId ? paymentObj.orderId : "--") + "<br/>";
+    html += '<button onclick="handlePayment();" style="color:red">Pay Bill</button>';
+    document.getElementById("result").innerHTML = html;
+}	
+
+function handlePayment() {
+    var toPay = confirm("Pay " + paymentObj.vendorName + " amount " + paymentObj.amount + "?");
+    console.log("payment confirmed: " + toPay);
+}
+
+</script>
 
 </head>
 
