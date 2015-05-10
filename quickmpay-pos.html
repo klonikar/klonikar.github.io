@@ -1,0 +1,157 @@
+
+<html>
+<head>
+  <meta name="description" content="QuickMPay POS" />
+  <meta name="keywords" content="qrcode,qr code,scanner,barcode,javascript,nfc" />
+  <meta name="language" content="English" />
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>QuickMPay POS: Quick Mobile payments using QR code, no NFC </title>
+
+<style type="text/css">
+body{
+    width:100%;
+}
+img{
+    border:0;
+}
+#main{
+    margin: 5px;
+    background:white;
+    overflow: auto;
+    width: 450px;
+    padding-left:20px;
+}
+#header{
+    /*background:white;*/
+    /*margin-bottom:15px;*/
+    font-size: 32px;
+}
+#mainbody{
+    /*background: white;*/
+    width:100%;
+}
+#footer{
+    margin-top:20px;
+    font-size:9px;
+    color:lightblue;
+    /*background:white;*/
+}
+#mp1{
+    text-align:center;
+    font-size:35px;
+}
+#header ul{
+    margin-bottom:0;
+    margin-right:40px;
+}
+#header li{
+    display:inline;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+    font-weight: bold;
+    border-right: 1px solid #333333;
+}
+#header li a{
+    text-decoration: none;
+    color: black;
+}
+
+#qrimage {
+    margin-top:20px;
+}
+
+.textInputClass {
+    margin-left: 10px;
+}
+
+p.quote1{
+    
+    font-weight:bold;
+    margin-left:10%;
+    margin-right:10%;
+    color: black;
+}
+a{
+	color: black;
+}
+
+div.button{
+    border: 2px solid #333333;;
+    border-radius:15px;
+    width:100px;
+    cursor:pointer;
+    font-weight:bold;
+    color: blue;
+}
+
+</style>
+<script type="text/javascript" src="js/qrcode.min.js"></script>
+</head>
+
+<body background="img/gola_taxi.jpg">
+  <div id="main">
+    <div id="header">
+      <b>Gola Taxi</b>
+    </div>
+    <div id="mainbody">
+      <table border="0">
+        <tr>
+          <td> <label for="amount">Enter Bill Amount: </label> </td>
+          <td> <input class="textInputClass" type="text" id="amount"/> </td>
+        </tr>
+        <tr>
+          <td> <label for="orderId">Enter Order Id/Bill No: </label></td>
+          <td> <input class="textInputClass" type="text" id="orderId"/> </td>
+        </tr>
+        <tr><td>
+          <div class="button" onclick="create()">Create Bill</div>
+        </td></tr>
+        <tr><td>
+          <div id="qrimage">
+          </div>
+        </td></tr>
+      </table>
+    </div>
+    <div id="footer">
+      Payments by &copy;QuickMPay<br>
+    </div>
+  </div>
+  <script type="text/javascript">
+
+    var qrcode = null;
+
+    function create()
+    {
+       var amount = document.getElementById("amount").value;
+       var orderId = document.getElementById("orderId").value;
+       if(!amount) {
+         alert("Enter Bill Amount");
+         return;
+       }
+       if(!orderId) {
+         var emptyOrderIdOk = confirm("Proceed without Order Id?");
+         if(!emptyOrderIdOk)
+           return;
+         orderId = '';
+       }
+       var data = '{"vendorName":"Gola Taxi","amount":' + amount + ',"vendorId":"golaVendorId","orderId":"' + orderId+ '"}';
+       if(!qrcode) {
+         qrcode = new QRCode("qrimage", {
+           text: '',
+           width: 128,
+           height: 128,
+           colorDark : "#000000",
+           colorLight : "#ffffff",
+           correctLevel : QRCode.CorrectLevel.H
+         });
+       }
+       console.log("creating qr code for " + data);
+       qrcode.clear(); // clear the code.
+       qrcode.makeCode(data);
+    }
+
+  </script>
+</body>
+</html>
+

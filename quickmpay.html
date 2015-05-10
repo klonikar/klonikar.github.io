@@ -1,7 +1,7 @@
 
 <html>
 <head>
-  <meta name="description" content="QR Code scanner" />
+  <meta name="description" content="QuickMPay" />
   <meta name="keywords" content="qrcode,qr code,scanner,barcode,javascript,nfc" />
   <meta name="language" content="English" />
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
@@ -32,6 +32,9 @@ img{
     display:none;
 }
 #footer{
+    margin-top:20px;
+    font-size:9px;
+    color:lightblue;
     /*background:white;*/
 }
 #v{
@@ -135,12 +138,16 @@ function processQRDecode(a)
     html += "Vendor Id: " + (paymentObj.vendorId ? paymentObj.vendorId : "-") + "<br/>";
     html += '<span style="color:red;font-weight:bold">Amount:'  + (paymentObj.amount ? paymentObj.amount : "0.0") + '</span><br/>';
     html += "Order Id: " + (paymentObj.orderId ? paymentObj.orderId : "--") + "<br/>";
+    html += '<label for="tipAmount">Tip: </label><input type="text" id="tipAmount"/><br/><br/>';
     html += '<button onclick="handlePayment();" style="color:red">Pay Bill</button>';
     document.getElementById("result").innerHTML = html;
 }	
 
 function handlePayment() {
-    var toPay = confirm("Pay " + paymentObj.vendorName + " amount " + paymentObj.amount + "?");
+    var amount = paymentObj.amount;
+    if(document.getElementById("tipAmount").value)
+        amount += parseFloat(document.getElementById("tipAmount").value);
+    var toPay = confirm("Pay " + paymentObj.vendorName + " amount " + amount + "?");
     console.log("payment confirmed: " + toPay);
 }
 
@@ -187,7 +194,7 @@ function handlePayment() {
       </table>
     </div>&nbsp;
     <div id="footer">
-      <br>
+      Payments by &copy;QuickMPay<br>
     </div>
   </div>
   <canvas id="qr-canvas" width="800" height="600"></canvas>
