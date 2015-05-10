@@ -11,7 +11,6 @@
 <style type="text/css">
 body{
     width:100%;
-    text-align:center;
 }
 img{
     border:0;
@@ -30,7 +29,7 @@ img{
 #mainbody{
     /*background: white;*/
     width:100%;
-	display:none;
+    display:none;
 }
 #footer{
     /*background:white;*/
@@ -95,14 +94,14 @@ div#container {
     border: solid;
 	border-width: 1px 1px 1px 1px;
 	padding:20px;
-	width:70%;
+	width:25%;
 }
 
 ul{
     margin-bottom:0;
     margin-right:40px;
 }
-li{
+ul li{
     display:inline;
     padding-right: 0.5em;
     padding-left: 0.5em;
@@ -128,33 +127,40 @@ li a{
 
 </head>
 
-<body background="img/quickmpay.jpg">
+<body background="img/quickmpay.png">
   <div id="main">
     <div id="header">
-      <b>Gola Taxi
+      <b>QuickMPay</b>
     </div>
+    <ol type="1">
+      <li>Scan the bill QR code </li>
+      <li>Select a credit card to pay the bill</li>
+    </ol>
     <div id="mainbody">
       <table class="tsel" border="0" width="100%">
         <tr>
-          <td valign="top" align="center" width="50%">
+          <td valign="top" width="50%">
             <table class="tsel" border="0">
               <tr>
                 <td><img class="selector" id="webcamimg" src="img/vid.png" onclick="setwebcam()" align="left" /></td>
                 <td><img class="selector" id="qrimg" src="img/cam.png" onclick="setimg()" align="right"/></td>
               </tr>
-              <tr><td colspan="2" align="center">
-                <div id="outdiv">
-                </div></td>
+              <tr>
+                <td colspan="2">
+                  <div id="outdiv"/>
+                </td>
                 <td style="vertical-align:top">
                   <div class="select">
                     <label for="videoSource">Video source: </label><select id="videoSource"></select>
-                  </div></td>
+                  </div>
+                </td>
               </tr>
             </table>
           </td>
         </tr>
-        <tr><td colspan="3" align="center">
-          <div id="result"></div>
+        <tr>
+          <td colspan="3">
+            <div id="result"></div>
           </td>
         </tr>
       </table>
