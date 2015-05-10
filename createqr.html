@@ -90,7 +90,7 @@ QR Code scanner
 <table border="0" align="center">
 <tr><td>
 <p style="font-size:20px;text-align:center;">Enter URL or text:</p>
-<textarea cols="40" rows="3" id="data" placeholder="sample text for which QR code will be generated"></textarea>
+<textarea cols="40" rows="3" id="data" placeholder="Enter text for which QR code will be generated"></textarea>
 </td></tr>
 <tr><td align="center">
 <div class="button" onclick="create()">Create</div>
@@ -109,7 +109,7 @@ QR Code scanner
 <script type="text/javascript">
 
 var qrcode = new QRCode("qrimage", {
-    text: "sample text for which QR code will be drawn",
+    text: '{"vendorName":"Gola Taxi","amount":200.24,"vendorId":"golaVendorId","orderId":"golaOrder134556"}',
     width: 128,
     height: 128,
     colorDark : "#000000",
