@@ -123,6 +123,33 @@ li a{
     padding:0;
 }
 
+.textInputClass {
+    width: 75px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.cardButton {
+  background-color: rgb(48, 189, 255);
+  border: 1px solid rgb(48, 189, 255);
+  color: #FFF;
+  font-weight: bold;
+  height: 3em;
+  cursor: pointer;
+  vertical-align: top;
+}
+
+.paymentButton {
+  background-color: rgb(48, 189, 255);
+  border: 1px solid rgb(48, 189, 255);
+  color: red;
+  font-weight: bold;
+  width: 8em;
+  height: 3em;
+  cursor: pointer;
+  vertical-align: top;
+}
+
 </style>
 
 <script type="text/javascript" src="js/llqrcode.js"></script>
@@ -130,6 +157,13 @@ li a{
 <script type="text/javascript">
 
 var paymentObj = null;
+// Retrieve cards data from storage. CVV is not stored
+var paymentCards = [{cardNo:"5XXXXXXXXXXX3025", expiryDate: "09-2015"},
+                    {cardNo:"4XXXXXXXXXXX1234", expiryDate: "12-2035"},
+                    {cardNo:"6XXXXXXXXXXX6789", expiryDate: "09-2045"}
+                   ];
+var paymentCard = null;
+
 function processQRDecode(a)
 {
     paymentObj = JSON.parse(a);
@@ -139,15 +173,40 @@ function processQRDecode(a)
     html += '<span style="color:red;font-weight:bold">Amount:'  + (paymentObj.amount ? paymentObj.amount : "0.0") + '</span><br/>';
     html += "Order Id: " + (paymentObj.orderId ? paymentObj.orderId : "--") + "<br/>";
     html += '<label for="tipAmount">Tip: </label><input type="text" id="tipAmount"/><br/><br/>';
-    html += '<button onclick="handlePayment();" style="color:red">Pay Bill</button>';
+    for(var i = 0;i< paymentCards.length;i++) {
+        var cardButton = '<button onclick="handleCardClick(' + i + ')"; class="cardButton">' + paymentCards[i].cardNo
+                         + '</button><br/>';
+        var labelText = '<label for="cvv_' + i + '" style="display:none" id="cvvlabel_' + i + '">CVV:</label>';
+        var cardCVVText = '<input type="password" id="cvv_' + i + '" placeholder="XXX" style="display:none;" class="textInputClass" /><br/>';
+        html += cardButton + labelText + cardCVVText;
+    }
+    html += '</br/><button onclick="handlePayment();" class="paymentButton">Pay Bill</button><br/>';
     document.getElementById("result").innerHTML = html;
-}	
+}
+
+function handleCardClick(cardNo) {
+    for(var i = 0;i < paymentCards.length;i++) {
+        var elem = document.getElementById('cvv_' + i);
+        elem.style.display = "none";
+        elem = document.getElementById('cvvlabel_' + i);
+        elem.style.display = "none";
+    }
+    var elem = document.getElementById('cvv_' + cardNo);
+    elem.style.display = "";
+    elem = document.getElementById('cvvlabel_' + cardNo);
+    elem.style.display = "";
+    paymentCard = paymentCards[cardNo];
+}
 
 function handlePayment() {
+    if(!paymentCard) {
+        alert("Please select a card to pay.");
+        return;
+    }
     var amount = paymentObj.amount;
     if(document.getElementById("tipAmount").value)
         amount += parseFloat(document.getElementById("tipAmount").value);
-    var toPay = confirm("Pay " + paymentObj.vendorName + " amount " + amount + "?");
+    var toPay = confirm("Pay " + paymentObj.vendorName + " amount " + amount + " using " + paymentCard.cardNo + "?");
     console.log("payment confirmed: " + toPay);
 }
 
