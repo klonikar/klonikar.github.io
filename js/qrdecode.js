@@ -118,14 +118,18 @@ function success(stream) {
 
         v.play();
     }
-    else
-    if(moz)
+    else if(moz)
     {
         v.mozSrcObject = stream;
         v.play();
     }
-    else
-        v.src = stream;
+    else {
+        v.srcObject = stream;
+	v.src = stream;
+        v.onloadedmetadata = function(e) {
+            v.play();
+        };
+    }
 
     gUM=true;
     setTimeout(captureToCanvas, 500);
@@ -229,16 +233,14 @@ function setwebcam()
       window.stream.stop();
     }
 
-    if(n.getUserMedia)
+    if(n.mediaDevices.getUserMedia)
         n.getUserMedia(constraints, success, error);
-    else
-    if(n.webkitGetUserMedia)
+    else if(n.mediaDevices.webkitGetUserMedia)
     {
         webkit=true;
         n.webkitGetUserMedia(constraints, success, error);
     }
-    else
-    if(n.mozGetUserMedia)
+    else if(n.mediaDevices.mozGetUserMedia)
     {
         moz=true;
         n.mozGetUserMedia(constraints, success, error);
