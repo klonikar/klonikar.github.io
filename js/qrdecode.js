@@ -147,11 +147,11 @@ function gotSources(sourceInfos) {
   for (var i = sourceInfos.length - 1; i >= 0; --i) {
     var sourceInfo = sourceInfos[i];
     var option = document.createElement('option');
-    option.value = sourceInfo.id;
-    if (sourceInfo.kind === 'audio') {
+    option.value = sourceInfo.deviceId;
+    if (sourceInfo.kind === 'audioinput' || sourceInfo.kind === 'audiooutput') {
       //option.text = sourceInfo.label || 'microphone ' + (audioSelect.length + 1);
       //audioSelect.appendChild(option);
-    } else if (sourceInfo.kind === 'video') {
+    } else if (sourceInfo.kind === 'videoinput') {
       option.text = sourceInfo.label || 'camera ' + (videoSelect.length + 1);
       videoSelect.appendChild(option);
     } else {
@@ -172,11 +172,29 @@ function load()
 		//setwebcam();
 		var videoSelect = document.querySelector('select#videoSource');
 		videoSelect.onchange = setwebcam;
-		if (typeof MediaStreamTrack === 'undefined'){
+		if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+		  console.log("enumerateDevices() not supported.");
+		  return;
+		}
+
+		// List cameras and microphones.
+
+		navigator.mediaDevices.enumerateDevices()
+		.then(function(devices) {
+		  devices.forEach(function(device) {
+		    console.log(device.kind + ": " + device.label +
+				" id = " + device.deviceId);
+		  });
+		  gotSources(devices);
+		})
+		.catch(function(err) {
+		  console.log(err.name + ": " + err.message);
+		});
+		/*if (typeof MediaStreamTrack === 'undefined'){
   			alert('This browser does not support MediaStreamTrack.\n\nTry Chrome Canary.');
 		} else {
   			MediaStreamTrack.getSources(gotSources);
-		}
+		}*/
 	}
 	else
 	{
