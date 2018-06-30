@@ -124,9 +124,11 @@ function success(stream) {
         v.play();
     }
     else {
+	console.log("starting to play selected webcam...");
         v.srcObject = stream;
 	v.src = stream;
         v.onloadedmetadata = function(e) {
+	    console.log("video metadata loaded. now playing...");
             v.play();
         };
     }
