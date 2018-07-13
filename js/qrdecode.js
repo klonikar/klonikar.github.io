@@ -232,7 +232,7 @@ function setwebcam()
     v=document.getElementById("v");
     if (!!window.stream) {
       v.src = null;
-      window.stream.stop();
+      //window.stream.stop();
     }
 
     if(n.mediaDevices.getUserMedia)
