@@ -139,7 +139,8 @@ function success(stream) {
 		
 function error(error) {
     gUM=false;
-    alert("Failed to access webcam", error);
+    console.log("Error in accessing webcam", error);
+    alert("Failed to access webcam: " + error.toString());
     return;
 }
 
