@@ -139,7 +139,7 @@ function success(stream) {
 		
 function error(error) {
     gUM=false;
-    alert("Failed to access webcam");
+    alert("Failed to access webcam", error);
     return;
 }
 
