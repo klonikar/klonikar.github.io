@@ -124,7 +124,7 @@ function success(stream) {
         v.play();
     }
     else {
-	console.log("starting to play selected webcam...");
+	console.log("starting to play selected webcam...", stream);
         v.srcObject = stream;
 	v.src = stream;
         v.onloadedmetadata = function(e) {
@@ -170,7 +170,6 @@ function gotSources(sourceInfos) {
 
 function load()
 {
-
 	if(isCanvasSupported() && window.File && window.FileReader)
 	{
 		initCanvas(800, 600);
@@ -222,10 +221,12 @@ function setwebcam()
     }
     var videoSelect = document.querySelector('select#videoSource');
     var videoSource = videoSelect.value;
+    alert("selected " + videoSource);
     var constraints = {
         audio: false,
         video: {
-            optional: [{sourceId: videoSource}]
+            //optional: [{sourceId: videoSource}]
+            deviceId: {exact: videoSource}
         }
     };
     var n=navigator;
@@ -234,19 +235,22 @@ function setwebcam()
     if (!!window.stream) {
       v.src = null;
       //window.stream.stop();
+      window.stream.getTracks().forEach(track => {
+        track.stop();
+      });
     }
 
     if(n.mediaDevices.getUserMedia)
-        n.getUserMedia(constraints, success, error);
+        n.mediaDevices.getUserMedia(constraints, success, error);
     else if(n.mediaDevices.webkitGetUserMedia)
     {
         webkit=true;
-        n.webkitGetUserMedia(constraints, success, error);
+        n.mediaDevices.webkitGetUserMedia(constraints, success, error);
     }
     else if(n.mediaDevices.mozGetUserMedia)
     {
         moz=true;
-        n.mozGetUserMedia(constraints, success, error);
+        n.mediaDevices.mozGetUserMedia(constraints, success, error);
     }
 
     //document.getElementById("qrimg").src="qrimg2.png";
