@@ -135,6 +135,8 @@ function success(stream) {
 
     gUM=true;
     setTimeout(captureToCanvas, 500);
+    // Refresh button list in case labels have become available
+    return navigator.mediaDevices.enumerateDevices();
 }
 		
 function error(error) {
@@ -221,7 +223,7 @@ function setwebcam()
     }
     var videoSelect = document.querySelector('select#videoSource');
     var videoSource = videoSelect.value;
-    alert("selected " + videoSource);
+    //alert("selected " + videoSource);
     var constraints = {
         audio: false,
         video: {
@@ -232,7 +234,7 @@ function setwebcam()
     var n=navigator;
     document.getElementById("outdiv").innerHTML = vidhtml;
     v=document.getElementById("v");
-    if (!!window.stream) {
+    if (window.stream) {
       v.src = null;
       //window.stream.stop();
       window.stream.getTracks().forEach(track => {
@@ -241,7 +243,7 @@ function setwebcam()
     }
 
     if(n.mediaDevices.getUserMedia)
-        n.mediaDevices.getUserMedia(constraints, success, error);
+        n.mediaDevices.getUserMedia(constraints).then(success).then(gotSources).catch(error);
     else if(n.mediaDevices.webkitGetUserMedia)
     {
         webkit=true;
