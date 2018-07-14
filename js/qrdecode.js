@@ -136,7 +136,7 @@ function success(stream) {
     gUM=true;
     setTimeout(captureToCanvas, 500);
     // Refresh button list in case labels have become available
-    return navigator.mediaDevices.enumerateDevices();
+    // return navigator.mediaDevices.enumerateDevices();
 }
 		
 function error(error) {
@@ -243,16 +243,16 @@ function setwebcam()
     }
 
     if(n.mediaDevices.getUserMedia)
-        n.mediaDevices.getUserMedia(constraints).then(success).then(gotSources).catch(error);
+        n.mediaDevices.getUserMedia(constraints).then(success).catch(error);
     else if(n.mediaDevices.webkitGetUserMedia)
     {
         webkit=true;
-        n.mediaDevices.webkitGetUserMedia(constraints, success, error);
+        n.mediaDevices.webkitGetUserMedia(constraints).then(success).catch(error);
     }
     else if(n.mediaDevices.mozGetUserMedia)
     {
         moz=true;
-        n.mediaDevices.mozGetUserMedia(constraints, success, error);
+        n.mediaDevices.mozGetUserMedia(constraints).then(success).catch(error);
     }
 
     //document.getElementById("qrimg").src="qrimg2.png";
