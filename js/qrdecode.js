@@ -118,22 +118,31 @@ function success(stream) {
 
         v.play();
     }
-    else
-    if(moz)
+    else if(moz)
     {
         v.mozSrcObject = stream;
         v.play();
     }
-    else
-        v.src = stream;
+    else {
+	console.log("starting to play selected webcam...", stream);
+        v.srcObject = stream;
+	v.src = stream;
+        v.onloadedmetadata = function(e) {
+	    console.log("video metadata loaded. now playing...");
+            v.play();
+        };
+    }
 
     gUM=true;
     setTimeout(captureToCanvas, 500);
+    // Refresh button list in case labels have become available
+    // return navigator.mediaDevices.enumerateDevices();
 }
 		
 function error(error) {
     gUM=false;
-    alert("Failed to access webcam");
+    console.log("Error in accessing webcam", error);
+    alert("Failed to access webcam: " + error.toString());
     return;
 }
 
@@ -147,11 +156,11 @@ function gotSources(sourceInfos) {
   for (var i = sourceInfos.length - 1; i >= 0; --i) {
     var sourceInfo = sourceInfos[i];
     var option = document.createElement('option');
-    option.value = sourceInfo.id;
-    if (sourceInfo.kind === 'audio') {
+    option.value = sourceInfo.deviceId;
+    if (sourceInfo.kind === 'audioinput' || sourceInfo.kind === 'audiooutput') {
       //option.text = sourceInfo.label || 'microphone ' + (audioSelect.length + 1);
       //audioSelect.appendChild(option);
-    } else if (sourceInfo.kind === 'video') {
+    } else if (sourceInfo.kind === 'videoinput') {
       option.text = sourceInfo.label || 'camera ' + (videoSelect.length + 1);
       videoSelect.appendChild(option);
     } else {
@@ -163,7 +172,6 @@ function gotSources(sourceInfos) {
 
 function load()
 {
-
 	if(isCanvasSupported() && window.File && window.FileReader)
 	{
 		initCanvas(800, 600);
@@ -172,11 +180,29 @@ function load()
 		//setwebcam();
 		var videoSelect = document.querySelector('select#videoSource');
 		videoSelect.onchange = setwebcam;
-		if (typeof MediaStreamTrack === 'undefined'){
+		if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+		  console.log("enumerateDevices() not supported.");
+		  return;
+		}
+
+		// List cameras and microphones.
+
+		navigator.mediaDevices.enumerateDevices()
+		.then(function(devices) {
+		  devices.forEach(function(device) {
+		    console.log(device.kind + ": " + device.label +
+				" id = " + device.deviceId);
+		  });
+		  gotSources(devices);
+		})
+		.catch(function(err) {
+		  console.log(err.name + ": " + err.message);
+		});
+		/*if (typeof MediaStreamTrack === 'undefined'){
   			alert('This browser does not support MediaStreamTrack.\n\nTry Chrome Canary.');
 		} else {
   			MediaStreamTrack.getSources(gotSources);
-		}
+		}*/
 	}
 	else
 	{
@@ -197,33 +223,36 @@ function setwebcam()
     }
     var videoSelect = document.querySelector('select#videoSource');
     var videoSource = videoSelect.value;
+    //alert("selected " + videoSource);
     var constraints = {
         audio: false,
         video: {
-            optional: [{sourceId: videoSource}]
+            //optional: [{sourceId: videoSource}]
+            deviceId: {exact: videoSource}
         }
     };
     var n=navigator;
     document.getElementById("outdiv").innerHTML = vidhtml;
     v=document.getElementById("v");
-    if (!!window.stream) {
+    if (window.stream) {
       v.src = null;
-      window.stream.stop();
+      //window.stream.stop();
+      window.stream.getTracks().forEach(track => {
+        track.stop();
+      });
     }
 
-    if(n.getUserMedia)
-        n.getUserMedia(constraints, success, error);
-    else
-    if(n.webkitGetUserMedia)
+    if(n.mediaDevices.getUserMedia)
+        n.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+    else if(n.mediaDevices.webkitGetUserMedia)
     {
         webkit=true;
-        n.webkitGetUserMedia(constraints, success, error);
+        n.mediaDevices.webkitGetUserMedia(constraints).then(success).catch(error);
     }
-    else
-    if(n.mozGetUserMedia)
+    else if(n.mediaDevices.mozGetUserMedia)
     {
         moz=true;
-        n.mozGetUserMedia(constraints, success, error);
+        n.mediaDevices.mozGetUserMedia(constraints).then(success).catch(error);
     }
 
     //document.getElementById("qrimg").src="qrimg2.png";
