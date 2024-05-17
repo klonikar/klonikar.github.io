@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /-->
+  <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
+
+  <link rel="stylesheet" type="text/css" href="css/webcamTest.css" />
+  <script src="js/face-api.js"></script>
+  <script src="js/commons.js"></script>
+  <script type="text/javascript" src="js/pouchdb.min.js"> </script>
+  <!-- link rel="stylesheet" href="css/index.css" -->
+  <!--link rel="stylesheet" href="css/styles.css"-->
+  <link rel="stylesheet" href="css/materialize.css">
+  <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.min.js"></script>
+  <style type="text/css">
+    .selectedFaces {
+      left: 900px;
+      top: 0px;
+      margin-top: 50px;
+      position: absolute;
+    }
+
+    #selectedFaces canvas {
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+
+    .recognized_image_container {
+      max-width: 50%;
+      display: inline-grid;
+    }
+
+    .recognized_image {
+      max-width: 55%;
+    }
+
+    .selected_recognized_image {
+      max-width: 25%;
+    }
+
+    .confirmationButton {
+      max-width: 50%;
+      border-radius: 8px;
+      border-color: #2ab7a9;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+  <div id="navbar"></div>
+  <div class="content center-content page-container">
+      <fieldset class="fieldsetCustom">
+        <legend>Start/Stop/Switch</legend>
+        <button id="btnToggleCamera" class="smallMarginRight">Start Camera</button>
+        <button id="btnSwitchCamera">Switch Camera</button>
+      </fieldset>
+
+      <fieldset class="fieldsetCustom">
+        <legend>Status</legend>
+        <label id="status"></label>
+      </fieldset>
+    <div class="progress" id="loader">
+      <div class="indeterminate"></div>
+    </div>
+    <div style="position: relative" class="margin">
+      <video onloadedmetadata="onPlay(this)" id="inputVideo" autoplay muted playsinline></video>
+      <canvas id="overlay" />
+    </div>
+    <b>Detected Faces:</b>
+      <div id="facesContainer" class="row side-by-side"></div>
+    <!--
+    <b>Original Faces:</b>
+      <div id="originalFacesContainer" class="row side-by-side"></div>
+    -->
+
+  <div class="row side-by-side" id="selectedFaces"> 
+    <b> Selected Faces </b>
+    <input type="text" id="selectedFacesName" class="bold" />
+    <button class="waves-effect waves-light btn" onclick="registerFaces();" >Register</button>
+    <br/>
+  </div>
+  <footer>
+    <img src="images/logo_36x36.png" >
+    <span class="footer_area">Powered By INICAI and PTPL </span>
+  </footer>
+  </div>
+  </div>
+
+  <script src="cordova.js"></script>
+
+  <script>
+    let forwardTimes = [];
+    let isCameraOn = false;
+    let use_cordova_plugin = window.cordova;
+    let globalTimeout = use_cordova_plugin ? 300 : 200;
+    let faceMatcher = null;
+
+    // Default settings. 
+    const SSD_MOBILENETV1 = 'ssd_mobilenetv1'
+    const TINY_FACE_DETECTOR = 'tiny_face_detector'
+
+    let selectedFaceDetector = SSD_MOBILENETV1
+
+    let maxFRThreshold = 0.55
+
+    // ssd_mobilenetv1 options
+    let minConfidence = 0.5
+
+    // tiny_face_detector options
+    let inputSize = 512
+    let scoreThreshold = 0.5
+    // end default settings
+
+    function getCurrentFaceDetectionNet() {
+      if (selectedFaceDetector === SSD_MOBILENETV1) {
+        return faceapi.nets.ssdMobilenetv1
+      }
+      if (selectedFaceDetector === TINY_FACE_DETECTOR) {
+        return faceapi.nets.tinyFaceDetector
+      }
+    }
+
+    function isFaceDetectionModelLoaded() {
+      return !!getCurrentFaceDetectionNet().params
+    }
+
+    function getFaceDetectorOptions() {
+      return selectedFaceDetector === SSD_MOBILENETV1
+        ? new faceapi.SsdMobilenetv1Options({ minConfidence })
+        : new faceapi.TinyFaceDetectorOptions({ inputSize, scoreThreshold })
+    }
+
+    async function docExists(db, docId) {
+      let ret = await db.get(docId).then((doc) => doc).catch(() => false)
+      return ret
+    }
+
+    async function attachmentExists(db, docId, attachmentId) {
+      let ret = await db.getAttachment(docId, attachmentId).then((doc) => doc).catch(() => false)
+      return ret
+    }
+
+    // doc returned by allDocs when include_docs and attachments is not specified
+    async function removeFromDb(db, doc) { await db.remove(doc.id, doc.value.rev) }
+
+    async function clearFacesDB(db) {
+        let alldocs = await db.allDocs()
+        await Promise.all(alldocs.rows.map(
+          async doc => {
+            removeFromDb(db, doc)
+          }))
+    }
+
+    async function saveFaceToDB(className, selectedFacesData, clearDb = false) {
+      const maxAvailableImagesPerClass = 5
+      const numImagesForTraining = Math.min(selectedFacesData.length, maxAvailableImagesPerClass)
+
+      let db = new PouchDB('faces_db');
+
+      if(clearDb) {
+        console.log('Clearing existing face embedding DB...')
+        await clearFacesDB(db)
+      }
+
+      let doc = {
+        '_id': className,
+        'name': className
+      }
+      let existingDoc = await docExists(db, className)
+      if(existingDoc) {
+        console.log('doc for ' + className + ' exists.', existingDoc)
+        doc = existingDoc
+      }
+      else {
+        doc._attachments = {}
+      }
+      for (let i = 0;i < numImagesForTraining; i++) {
+        const imageUri = selectedFacesData.get(i)
+        let attachmentId = `${className}${i}.png`
+        let embeddingAttachmentId = `${attachmentId.split(".")[0]}.bin`
+        let exists = await attachmentExists(db, className, attachmentId)
+        if(exists) {
+          console.log('Embedding exists for ' + className + ' and ' + attachmentId)
+          //continue
+        }
+        console.log('Embedding will be created for ' + className + ' and ' + attachmentId)
+        const img = await faceapi.fetchImage(imageUri)
+        let embedding = await faceapi.computeFaceDescriptor(img)
+        let embeddingType = 'application/octet-stream'
+        // Strip off "data:image/png;base64," from data url
+        doc._attachments[attachmentId] = {
+          'content_type': 'text/png',
+          'data': img.src.split('base64,')[1]
+        }
+        doc._attachments[embeddingAttachmentId] = {
+          'content_type': embeddingType,
+          'data': new Blob([embedding], {'type': embeddingType})
+        }
+        // Add embedding to faceMatcher
+        if(faceMatcher) {
+          let existingDescriptor = faceMatcher.labeledDescriptors.filter(d => d._label == className)
+          if(existingDescriptor && existingDescriptor.length) {
+            existingDescriptor[0]._descriptors.push(embedding)
+          }
+          else {
+            let desc = new faceapi.LabeledFaceDescriptors(className, [embedding])
+            faceMatcher.labeledDescriptors.push(desc)
+          }
+        }
+      }
+      let savedDoc = await db.put(doc)
+      console.log('Saved embedding and image: ', savedDoc)
+    }
+
+    // From https://gist.github.com/sketchpunk/f5fa58a56dcfe6168a9328e7c32a4fd4
+    function base64_to_float32Array(attachment) {
+      let blob  = window.atob(attachment),
+          fLen  = blob.length / Float32Array.BYTES_PER_ELEMENT,           // How many floats can be made, but be even
+          dView = new DataView(new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT)),  // ArrayBuffer/DataView to convert 4 bytes into 1 float.
+          fAry  = new Float32Array(fLen),                     // Final Output at the correct size
+          p     = 0;                                // Position
+
+      for(let j=0; j < fLen; j++){
+        p = j * 4;
+        dView.setUint8(0,blob.charCodeAt(p));
+        dView.setUint8(1,blob.charCodeAt(p+1));
+        dView.setUint8(2,blob.charCodeAt(p+2));
+        dView.setUint8(3,blob.charCodeAt(p+3));
+        fAry[j] = dView.getFloat32(0,true);
+      }
+      return fAry;
+    }
+
+    // fetch first image of each class and compute their descriptors
+    async function createFaceMatcher() {
+      let db = new PouchDB('faces_db');
+
+      let alldocs = await db.allDocs({include_docs: true, attachments: true})
+      let labeledFaceDescriptors = alldocs.rows.map(row => {
+        let descriptors = Object.keys(row.doc._attachments).filter(k => k.endsWith('.bin')).map(k => {
+          let attachment = row.doc._attachments[k]
+          return base64_to_float32Array(attachment.data)
+        })
+        return new faceapi.LabeledFaceDescriptors(
+            row.doc.name,
+            descriptors
+          )
+      })
+      if(labeledFaceDescriptors.length == 0) {
+        labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors('unknown', [new Float32Array(128)])
+      }
+      return new faceapi.FaceMatcher(labeledFaceDescriptors, maxFRThreshold)
+    }
+
+    function updateTimeStats(timeInMs) {
+      forwardTimes = [timeInMs].concat(forwardTimes).slice(0, 30)
+      const avgTimeInMs = forwardTimes.reduce((total, t) => total + t) / forwardTimes.length
+      let timeStats = `Time/Frame ${Math.round(avgTimeInMs)} ms, FPS ${faceapi.utils.round(1000 / avgTimeInMs)}`
+      $('#status').html('<span class="success">' + timeStats + '</span>');
+    }
+
+    async function registerFaces() {
+      let name = document.getElementById("selectedFacesName").value;
+      console.log("Registering selected faces as: " + name);
+      var faces = $("#selectedFaces canvas");
+      var selectedFaces = faces.filter(f => { return faces[f].style.opacity && faces[f].style.opacity == 0.5; });
+      var selectedFacesData = selectedFaces.map(f => { return selectedFaces[f].toDataURL(); });
+      console.log(selectedFacesData);
+      await saveFaceToDB(name, selectedFacesData);
+      selectedFaces.map(f => { selectedFaces[f].parentNode.remove(); });
+    }
+
+    function selectedFaceImageClickHandler(elem) {
+      elem.style.opacity = elem.style.opacity && elem.style.opacity != 1 ? 1 : 0.5;
+    }
+
+    function faceImageClickHandler(elem, containerElem) {
+      elem.className = 'selected_recognized_image'
+      let span = document.createElement("span");
+      span.appendChild(elem);
+      //span.appendChild(document.createElement('br'));
+      elem.onclick = function() {
+        return selectedFaceImageClickHandler(elem)
+      }
+      $('#selectedFaces').append(span);
+      containerElem.remove()
+    };
+
+    function confirmRecognizedFace(recognizedFaceLabel) {
+      ret = confirm("Is the face of " + recognizedFaceLabel + '?')
+      console.log('Confirmation Status', ret)
+    }
+
+    async function performDetection(videoEl) {
+      const ts = Date.now()
+      const options = getFaceDetectorOptions();
+      const detections = await faceapi.detectAllFaces(videoEl, options).withFaceLandmarks().withFaceDescriptors();
+
+      updateTimeStats(Date.now() - ts)
+
+      if (detections) {
+        const alignedDetections = detections.map((det) => det.alignedRect )
+        const originalDetections = detections.map((det) => det.detection )
+        const faceImages = await faceapi.extractFaces(videoEl, originalDetections)
+        const alignedFaceImages = await faceapi.extractFaces(videoEl, alignedDetections)
+
+        const canvas = $('#overlay').get(0)
+        const dims = faceapi.matchDimensions(canvas, videoEl, videoEl.tagName.toLocaleLowerCase() == 'video')
+        // resize detection and landmarks in case displayed image is smaller than
+        // original size
+        const resizedResults = faceapi.resizeResults(detections, dims)
+        const results_images = zip2(resizedResults, alignedFaceImages)
+
+        $('#facesContainer').empty()
+        results_images.forEach((result_and_image) => {
+          let [result, croppedCanvas] = result_and_image
+          let descriptor = result.descriptor
+          let detection = result.detection
+          const label = faceMatcher.findBestMatch(descriptor).toString()
+          const options = { label }
+          const drawBox = new faceapi.draw.DrawBox(detection.box, options)
+          drawBox.draw(canvas)
+
+          croppedCanvas.className = 'recognized_image'
+          croppedCanvas.title = label
+          let button = document.createElement('button')
+          button.className = 'confirmationButton'
+          button.innerHTML = label.split('(')[0] + '?'
+          button.onclick = function() {
+            return confirmRecognizedFace(label)
+          }
+          let containerElem = document.createElement('span')
+          containerElem.className = 'recognized_image_container'
+          croppedCanvas.onclick = function() {
+            return faceImageClickHandler(croppedCanvas, containerElem);
+          };
+          containerElem.appendChild(croppedCanvas)
+          containerElem.appendChild(button)
+          $('#facesContainer').append(containerElem)
+        })
+        //faceapi.draw.drawDetections(canvas, faceapi.resizeResults(detections, dims))
+        //$('#originalFacesContainer').empty()
+        //faceImages.forEach(canvas => $('#originalFacesContainer').append(canvas))
+
+      }
+      setTimeout(() => onPlay(), globalTimeout);
+    }
+
+    async function onPlay() {
+      const videoEl = $('#inputVideo').get(0);
+
+      if(use_cordova_plugin) {
+        if(!isCameraOn || !isFaceDetectionModelLoaded())
+          return setTimeout(() => onPlay(), globalTimeout);
+
+        let cameraOptions = {
+          quality: 85
+        };
+        let successCallback = function (imgData) {
+          $('#status').html('Ok');
+          let base64Image = 'data:image/jpeg;base64,' + imgData;
+          videoEl.onload = function() {
+            performDetection(videoEl);
+          };
+          $('#inputVideo').attr('src', base64Image);
+
+        };
+        let errorCallback = function (pluginResult) {
+          //$('#status').html('<span class="error">' + pluginResult + '</span>');
+          $('#status').html('<span class="error">' + 'Camera is getting ready... Please wait.' + '</span>');
+          setTimeout(() => onPlay(), globalTimeout)
+        };
+        CameraPreview.takeSnapshot(cameraOptions, successCallback, errorCallback);
+      }
+      else {
+        if(videoEl.paused || videoEl.ended || !isFaceDetectionModelLoaded())
+          return setTimeout(() => onPlay(), globalTimeout);
+        performDetection(videoEl);
+      }
+    }
+
+    function startCamera() {
+        // Initialize the CameraPreview
+        let cwidth = String(window.screen.width - 40);
+        let cheight = String(window.screen.width - 40); // same as width
+        let optCameraDirection = 'front';
+        CameraPreview.startCamera({x: '0', y: '0', width: cwidth, height: cheight, camera: optCameraDirection, tapPhoto: false, toBack: true, previewDrag: true});
+        document.addEventListener("backbutton", stopCamera, false);
+        isCameraOn = true;
+        $('#btnToggleCamera').html('Stop Camera');
+        $('#btnToggleCamera').on('click', stopCamera);
+        onPlay();
+    }
+
+    function stopCamera() {
+      CameraPreview.stopCamera();
+      document.removeEventListener("backbutton", stopCamera, false);
+      isCameraOn = false;
+      $('#btnToggleCamera').html('Start Camera');
+      $('#btnToggleCamera').on('click', startCamera);
+    }
+
+    function switchCamera() {
+      let successCallback = function (pluginResult) {
+        $('#status').html('<span class="success">' + pluginResult + '</span>');
+      };
+      let errorCallback = function (pluginResult) {
+        $('#status').html('<span class="error">' + pluginResult + '</span>');
+      };
+      CameraPreview.switchCamera(successCallback, errorCallback);
+    }
+
+    async function run() {
+      // load face detection model
+      let faces_settings_db = new PouchDB('faces_settings_db')
+      let settings = await docExists(faces_settings_db, 'settings')
+      if(settings) { // Get from settings
+        selectedFaceDetector = settings.faceDetector
+        maxFRThreshold = settings.maxFRThreshold
+        // ssd_mobilenetv1 options
+        minConfidence = settings.minConfidence
+        // tiny_face_detector options
+        inputSize = settings.inputSize
+        scoreThreshold = settings.scoreThreshold
+      }
+      else { // Save initial settings to db
+        settings = {
+          '_id': 'settings',
+          'faceDetector': selectedFaceDetector,
+          'maxFRThreshold': maxFRThreshold,
+          'minConfidence': minConfidence,
+          'inputSize': inputSize,
+          'scoreThreshold': scoreThreshold
+        }
+        await faces_settings_db.put(settings)
+      }
+
+      $('#loader').show()
+      await getCurrentFaceDetectionNet().load("weights/")
+      await faceapi.loadFaceLandmarkModel('weights/')
+      await faceapi.loadFaceRecognitionModel('weights/')
+      $('#loader').hide()
+
+      $('.content').get(0).style.marginTop = '0%';
+
+      faceMatcher = await createFaceMatcher();
+
+      // try to access users webcam and stream the images
+      // to the video element
+      if(use_cordova_plugin) {
+        $('#inputVideo').remove();
+        let overlayParent = $('#overlay').get(0).parentNode;
+        let imgOverlay = new Image();
+        imgOverlay.id = 'inputVideo';
+        //imgOverlay.style = "max-width: 50%";
+        overlayParent.insertBefore(imgOverlay, overlayParent.children[0]);
+        $('#btnSwitchCamera').on('click', switchCamera);
+        startCamera();
+      }
+      else {
+        // The following does not work for back cameras in android while using cordova.
+        // cordova-camera-preview plugin needs to be used.
+        /*
+        let devices = await navigator.mediaDevices.enumerateDevices();
+        let backCameras = devices.filter(d => d.kind.indexOf('back') >= 0);
+        let frontCameras = devices.filter(d => d.label.indexOf('front') >= 0);
+        let constraints = {
+          audio: false,
+          video: {
+            //optional: [{sourceId: videoSource}]
+            deviceId: {exact: backCameras[0].deviceId} // frontCameras[0].deviceId works
+          }
+        };
+        const backCameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+        */
+        const stream = await navigator.mediaDevices.getUserMedia({ video: {} })
+        const videoEl = $('#inputVideo').get(0)
+        videoEl.srcObject = stream;
+        onPlay();
+      }
+    }
+
+    function updateResults() {
+    }
+
+    document.addEventListener('deviceready', pageOnDeviceReady, false);
+
+    async function pageOnDeviceReady() {
+      renderNavBar('#navbar', 'index.html')
+      run()
+    }
+
+    window.onbeforeunload =  function(){
+      console.log('before unload... stopping camera.')
+      stopCamera();
+    };
+
+    /*
+    window.onunload = function(){
+      console.log('unload... stopping camera.')
+      stopCamera();
+    };
+*/
+
+  </script>
+</body>
+</html>

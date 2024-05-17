@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /-->
+  <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
+
+  <link rel="stylesheet" type="text/css" href="css/webcamTest.css" />
+  <script src="js/commons.js"></script>
+  <script type="text/javascript" src="js/pouchdb.min.js"> </script>
+  <!-- link rel="stylesheet" href="css/index.css" -->
+  <!--link rel="stylesheet" href="css/styles.css"-->
+  <link rel="stylesheet" href="css/materialize.css">
+  <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.min.js"></script>
+  <style type="text/css">
+    .selectedFaces {
+      left: 900px;
+      top: 0px;
+      margin-top: 50px;
+      position: absolute;
+    }
+
+    #selectedFaces canvas {
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+  <div id="navbar"></div>
+  <div class="content center-content page-container">
+    <div class="row side-by-side">
+      <!-- person selection -->
+      <div id="person_selection" class="row input-field" style="margin-right: 20px;">
+        <select id="selectPerson">
+        </select>
+        <label>Select Person</label>
+      </div>
+
+    </div>
+
+    <!-- Person details -->
+    <div class="row side-by-side">
+      <label for="name">Name:</label>
+      <input id="name" type="text" class="inputCustom bold">
+    </div>
+    <div class="row side-by-side">
+      <label for="country">Country:</label>
+      <input id="country" type="text" class="inputCustom bold">
+    </div>
+    <!-- Save person -->
+    <div class="row side-by-side">
+      <button
+        class="waves-effect waves-light btn"
+        onclick="savePersonDetails()"
+      >
+        <i class="material-icons left">Save</i>
+      </button>
+    </div>
+
+  <footer>
+    <img src="images/logo_36x36.png" >
+    <span class="footer_area">Powered By INICAI and PTPL </span>
+  </footer>
+  </div>
+  </div>
+
+  <script src="cordova.js"></script>
+
+  <script>
+    let faces_db = null;
+    let person_db = null;
+    let faces_docs = null;
+    let selectedPerson = null;
+
+    async function docExists(db, docId, options) {
+      let ret = await db.get(docId, options).then((doc) => doc).catch(() => false)
+      return ret
+    }
+
+    async function attachmentExists(db, docId, attachmentId) {
+      let ret = await db.getAttachment(docId, attachmentId).then((doc) => doc).catch(() => false)
+      return ret
+    }
+
+    // doc returned by allDocs when include_docs and attachments is not specified
+    async function removeFromDb(db, doc) { await db.remove(doc.id, doc.value.rev) }
+
+    async function clearFacesDB(db) {
+        let alldocs = await db.allDocs()
+        await Promise.all(alldocs.rows.map(
+          async doc => {
+            removeFromDb(db, doc)
+          }))
+    }
+
+    async function savePersonDetails() {
+      selectedPerson.name = $('#name').val()
+      selectedPerson.country = $('#country').val()
+      // TODO: Add other fields from the UI to selectedPerson
+      let personDbRec = await docExists(person_db, selectedPerson._id, {})
+      if(personDbRec) {
+        selectedPerson._rev = personDbRec._rev
+      }
+      let ret = await person_db.put(selectedPerson)
+      console.log('Saved person data. Status:', ret)
+      // TODO: Save the person name to faces_db also if it has changed.
+    }
+
+    async function changePerson(name) {
+      $('#selectPerson').val(name)
+      $('#selectPerson').material_select()
+      selectedPerson = await docExists(person_db, name, {attachments: true})
+      if(!selectedPerson) {
+        console.log('No record for selected person:', name)
+        let selectedPersonFaceDoc = faces_docs.rows.filter(d => d.doc.name == name)[0].doc
+        selectedPerson = {
+          '_id': selectedPersonFaceDoc._id,
+          'name': selectedPersonFaceDoc.name
+        }
+        $('#name').val(selectedPerson.name)
+        return;
+      }
+      $('#name').val(selectedPerson.name)
+      $('#country').val(selectedPerson.country)
+    }
+
+    async function onPersonSelected(e) {
+      await changePerson(e.target.value)
+      updateResults()
+    }
+
+    async function run() {
+      $('.content').get(0).style.marginTop = '0%';
+
+      faces_db = new PouchDB('faces_db')
+      faces_docs = await faces_db.allDocs({include_docs: true, attachments: true})
+      let names = faces_docs.rows.map(d => 
+        {return {name: d.doc.name, _id: d.doc._id};
+      })
+      names.forEach((n, i) => {
+        let opt = document.createElement('option')
+        opt.value = n._id
+        opt.innerHTML = n.name
+        $('#selectPerson').append(opt)
+      })
+      $('#selectPerson').on('change', onPersonSelected)
+      $('#selectPerson').material_select()
+      person_db = new PouchDB('person_db')
+      if(names.length > 0) {
+        changePerson(names[0]._id)
+      }
+    }
+
+    async function updateResults() {
+    }
+
+    document.addEventListener('deviceready', pageOnDeviceReady, false);
+
+    async function pageOnDeviceReady() {
+      renderNavBar('#navbar', 'editDetails.html')
+      run()
+    }
+
+    window.onbeforeunload =  function(){
+      console.log("Saving results before leaving page")
+      updateResults()
+    };
+
+    /*
+    window.onunload = function(){
+    };
+*/
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "name": "ai.parachutetech.satyapan",
+  "displayName": "Satyapan.AI",
+  "version": "1.0.0",
+  "description": "AI based Interrogation System.",
+  "main": "common.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Parachute Technologies and Indian Navy Incubation Center for Artificial Intelligence",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^12.0.1",
+    "cordova-plugin-camera-preview": "github:cordova-plugin-camera-preview/cordova-plugin-camera-preview",
+    "cordova-plugin-geolocation": "https://github.com/apache/cordova-plugin-geolocation"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-file": {
+        "ANDROIDX_WEBKIT_VERSION": "1.4.0"
+      },
+      "cordova-plugin-device": {
+        "ANDROIDX_WEBKIT_VERSION": "1.4.0"
+      },
+      "cordova-plugin-camera-preview": {},
+      "cordova-plugin-geolocation": {}
+    }
+  },
+  "dependencies": {
+    "cordova-plugin-device": "2.1.0",
+    "cordova-plugin-file": "8.0.1"
+  }
+}

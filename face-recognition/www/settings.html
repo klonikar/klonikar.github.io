@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /-->
+  <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
+
+  <link rel="stylesheet" type="text/css" href="css/webcamTest.css" />
+  <script src="js/commons.js"></script>
+  <script type="text/javascript" src="js/pouchdb.min.js"> </script>
+  <script src="js/faceDetectionControls.js"></script>
+  <!-- link rel="stylesheet" href="css/index.css" -->
+  <!--link rel="stylesheet" href="css/styles.css"-->
+  <link rel="stylesheet" href="css/materialize.css">
+  <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.min.js"></script>
+  <style type="text/css">
+    .selectedFaces {
+      left: 900px;
+      top: 0px;
+      margin-top: 50px;
+      position: absolute;
+    }
+
+    #selectedFaces canvas {
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+  <div id="navbar"></div>
+  <div class="content center-content page-container">
+    <div class="progress" id="loader">
+      <div class="indeterminate"></div>
+    </div>
+    <div class="row side-by-side">
+      <!-- face_detector_selection_control -->
+      <div id="face_detector_selection_control" class="row input-field" style="margin-right: 20px;">
+        <select id="selectFaceDetector">
+          <option value="ssd_mobilenetv1">SSD Mobilenet V1</option>
+          <option value="tiny_face_detector">Tiny Face Detector</option>
+        </select>
+        <label>Select Face Detector</label>
+      </div>
+
+    </div>
+
+    <!-- ssd_mobilenetv1_controls -->
+    <span id="ssd_mobilenetv1_controls">
+      <div class="row side-by-side">
+        <label for="minConfidence">Min Confidence:</label>
+        <input disabled value="0.5" id="minConfidence" type="text" class="inputCustom bold">
+        <button
+          class="waves-effect waves-light btn"
+          onclick="onDecreaseMinConfidence()"
+        >
+          <i class="material-icons left">-</i>
+        </button>
+        <button
+          class="waves-effect waves-light btn"
+          onclick="onIncreaseMinConfidence()"
+        >
+          <i class="material-icons left">+</i>
+        </button>
+      </div>
+    </span>
+    <!-- ssd_mobilenetv1_controls -->
+
+    <!-- tiny_face_detector_controls -->
+    <span id="tiny_face_detector_controls">
+      <div class="row side-by-side">
+        <div class="selectCustom row input-field" style= "margin-right: 20px;">
+          <select id="inputSize">
+            <option value="" disabled selected>Input Size:</option>
+            <option value="128">128 x 128</option>
+            <option value="160">160 x 160</option>
+            <option value="224">224 x 224</option>
+            <option value="320">320 x 320</option>
+            <option value="416">416 x 416</option>
+            <option value="512">512 x 512</option>
+            <option value="608">608 x 608</option>
+          </select>
+          <label for="inputSize">Input Size</label>
+        </div>
+        <label for="scoreThreshold">Score Threshold:</label>
+        <input disabled value="0.5" id="scoreThreshold" type="text" class="inputCustom bold">
+        <button
+          class="waves-effect waves-light btn"
+          onclick="onDecreaseScoreThreshold()"
+        >
+          <i class="material-icons left">-</i>
+        </button>
+        <button
+          class="waves-effect waves-light btn"
+          onclick="onIncreaseScoreThreshold()"
+        >
+          <i class="material-icons left">+</i>
+        </button>
+      </div>
+    </span>
+    <!-- tiny_face_detector_controls -->
+
+    <!-- face recognition max distance between embeddings -->
+    <div class="row side-by-side">
+      <label for="maxFRThreshold">Max FR Distance:</label>
+      <input disabled value="0.55" id="maxFRThreshold" type="text" class="inputCustom bold">
+      <button
+        class="waves-effect waves-light btn"
+        onclick="onDecreaseFRThreshold()"
+      >
+        <i class="material-icons left">-</i>
+      </button>
+      <button
+        class="waves-effect waves-light btn"
+        onclick="onIncreaseFRThreshold()"
+      >
+        <i class="material-icons left">+</i>
+      </button>
+    </div>
+
+    <!-- Location lat long -->
+    <div class="row side-by-side">
+      <label for="latitude">Latitude:</label>
+      <input id="latitude" type="text" class="inputCustom bold">
+    </div>
+    <div class="row side-by-side">
+      <label for="longitude">Longitude:</label>
+      <input id="longitude" type="text" class="inputCustom bold">
+    </div>
+
+  <footer>
+    <img src="images/logo_36x36.png" >
+    <span class="footer_area">Powered By INICAI and PTPL </span>
+  </footer>
+  </div>
+  </div>
+
+  <script src="cordova.js"></script>
+
+  <script>
+    async function docExists(db, docId) {
+      let ret = await db.get(docId).then((doc) => doc).catch(() => false)
+      return ret
+    }
+
+    async function attachmentExists(db, docId, attachmentId) {
+      let ret = await db.getAttachment(docId, attachmentId).then((doc) => doc).catch(() => false)
+      return ret
+    }
+
+    // doc returned by allDocs when include_docs and attachments is not specified
+    async function removeFromDb(db, doc) { await db.remove(doc.id, doc.value.rev) }
+
+    async function clearFacesDB(db) {
+        let alldocs = await db.allDocs()
+        await Promise.all(alldocs.rows.map(
+          async doc => {
+            removeFromDb(db, doc)
+          }))
+    }
+
+    // onSuccess Callback
+    // This method accepts a Position object, which contains the
+    // current GPS coordinates
+    //
+    var geolocationSuccess = function(position) {
+        console.log('Latitude: '          + position.coords.latitude          + '\n' +
+              'Longitude: '         + position.coords.longitude         + '\n' +
+              'Altitude: '          + position.coords.altitude          + '\n' +
+              'Accuracy: '          + position.coords.accuracy          + '\n' +
+              'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+              'Heading: '           + position.coords.heading           + '\n' +
+              'Speed: '             + position.coords.speed             + '\n' +
+              'Timestamp: '         + position.timestamp                + '\n');
+        $('#latitude').val(position.coords.latitude);
+        $('#longitude').val(position.coords.longitude);
+        updateResults();
+    };
+
+    // onError Callback receives a PositionError object
+    //
+    function geolocationError(error) {
+        console.log('Error in obtaining geolocation:', error);
+    }
+
+    async function run() {
+      $('.content').get(0).style.marginTop = '0%';
+
+      let faces_settings_db = new PouchDB('faces_settings_db')
+      let settings = await docExists(faces_settings_db, 'settings')
+      if(settings) { // Get from settings
+        await changeFaceDetector(settings.faceDetector, false)
+        changeInputSize(settings.inputSize)
+        maxFRThreshold = settings.maxFRThreshold
+        // ssd_mobilenetv1 options
+        minConfidence = settings.minConfidence
+        // tiny_face_detector options
+        inputSize = settings.inputSize
+        scoreThreshold = settings.scoreThreshold
+        $('#maxFRThreshold').val(maxFRThreshold)
+        $('#minConfidence').val(minConfidence)
+        $('#scoreThreshold').val(scoreThreshold)
+        $('#latitude').val(settings.latitude ? settings.latitude : '')
+        $('#longitude').val(settings.longitude ? settings.longitude : '')
+      }
+      $('#latitude').on('change', updateResults)
+      $('#longitude').on('change', updateResults)
+
+      navigator.geolocation.getCurrentPosition(geolocationSuccess,
+                                               geolocationError,
+                                              { maximumAge: 10000, timeout: 10000, enableHighAccuracy: true });
+    }
+
+    async function updateResults() {
+      let faces_settings_db = new PouchDB('faces_settings_db')
+      let settings = await docExists(faces_settings_db, 'settings')
+      settings['faceDetector'] = selectedFaceDetector
+      settings['minConfidence'] = minConfidence
+      settings['inputSize'] = inputSize
+      settings['scoreThreshold'] = scoreThreshold
+      settings['maxFRThreshold'] = maxFRThreshold
+      settings['latitude'] = $('#latitude').val()
+      settings['longitude'] = $('#longitude').val()
+      await faces_settings_db.put(settings)
+    }
+
+    document.addEventListener('deviceready', pageOnDeviceReady, false);
+
+    async function pageOnDeviceReady() {
+      renderNavBar('#navbar', 'settings.html')
+      initFaceDetectionControls()
+      run()
+    }
+
+    window.onbeforeunload =  function(){
+      console.log("Saving results before leaving page")
+      updateResults()
+    };
+
+    /*
+    window.onunload = function(){
+    };
+*/
+
+  </script>
+</body>
+</html>

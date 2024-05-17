@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="msapplication-tap-highlight" content="no">
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+		<link rel="stylesheet" type="text/css" href="css/webcamTest.css" />
+		<!-- script src="js/jquery-3.6.0.min.js"></script -->
+	    <script src="js/face-api.js"></script>
+	    <script src="js/commons.js"></script>
+	    <script src="js/faceDetectionControls.js"></script>
+	    <script src="js/imageSelectionControls.js"></script>
+	    <!-- link rel="stylesheet" href="css/index.css" -->
+	    <!-- link rel="stylesheet" href="css/styles.css" -->
+	    <link rel="stylesheet" href="css/materialize.css">
+	    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+	    <script src="js/materialize.min.js"></script>
+
+		<title>Webcam Cordova plugin</title>
+	</head>
+
+	<body>
+	  <div class="app">
+	  	<div id="navbar"></div>
+		<div class="content center-content page-container">
+			<fieldset class="fieldsetCustom">
+				<legend>Camera Selection</legend>
+				<select id="optCameraDirection" class="selectCustom">
+					<option value="back">Back camera</option>
+					<option value="front">Front camera</option>
+				</select>
+				<select id="optToBack" class="selectCustom">
+					<option value="true">To Back ON</option>
+					<option value="false">To Back OFF</option>
+				</select>
+				<select id="optPreviewDrag" class="selectCustom">
+					<option value="true">Preview Drag ON</option>
+					<option value="false">preview Drag OFF</option>
+				</select>
+			</fieldset>
+			<fieldset class="fieldsetCustom">
+			    <legend>View position and size</legend>
+				X <input type="number" id="txtCameraX" placeholder="x" value="20" class="inputCustom" />
+				Y <input type="number" id="txtCameraY" placeholder="y" value="20" class="inputCustom" />
+				W <input type="number" id="txtCameraWidth" placeholder="width" value="" class="inputCustom" />
+				H <input type="number" id="txtCameraHeight" placeholder="height" value="" class="inputCustom" />
+			</fieldset>
+
+			<fieldset class="fieldsetCustom">
+				<legend>Start/Stop/Switch</legend>
+				<button id="btnStartCamera" class="smallMarginRight">Start Camera</button>
+				<button id="btnStopCamera" class="smallMarginRight">Stop Camera</button>
+				<button id="btnSwitchCamera">Switch Camera</button>
+			</fieldset>
+			<fieldset class="fieldsetCustom">
+				<legend>Hide/Show</legend>
+				<button id="btnHide" class="smallMarginRight">Hide</button>
+				<button id="btnShow" class="smallMarginRight">Show</button>
+				<button id="btnToggle" style="color:red"><b>Toggle Live Preview</b></button>
+			</fieldset>
+			<fieldset class="fieldsetCustom">
+				<legend>Click Picture</legend>
+				<button id="btnTakePicture" class="smallMarginRight">Take Picture</button>
+				<button id="btnTakeSnapshot">Take Snapshot</button>
+			</fieldset>
+			<fieldset class="fieldsetCustom">
+				<button id="btnSetPreviewSize" class="smallMarginRight">Set Preview Size</button>
+				<input type="number" id="cpsWidth" placeholder="width" value="128"  class="smallMarginRight"/>
+				<input type="number" id="cpsHeight" placeholder="height" value="256" />
+			</fieldset>
+
+			<fieldset class="fieldsetCustom">
+				<legend>Status</legend>
+				<label id="status"></label>
+			</fieldset>
+
+			<fieldset class="fieldsetCustom">
+				<legend>Camera Settings</legend>
+				<button id="btnGetSupportedPictureSizes" class="smallMarginRight">Supported Picture Sizes</button>
+				<select id="pictureSizes" disabled="disabled" class="selectCustom">
+					<option value="0x0">...</option>
+				</select>
+			</fieldset>
+			<fieldset class="fieldsetCustom">
+				<button id="btnGetSupportedFlashModes" class="smallMarginRight">Supported Flash Modes</button>
+				<select id="flashModes" disabled="disabled" class="selectCustom">
+					<option value="">...</option>
+				</select>
+			</fieldset>
+			<fieldset class="fieldsetCustom">
+				<button id="btnGetSupportedFocusModes" class="smallMarginRight">Supported FocusModes</button>
+				<select id="focusModes" disabled="disabled" class="selectCustom">
+					<option value="">...</option>
+				</select>
+			</fieldset>
+			<fieldset class="fieldsetCustom">
+				<button id="btnGetSupportedColorEffects" class="smallMarginRight">Supported Color Effects</button>
+				<select id="colorEffects" disabled="disabled" class="selectCustom">
+					<option value="">...</option>
+				</select>
+			</fieldset>
+			<fieldset class="fieldsetCustom">
+				<button id="btnGetMaxZoom" class="smallMarginRight">Max Zoom</button>
+				<select id="zoomSlider" disabled="disabled" class="selectCustom">
+					<option value="zoom">...</option>
+				</select>
+			</fieldset>
+
+			<fieldset class="fieldsetCustom">
+				<legend>Plugin-taken picture</legend>
+				<img src="" alt="" id="originalPicture" style="max-width: 50%" />
+				<label id="originalSize">dimensions</label>
+			</fieldset>
+			<fieldset class="fieldsetCustom">
+				<legend>App-cropped picture:</legend>
+				<img src="" alt="" id="croppedPicture" style="max-width: 50%" />
+				<label id="croppedSize">dimensions</label>
+			</fieldset>
+
+			<fieldset id="versions" class="fieldsetCustom">
+				<legend>Versions</legend>
+				<label id="app_version" class="blueText">App version</label>
+				<label id="plugin_version" class="blueText">Plugin version</label>
+			</fieldset>
+		</div>
+
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="js/webcamTest.js"></script>
+	  </div>
+	</body>
+</html>

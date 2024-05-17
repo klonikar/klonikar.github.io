@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="ai.parachutetech.satyapan" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Satyapan.AI</name>
+    <description>AI based Interrogation System</description>
+    <author email="innovations@parachutetech.ai" href="https://parachutetech.ai">
+        Parachute Technologies and Indian Navy Incubation Center for Artificial Intelligence
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-navigation href="*"/>
+    <preference name="AndroidXEnabled" value="true" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon src="www/images/indian_navy.png" width="57" height="57" density="mdpi" />
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="www/images/indian_navy.png" />
+        <preference name="loadUrlTimeoutValue" value="700000" />
+        <preference name="android-minSdkVersion" value="22" />
+        <!--preference name="android-targetSdkVersion" value="33" /-->
+        <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+        <preference name="AndroidPersistentFileLocation" value="Internal" />
+        <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,assets,root,applicationDirectory" />
+    </platform>
+    <plugin name="cordova-plugin-device" spec="^2.1.0" />
+    <plugin name="cordova-plugin-file" spec="^8.0.1" />
+    <plugin name="cordova-plugin-geolocation" spec="https://github.com/apache/cordova-plugin-geolocation" />
+    <plugin name="cordova-plugin-camera-preview" spec="https://github.com/cordova-plugin-camera-preview/cordova-plugin-camera-preview.git" />
+</widget>
