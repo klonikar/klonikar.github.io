@@ -487,7 +487,10 @@
     function updateResults() {
     }
 
-    document.addEventListener('ready', pageOnDeviceReady, false);
+    if(use_cordova_plugin)
+      document.addEventListener('deviceready', pageOnDeviceReady, false);
+    else
+      $(document).ready(pageOnDeviceReady)
 
     async function pageOnDeviceReady() {
       renderNavBar('#navbar', 'index.html')
