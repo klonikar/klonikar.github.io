@@ -495,7 +495,10 @@
     if(use_cordova_plugin)
       document.addEventListener('deviceready', pageOnDeviceReady, false);
     else
-      $(document).ready(pageOnDeviceReady)
+      $(document).ready(function() {
+      renderNavBar('#navbar', 'index.html')
+      run()
+    })
 
     window.onbeforeunload =  function(){
       console.log('before unload... stopping camera.')
