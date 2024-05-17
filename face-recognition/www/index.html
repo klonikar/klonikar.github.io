@@ -487,7 +487,7 @@
     function updateResults() {
     }
 
-    document.addEventListener('deviceready', pageOnDeviceReady, false);
+    document.addEventListener('ready', pageOnDeviceReady, false);
 
     async function pageOnDeviceReady() {
       renderNavBar('#navbar', 'index.html')
@@ -496,7 +496,8 @@
 
     window.onbeforeunload =  function(){
       console.log('before unload... stopping camera.')
-      stopCamera();
+      if(use_cordova_plugin)
+        stopCamera();
     };
 
     /*
