@@ -55,7 +55,7 @@ function renderNavBar(navbarId, exampleUri) {
 
   const menuContent = document.createElement('ul')
   menuContent.id = 'slide-out'
-  menuContent.classList.add('side-nav', 'fixed')
+  menuContent.classList.add('side-nav')
   navbar.appendChild(menuContent)
 
   const menuButton = document.createElement('a')
