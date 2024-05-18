@@ -51,7 +51,7 @@ function renderNavBar(navbarId, exampleUri) {
   const matchingExample = examples.find(ex => ex.uri === exampleUri)
   header.innerHTML = matchingExample ? matchingExample.name : exampleUri
   pageContainer.insertBefore(header, pageContainer.children[0])
-  pageContainer.insertBefore(navbar, pageContainer.children[0])
+  //pageContainer.insertBefore(navbar, pageContainer.children[0])
 
   const menuContent = document.createElement('ul')
   menuContent.id = 'slide-out'
