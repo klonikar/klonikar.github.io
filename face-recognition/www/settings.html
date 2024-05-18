@@ -143,6 +143,8 @@
   <script src="cordova.js"></script>
 
   <script>
+    let use_cordova_plugin = window.cordova;
+
     async function docExists(db, docId) {
       let ret = await db.get(docId).then((doc) => doc).catch(() => false)
       return ret
@@ -229,13 +231,20 @@
       await faces_settings_db.put(settings)
     }
 
-    document.addEventListener('deviceready', pageOnDeviceReady, false);
-
     async function pageOnDeviceReady() {
       renderNavBar('#navbar', 'settings.html')
       initFaceDetectionControls()
       run()
     }
+
+    if(use_cordova_plugin)
+      document.addEventListener('deviceready', pageOnDeviceReady, false);
+    else
+      $(document).ready(function() {
+      renderNavBar('#navbar', 'settings.html')
+      initFaceDetectionControls()
+      run()
+    })
 
     window.onbeforeunload =  function(){
       console.log("Saving results before leaving page")

@@ -73,6 +73,7 @@
   <script src="cordova.js"></script>
 
   <script>
+    let use_cordova_plugin = window.cordova;
     let faces_db = null;
     let person_db = null;
     let faces_docs = null;
@@ -160,12 +161,18 @@
     async function updateResults() {
     }
 
-    document.addEventListener('deviceready', pageOnDeviceReady, false);
-
     async function pageOnDeviceReady() {
       renderNavBar('#navbar', 'editDetails.html')
       run()
     }
+
+    if(use_cordova_plugin)
+      document.addEventListener('deviceready', pageOnDeviceReady, false);
+    else
+      $(document).ready(function() {
+      renderNavBar('#navbar', 'editDetails.html')
+      run()
+    })
 
     window.onbeforeunload =  function(){
       console.log("Saving results before leaving page")

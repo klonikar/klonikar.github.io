@@ -92,11 +92,13 @@
   </div>
   </div>
 
+  <script src="cordova.js"></script>
+
   <script>
     let forwardTimes = [];
     let isCameraOn = false;
     let use_cordova_plugin = window.cordova;
-    let globalTimeout = use_cordova_plugin ? 300 : 0;
+    let globalTimeout = use_cordova_plugin ? 30 : 0;
     let faceMatcher = null;
 
     // Default settings. 
@@ -511,7 +513,7 @@
       console.log('unload... stopping camera.')
       stopCamera();
     };
-*/
+	*/
 
   </script>
 </body>
