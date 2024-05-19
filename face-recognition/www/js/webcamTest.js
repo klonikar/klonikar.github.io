@@ -3,6 +3,7 @@
 var app = {
 	/* informative variables manually updated */
 	plugin_version: '0.12.3',
+	isCameraOn: false,
 	getVersion: function () {
 		if (typeof (cordova.getAppVersion) != 'undefined') {
 			// cordova-plugin-app-version present
@@ -25,11 +26,8 @@ var app = {
 		$('#txtCameraWidth').val(window.screen.width - 40);
 		$('#txtCameraHeight').val(window.screen.width - 40); // same as width
 
-		$('#btnStartCamera').on('click', app.startCamera);
-		$('#btnStopCamera').on('click', app.stopCamera);
 		$('#btnSwitchCamera').on('click', app.switchCamera);
-		$('#btnShow').on('click', app.show);
-		$('#btnHide').on('click', app.hide);
+		$('#btnHideShowToggle').on('click', app.hide);
 		$('#btnToggle').on('click', app.tottleLiveView);
 		$('#btnTakePicture').on('click', app.takePicture);
 		$('#btnTakeSnapshot').on('click', app.takeSnapshot);
@@ -48,6 +46,7 @@ var app = {
 		// materialize.css hides all select elements. Make them visible.
 		//for(let sel of document.getElementsByTagName('select')) 
     	//	sel.style.display = 'block'
+		app.startCamera();
 	},
 	startCamera: function () {
 		var x = $('#txtCameraX').val();
@@ -63,10 +62,16 @@ var app = {
 
 		CameraPreview.startCamera({x: x, y: y, width: cwidth, height: cheight, camera: optCameraDirection, tapPhoto: tapPhoto, toBack: toBack, previewDrag: previewDrag});
 		document.addEventListener("backbutton", stopCamera, false);
+    app.isCameraOn = true;
+    $('#btnToggleCamera').html('Stop Camera');
+    $('#btnToggleCamera').on('click', app.stopCamera);
 	},
 	stopCamera: function () {
 		CameraPreview.stopCamera();
 		document.removeEventListener("backbutton", stopCamera, false);
+    app.isCameraOn = false;
+    $('#btnToggleCamera').html('Start Camera');
+    $('#btnToggleCamera').on('click', app.startCamera);
 	},
 	takePicture: function () {
 		var options = {
@@ -123,9 +128,13 @@ var app = {
 	},
 	show: function () {
 		CameraPreview.show();
+		$('#btnHideShowToggle').on('click', app.hide);
+		$('#btnHideShowToggle').html('Hide');
 	},
 	hide: function () {
 		CameraPreview.hide();
+		$('#btnHideShowToggle').on('click', app.show);
+		$('#btnHideShowToggle').html('Show');
 	},
 	content_margin: '100%',
 	tottleLiveView: function() {

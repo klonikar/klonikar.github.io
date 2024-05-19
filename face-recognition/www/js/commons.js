@@ -72,12 +72,16 @@ function renderNavBar(navbarId, exampleUri) {
   githubLink.classList.add('waves-effect', 'waves-light', 'side-by-side')
   githubLink.id = 'github-link'
   githubLink.href = 'https://parachutetech.ai'
-  const h5 = document.createElement('h5')
-  h5.innerHTML = 'Satyapan.ai'
-  githubLink.appendChild(h5)
   const githubLinkIcon = document.createElement('img')
   githubLinkIcon.src = 'images/logo_36x36.png'
   githubLink.appendChild(githubLinkIcon)
+  const menuSpan = document.createElement('span')
+  menuSpan.className = 'menuSpan'
+  menuSpan.innerHTML = 'Satyapan.ai'
+  githubLink.appendChild(menuSpan)
+  const githubLinkIcon2 = document.createElement('img')
+  githubLinkIcon2.src = 'images/indian_navy_36x36.png'
+  githubLink.appendChild(githubLinkIcon2)
   li.appendChild(githubLink)
   menuContent.appendChild(li)
 

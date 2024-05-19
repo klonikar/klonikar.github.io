@@ -7,6 +7,7 @@
   <meta name="msapplication-tap-highlight" content="no">
   <!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /-->
   <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
+  <title>Edit Details</title>
 
   <link rel="stylesheet" type="text/css" href="css/webcamTest.css" />
   <script src="js/commons.js"></script>
@@ -78,6 +79,21 @@
     let person_db = null;
     let faces_docs = null;
     let selectedPerson = null;
+
+    function getQueryParams() {
+      let qs = window.location.search || document.location.search;
+      qs = qs.split("+").join(" ");
+
+      let params = {}, tokens,
+          re = /[?&]?([^=]+)=([^&]*)/g;
+
+      while (tokens = re.exec(qs)) {
+          params[decodeURIComponent(tokens[1])]
+              = decodeURIComponent(tokens[2]);
+      }
+
+      return params;
+    }
 
     async function docExists(db, docId, options) {
       let ret = await db.get(docId, options).then((doc) => doc).catch(() => false)
@@ -154,7 +170,9 @@
       $('#selectPerson').material_select()
       person_db = new PouchDB('person_db')
       if(names.length > 0) {
-        changePerson(names[0]._id)
+        let params = getQueryParams()
+        let id = 'id' in params ? params['id'] : names[0]._id
+        changePerson(id)
       }
     }
 

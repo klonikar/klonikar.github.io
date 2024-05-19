@@ -7,6 +7,7 @@
   <meta name="msapplication-tap-highlight" content="no">
   <!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /-->
   <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
+  <title>AI Based Interrogation System</title>
 
   <link rel="stylesheet" type="text/css" href="css/webcamTest.css" />
   <script src="js/face-api.js"></script>
@@ -85,7 +86,7 @@
   </div>
   <div class="row side-by-side"> 
     <label for="selectedFacesName">Name:</label>
-    <input type="text" id="selectedFacesName" class="bold" placeholder="Person Name" />
+    <input type="text" id="selectedFacesName" class="bold" placeholder="Enter Person Name" />
     <button class="waves-effect waves-light btn" onclick="registerFaces();" >Register</button>
   </div>
 
@@ -298,7 +299,9 @@
 
     function confirmRecognizedFace(recognizedFaceLabel) {
       ret = confirm("Is the face of " + recognizedFaceLabel + '?')
-      console.log('Confirmation Status', ret)
+      if(ret) {
+        window.location.href = 'editDetails.html?id=' + recognizedFaceLabel.split('(')[0].trim();
+      }
     }
 
     async function performDetection(videoEl) {
@@ -333,19 +336,23 @@
 
           croppedCanvas.className = 'recognized_image'
           croppedCanvas.title = label
-          let button = document.createElement('button')
-          button.className = 'confirmationButton'
-          button.innerHTML = label.split('(')[0] + '?'
-          button.onclick = function() {
-            return confirmRecognizedFace(label)
-          }
-          let containerElem = document.createElement('span')
-          containerElem.className = 'recognized_image_container'
           croppedCanvas.onclick = function() {
             return faceImageClickHandler(croppedCanvas, containerElem);
           };
+
+          let containerElem = document.createElement('span')
+          containerElem.className = 'recognized_image_container'
           containerElem.appendChild(croppedCanvas)
-          containerElem.appendChild(button)
+          let faceName = label.split('(')[0].trim()
+          if(faceName != 'unknown') {
+            let button = document.createElement('button')
+            button.className = 'confirmationButton'
+            button.innerHTML = 'View ' + faceName
+            button.onclick = function() {
+              return confirmRecognizedFace(label)
+            }
+            containerElem.appendChild(button)
+          }
           $('#facesContainer').append(containerElem)
         })
         //faceapi.draw.drawDetections(canvas, faceapi.resizeResults(detections, dims))

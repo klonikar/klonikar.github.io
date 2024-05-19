@@ -21,10 +21,10 @@ body {
 }
 
 .content{
-	background:#E4E4E4;
-	background:linear-gradient(to bottom, #E4E4E4 0%,#FFFFFF 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	background:#C2DFFF;
+	background:linear-gradient(to bottom, #C2DFFF 0%,#FFFFFF 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	/*background-repeat:no-repeat;*/
-	/*background: url('../images/ships.jpeg');*/ /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	background: url('../images/waterisBlueDepth.jpg'); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	background-size: contain;
 	margin-top:100%; /* This is the element which puts live preview behind the HTML layer */
 	padding:1em;
@@ -52,11 +52,12 @@ fieldset {
 }
 
 img {
-	max-width: 75%;
+	max-width: 95%;
 }
 
 label {
-	color: #546E7A;
+	color: darkred !important;
+	font-weight: bold;
 	display: inline-flex;
 	margin: 2px;
 }
@@ -115,7 +116,8 @@ img.info{
 }
 
 .success{
-	color:#43A047;
+	color:#black;
+	font-weight: bold;
 }
 
 .selectCustom {
@@ -124,7 +126,7 @@ img.info{
 }
 
 .inputCustom {
-	width: 20% !important;
+	width: 25% !important;
 }
 
 .fieldsetCustom {
@@ -144,4 +146,18 @@ img.info{
 .footer_area {
   color: blue;
   font-weight: bold;
+}
+
+.menuSpan {
+	font-size: x-large;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+input::placeholder {
+  font-weight: bold;
+  opacity: 0.35;
+  color: red;
 }
