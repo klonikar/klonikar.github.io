@@ -102,7 +102,7 @@
     let forwardTimes = [];
     let isCameraOn = false;
     let use_cordova_plugin = window.cordova;
-    let globalTimeout = 200;
+    let globalTimeout = use_cordova_plugin ? 200 : 500;
     let faceMatcher = null;
 
     // Default settings. 
