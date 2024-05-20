@@ -18,17 +18,15 @@
   <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
   <script src="js/materialize.min.js"></script>
   <style type="text/css">
-    .selectedFaces {
-      left: 900px;
-      top: 0px;
-      margin-top: 50px;
-      position: absolute;
+    .highlightedSection {
+      .color: red;
+      .font-weight: bold;
     }
 
-    #selectedFaces canvas {
-      margin-top: 10px;
-      margin-left: 10px;
+    .selected_recognized_image {
+      max-width: 25%;
     }
+
   </style>
 </head>
 <body>
@@ -37,23 +35,65 @@
   <div class="content center-content page-container">
     <div class="row side-by-side">
       <!-- person selection -->
-      <div id="person_selection" class="row input-field" style="margin-right: 20px;">
-        <select id="selectPerson">
-        </select>
-        <label>Select Person</label>
-      </div>
-
+      <label for="selectPerson">Select Person:</label>
+      <input list="personList" id="selectPerson" type="text" class="inputCustom bold">
+      <datalist id="personList"></datalist>
     </div>
 
+    <div class="highlightedSection row side-by-side" id="registeredFaceImages">
+    </div>
     <!-- Person details -->
     <div class="row side-by-side">
-      <label for="name">Name:</label>
-      <input id="name" type="text" class="inputCustom bold">
+      <label for="name">Full Name:</label>
+      <input id="name" type="text" class="inputWideCustom bold">
     </div>
     <div class="row side-by-side">
-      <label for="country">Country:</label>
-      <input id="country" type="text" class="inputCustom bold">
+      <label for="age">Age:</label>
+      <input id="age" type="number" class="inputCustom bold">
     </div>
+    <div class="row side-by-side">
+      <label for="gender">Gender:</label>
+      <select id="gender" class="selectCustom bold">
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+        <option value="O">Other</option>
+      </select>
+    </div>
+
+    <div class="row side-by-side">
+      <label for="country">Nationality:</label>
+      <input list="countryList" id="country" type="text" class="inputCustom bold">
+      <datalist id="countryList">
+        <option>India</option>
+        <option>Pakistan</option>
+        <option>Somalia</option>
+        <option>Iran</option>
+        <option>Afghanistan</option>
+        <option>East Africa</option>
+        <option>Kenya</option>
+        <option>Male</option>
+        <option>Burundi</option>
+        <option>Rwanda</option>
+        <option>Uganda</option>
+        <option>Maldives</option>
+        <option>Male</option>
+        <option>Tajikistan</option>
+        <option>Turkmenistan</option>
+        <option>Kazakhstan</option>
+        <option>Kyrgyz Republic</option>
+        <option>Uzbekistan</option>
+      </datalist>
+    </div>
+    <div class="row side-by-side">
+      <label for="category">Categoty:</label>
+      <select id="category" class="selectCustom bold">
+        <option value="normal">Normal Person</option>
+        <option value="govtSecurity">Govt Security</option>
+        <option value="pvtSecurity">Private Security</option>
+        <option value="criminal">Criminal</option>
+      </select>
+    </div>
+
     <!-- Save person -->
     <div class="row side-by-side">
       <button
@@ -95,7 +135,7 @@
       return params;
     }
 
-    async function docExists(db, docId, options) {
+    async function docExists(db, docId, options={}) {
       let ret = await db.get(docId, options).then((doc) => doc).catch(() => false)
       return ret
     }
@@ -118,7 +158,10 @@
 
     async function savePersonDetails() {
       selectedPerson.name = $('#name').val()
+      selectedPerson.age = $('#age').val()
+      selectedPerson.gender = $('#gender').val()
       selectedPerson.country = $('#country').val()
+      selectedPerson.category = $('#category').val()
       // TODO: Add other fields from the UI to selectedPerson
       let personDbRec = await docExists(person_db, selectedPerson._id, {})
       if(personDbRec) {
@@ -129,22 +172,51 @@
       // TODO: Save the person name to faces_db also if it has changed.
     }
 
+    function showRegisteredImages(name) {
+      $('#registeredFaceImages').empty()
+      let filteredNames = faces_docs.rows.filter(d => d.doc._id == name)
+      if(!filteredNames || filteredNames.length == 0) {
+        console.log(`No face registered by ${name}`)
+        $('#registeredFaceImages').html(`No face registered by ${name}`)
+        return
+      }
+      let selectedPersonFaceDoc = filteredNames[0].doc
+      let imageAttachments = Object.keys(selectedPersonFaceDoc._attachments).filter(k => k.split('.')[1] == 'png')
+      imageAttachments.forEach((a, i) => {
+          let img = new Image()
+          img.src = "data:image/png;base64," + selectedPersonFaceDoc._attachments[a].data
+          img.className = 'selected_recognized_image'
+          $('#registeredFaceImages').append(img)
+      })
+    }
+
     async function changePerson(name) {
       $('#selectPerson').val(name)
-      $('#selectPerson').material_select()
       selectedPerson = await docExists(person_db, name, {attachments: true})
       if(!selectedPerson) {
-        console.log('No record for selected person:', name)
-        let selectedPersonFaceDoc = faces_docs.rows.filter(d => d.doc.name == name)[0].doc
-        selectedPerson = {
-          '_id': selectedPersonFaceDoc._id,
-          'name': selectedPersonFaceDoc.name
+        console.log('No record for selected person:', name, '. Looking in registered faces db.')
+        let filteredNames = faces_docs.rows.filter(d => d.doc._id == name)
+        console.log(`Registered faces for ${name}:`, filteredNames)
+        if(filteredNames && filteredNames.length > 0) {
+          let selectedPersonFaceDoc = filteredNames[0].doc
+          selectedPerson = {
+            '_id': selectedPersonFaceDoc._id,
+            'name': selectedPersonFaceDoc.name
+          }
+          $('#name').val(selectedPerson.name)
+          showRegisteredImages(name)
         }
-        $('#name').val(selectedPerson.name)
+        else {
+          console.log('No registered face by name: ', name)
+        }
         return;
       }
       $('#name').val(selectedPerson.name)
+      $('#age').val('age' in selectedPerson ? selectedPerson.age : '')
+      $('#gender').val('gender' in selectedPerson ? selectedPerson.gender : '')
       $('#country').val(selectedPerson.country)
+      $('#category').val('category' in selectedPerson ? selectedPerson.category : '')
+      showRegisteredImages(name)
     }
 
     async function onPersonSelected(e) {
@@ -164,14 +236,13 @@
         let opt = document.createElement('option')
         opt.value = n._id
         opt.innerHTML = n.name
-        $('#selectPerson').append(opt)
+        $('#personList').append(opt)
       })
       $('#selectPerson').on('change', onPersonSelected)
-      $('#selectPerson').material_select()
       person_db = new PouchDB('person_db')
-      if(names.length > 0) {
-        let params = getQueryParams()
-        let id = 'id' in params ? params['id'] : names[0]._id
+      let params = getQueryParams()
+      if(names.length > 0 && 'id' in params) {
+        let id = params['id']
         changePerson(id)
       }
     }

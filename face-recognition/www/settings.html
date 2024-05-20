@@ -75,7 +75,7 @@
     <!-- tiny_face_detector_controls -->
     <span id="tiny_face_detector_controls">
       <div class="row side-by-side">
-        <div class="selectCustom row input-field" style= "margin-right: 20px;">
+        <div class="row input-field" style= "margin-right: 20px;">
           <select id="inputSize">
             <option value="" disabled selected>Input Size:</option>
             <option value="128">128 x 128</option>
@@ -132,6 +132,18 @@
     <div class="row side-by-side">
       <label for="longitude">Longitude:</label>
       <input id="longitude" type="text" class="inputCustom bold">
+    </div>
+    <!-- Camera Settings -->
+    <div class="row side-by-side">
+      <label for="camera">Default Camera:</label>
+      <select id="camera" class="selectCustom bold">
+        <option value="back">Back camera</option>
+        <option value="front">Front camera</option>
+      </select>
+    </div>
+    <div class="row side-by-side">
+      <label for="zoom">Zoom:</label>
+      <input id="zoom" type="number" class="inputCustom bold">
     </div>
 
   <footer>
@@ -210,9 +222,13 @@
         $('#scoreThreshold').val(scoreThreshold)
         $('#latitude').val(settings.latitude ? settings.latitude : '')
         $('#longitude').val(settings.longitude ? settings.longitude : '')
+        $('#camera').val(settings.camera ? settings.camera : 'front')
+        $('#zoom').val(settings.zoom ? settings.zoom : 10)
       }
       $('#latitude').on('change', updateResults)
       $('#longitude').on('change', updateResults)
+      $('#camera').on('change', updateResults)
+      $('#zoom').on('change', updateResults)
 
       navigator.geolocation.getCurrentPosition(geolocationSuccess,
                                                geolocationError,
@@ -229,6 +245,8 @@
       settings['maxFRThreshold'] = maxFRThreshold
       settings['latitude'] = $('#latitude').val()
       settings['longitude'] = $('#longitude').val()
+      settings['camera'] = $('#camera').val()
+      settings['zoom'] = parseInt($('#zoom').val())
       await faces_settings_db.put(settings)
     }
 

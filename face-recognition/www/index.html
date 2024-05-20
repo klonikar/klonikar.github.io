@@ -79,14 +79,16 @@
     <b>Original Faces:</b>
       <div id="originalFacesContainer" class="row side-by-side"></div>
     -->
-
+    <div class="highlightedSection row side-by-side" id="registeredFaceImages" style="display: none;">
+    </div>
   <div class="row side-by-side" id="selectedFaces"> 
     <b> Selected Faces </b>
     <br/>
   </div>
   <div class="row side-by-side"> 
     <label for="selectedFacesName">Name:</label>
-    <input type="text" id="selectedFacesName" class="bold" placeholder="Enter Person Name" />
+    <input list="registeredFacesList" type="text" id="selectedFacesName" class="bold" placeholder="Enter Person Name" />
+    <datalist id="registeredFacesList"></datalist>
     <button class="waves-effect waves-light btn" onclick="registerFaces();" >Register</button>
   </div>
 
@@ -105,6 +107,8 @@
     let use_cordova_plugin = window.cordova;
     let globalTimeout = use_cordova_plugin ? 200 : 500;
     let faceMatcher = null;
+    let defaultCamera = 'front';
+    let defaultZoomLevel = 10;
 
     // Default settings. 
     const SSD_MOBILENETV1 = 'ssd_mobilenetv1'
@@ -141,8 +145,8 @@
         : new faceapi.TinyFaceDetectorOptions({ inputSize, scoreThreshold })
     }
 
-    async function docExists(db, docId) {
-      let ret = await db.get(docId).then((doc) => doc).catch(() => false)
+    async function docExists(db, docId, options={}) {
+      let ret = await db.get(docId, options).then((doc) => doc).catch(() => false)
       return ret
     }
 
@@ -252,6 +256,11 @@
           let attachment = row.doc._attachments[k]
           return base64_to_float32Array(attachment.data)
         })
+        // Add names to autocomplete list of registered face names
+        let opt = document.createElement('option')
+        opt.value = row.doc.name
+        opt.innerHTML = row.doc.name
+        $('#registeredFacesList').append(opt)
         return new faceapi.LabeledFaceDescriptors(
             row.doc.name,
             descriptors
@@ -279,6 +288,10 @@
       console.log(selectedFacesData);
       await saveFaceToDB(name, selectedFacesData);
       selectedFaces.map(f => { selectedFaces[f].parentNode.remove(); });
+      let opt = document.createElement('option')
+      opt.value = name
+      opt.innerHTML = name
+      $('#registeredFacesList').append(opt)
     }
 
     function selectedFaceImageClickHandler(elem) {
@@ -296,6 +309,36 @@
       $('#selectedFaces').append(span);
       containerElem.remove()
     };
+
+    async function showRegisteredImages(label) {
+      let name = label.split('(')[0].trim()
+      $('#registeredFaceImages').get(0).style.display = 'block'
+      $('#registeredFaceImages').empty()
+      let db = new PouchDB('faces_db');
+      let selectedPersonFaceDoc = await docExists(db, name, {attachments: true})
+      if(!selectedPersonFaceDoc) {
+        console.log(`No face registered by ${name}`)
+        $('#registeredFaceImages').html(`No face registered by ${name}`)
+        return
+      }
+      let imageAttachments = Object.keys(selectedPersonFaceDoc._attachments).filter(k => k.split('.')[1] == 'png')
+      $('#registeredFaceImages').append(`<b>Registered Images of ${name}</b><br/>`)
+      imageAttachments.forEach((a, i) => {
+          let img = new Image()
+          img.src = "data:image/png;base64," + selectedPersonFaceDoc._attachments[a].data
+          img.className = 'selected_recognized_image'
+          $('#registeredFaceImages').append(img)
+      })
+      let button = document.createElement('button')
+      button.className = 'confirmationButton'
+      button.innerHTML = 'Edit ' + name
+      button.classList.add('row', 'side-by-side')
+      button.onclick = function() {
+        return confirmRecognizedFace(label)
+      }
+      $('#registeredFaceImages').append('<br/>')
+      $('#registeredFaceImages').append(button)
+    }
 
     function confirmRecognizedFace(recognizedFaceLabel) {
       ret = confirm("Is the face of " + recognizedFaceLabel + '?')
@@ -349,7 +392,7 @@
             button.className = 'confirmationButton'
             button.innerHTML = 'View ' + faceName
             button.onclick = function() {
-              return confirmRecognizedFace(label)
+              return showRegisteredImages(label)
             }
             containerElem.appendChild(button)
           }
@@ -400,12 +443,20 @@
         // Initialize the CameraPreview
         let cwidth = String(window.screen.width - 40);
         let cheight = String(window.screen.width - 40); // same as width
-        let optCameraDirection = 'front';
+        let optCameraDirection = defaultCamera;
         CameraPreview.startCamera({x: '0', y: '0', width: cwidth, height: cheight, camera: optCameraDirection, tapPhoto: false, toBack: true, previewDrag: true});
         document.addEventListener("backbutton", stopCamera, false);
         isCameraOn = true;
         $('#btnToggleCamera').html('Stop Camera');
         $('#btnToggleCamera').on('click', stopCamera);
+        let successCallback = function (pluginResult) {
+          $('#status').html('<span class="success">Zoom: ' + pluginResult + '</span>');
+        };
+        let errorCallback = function (pluginResult) {
+          $('#status').html('<span class="error">' + pluginResult + '</span>');
+        };
+        CameraPreview.setZoom(defaultZoomLevel, successCallback, errorCallback);
+
         onPlay();
     }
 
@@ -439,6 +490,8 @@
         // tiny_face_detector options
         inputSize = settings.inputSize
         scoreThreshold = settings.scoreThreshold
+        defaultCamera = 'camera' in settings ? settings.camera : defaultCamera
+        defaultZoomLevel = 'zoom' in settings ? settings.zoom : defaultZoomLevel
       }
       else { // Save initial settings to db
         settings = {
@@ -447,7 +500,9 @@
           'maxFRThreshold': maxFRThreshold,
           'minConfidence': minConfidence,
           'inputSize': inputSize,
-          'scoreThreshold': scoreThreshold
+          'scoreThreshold': scoreThreshold,
+          'camera': defaultCamera,
+          'zoom': defaultZoomLevel
         }
         await faces_settings_db.put(settings)
       }

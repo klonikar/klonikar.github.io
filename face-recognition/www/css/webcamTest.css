@@ -122,11 +122,15 @@ img.info{
 
 .selectCustom {
 	width: 40% !important;
-	display: block;
+	display: inline-flex;
 }
 
 .inputCustom {
 	width: 25% !important;
+}
+
+.inputWideCustom {
+	width: 65% !important;
 }
 
 .fieldsetCustom {
