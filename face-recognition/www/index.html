@@ -9,7 +9,7 @@
   <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
   <title>AI Based Interrogation System</title>
 
-  <link rel="stylesheet" type="text/css" href="css/webcamTest.css" />
+  <link rel="stylesheet" type="text/css" href="css/app_styles.css" />
   <script src="js/face-api.js"></script>
   <script src="js/commons.js"></script>
   <script type="text/javascript" src="js/pouchdb.min.js"> </script>
@@ -55,7 +55,7 @@
 <body>
   <div class="app">
   <div id="navbar"></div>
-  <div class="content center-content page-container">
+  <div class="center-content page-container">
       <fieldset class="fieldsetCustom">
         <legend>Start/Stop/Switch</legend>
         <button id="btnToggleCamera" class="smallMarginRight">Start Camera</button>
@@ -91,12 +91,13 @@
     <button class="waves-effect waves-light btn" onclick="registerFaces();" >Register</button>
   </div>
 
+  </div>
+  </div>
+
   <footer>
     <img src="images/logo_36x36.png" >
     <span class="footer_area">Powered By INICAI and PTPL </span>
   </footer>
-  </div>
-  </div>
 
   <script src="cordova.js"></script>
 
@@ -433,7 +434,6 @@
           };
           $('#inputVideo').attr('src', base64Image);
           //CameraPreview.hide();
-          $('.content').get(0).style.height = '';
         };
         let errorCallback = function (pluginResult) {
           //$('#status').html('<span class="error">' + pluginResult + '</span>');
@@ -489,8 +489,7 @@
     }
 
     async function run() {
-      $('.content').get(0).style.marginTop = '0%';
-      $('.content').get(0).style.height = `${window.screen.height}px`;
+      document.body.style.minHeight = `${window.screen.height}px`;
       // load face detection model
       let faces_settings_db = new PouchDB('faces_settings_db')
       let settings = await docExists(faces_settings_db, 'settings')

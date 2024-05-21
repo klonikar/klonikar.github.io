@@ -9,7 +9,7 @@
   <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
   <title>Settings</title>
 
-  <link rel="stylesheet" type="text/css" href="css/webcamTest.css" />
+  <link rel="stylesheet" type="text/css" href="css/app_styles.css" />
   <script src="js/commons.js"></script>
   <script type="text/javascript" src="js/pouchdb.min.js"> </script>
   <script src="js/faceDetectionControls.js"></script>
@@ -35,7 +35,7 @@
 <body>
   <div class="app">
   <div id="navbar"></div>
-  <div class="content center-content page-container">
+  <div class="center-content page-container">
     <div class="progress" id="loader">
       <div class="indeterminate"></div>
     </div>
@@ -150,12 +150,13 @@
       <textarea id="countries" class="textareaCustom bold"></textarea>
     </div>
 
+  </div>
+  </div>
+
   <footer>
     <img src="images/logo_36x36.png" >
     <span class="footer_area">Powered By INICAI and PTPL </span>
   </footer>
-  </div>
-  </div>
 
   <script src="cordova.js"></script>
 
@@ -209,8 +210,7 @@
     }
 
     async function run() {
-      $('.content').get(0).style.marginTop = '0%';
-      //$('.content').get(0).style.height = `${window.screen.height}px`;
+      document.body.style.minHeight = `${window.screen.height}px`;
 
 
       let faces_settings_db = new PouchDB('faces_settings_db')
