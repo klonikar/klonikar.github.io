@@ -87,8 +87,7 @@
   </div>
   <div class="row side-by-side"> 
     <label for="selectedFacesName">Name:</label>
-    <input list="registeredFacesList" type="text" id="selectedFacesName" class="bold" placeholder="Enter Person Name" />
-    <datalist id="registeredFacesList"></datalist>
+    <input type="text" id="selectedFacesName" class="bold" placeholder="Enter Person Name" />
     <button class="waves-effect waves-light btn" onclick="registerFaces();" >Register</button>
   </div>
 
@@ -256,11 +255,6 @@
           let attachment = row.doc._attachments[k]
           return base64_to_float32Array(attachment.data)
         })
-        // Add names to autocomplete list of registered face names
-        let opt = document.createElement('option')
-        opt.value = row.doc.name
-        opt.innerHTML = row.doc.name
-        $('#registeredFacesList').append(opt)
         return new faceapi.LabeledFaceDescriptors(
             row.doc.name,
             descriptors
@@ -281,6 +275,14 @@
 
     async function registerFaces() {
       let name = document.getElementById("selectedFacesName").value;
+      let db = new PouchDB('faces_db');
+      let faceRec = await docExists(db, name);
+      if(faceRec) {
+        let ret = confirm(`${name} is already registered. Do you want to continue?`);
+        if(!ret) {
+          return;
+        }
+      }
       console.log("Registering selected faces as: " + name);
       var faces = $("#selectedFaces canvas");
       var selectedFaces = faces.filter(f => { return faces[f].style.opacity && faces[f].style.opacity == 0.5; });
@@ -288,10 +290,6 @@
       console.log(selectedFacesData);
       await saveFaceToDB(name, selectedFacesData);
       selectedFaces.map(f => { selectedFaces[f].parentNode.remove(); });
-      let opt = document.createElement('option')
-      opt.value = name
-      opt.innerHTML = name
-      $('#registeredFacesList').append(opt)
     }
 
     function selectedFaceImageClickHandler(elem) {
@@ -321,8 +319,19 @@
         $('#registeredFaceImages').html(`No face registered by ${name}`)
         return
       }
+      let person_db = new PouchDB('person_db')
+      let personRec = await docExists(person_db, name)
+      if(personRec) {
+        $('#registeredFaceImages').append(`<b>Full Name: ${personRec.name}</b><br/>`)
+        $('#registeredFaceImages').append(`<b>Country: ${personRec.country}</b><br/>`)
+        $('#registeredFaceImages').append(`<b>Age: ${personRec.age}</b><br/>`)
+        $('#registeredFaceImages').append(`<b>Gender: ${personRec.gender}</b><br/>`)
+      }
+      else {
+        $('#registeredFaceImages').append(`<b>Registered Images of ${name}</b><br/>`)
+      }
+
       let imageAttachments = Object.keys(selectedPersonFaceDoc._attachments).filter(k => k.split('.')[1] == 'png')
-      $('#registeredFaceImages').append(`<b>Registered Images of ${name}</b><br/>`)
       imageAttachments.forEach((a, i) => {
           let img = new Image()
           img.src = "data:image/png;base64," + selectedPersonFaceDoc._attachments[a].data
@@ -341,7 +350,7 @@
     }
 
     function confirmRecognizedFace(recognizedFaceLabel) {
-      ret = confirm("Is the face of " + recognizedFaceLabel + '?')
+      ret = confirm("Edit " + recognizedFaceLabel + '?')
       if(ret) {
         window.location.href = 'editDetails.html?id=' + recognizedFaceLabel.split('(')[0].trim();
       }
@@ -479,6 +488,8 @@
     }
 
     async function run() {
+      $('.content').get(0).style.marginTop = '0%';
+      $('.content').get(0).style.height = `${window.screen.height}px`;
       // load face detection model
       let faces_settings_db = new PouchDB('faces_settings_db')
       let settings = await docExists(faces_settings_db, 'settings')
@@ -512,8 +523,6 @@
       await faceapi.loadFaceLandmarkModel('weights/')
       await faceapi.loadFaceRecognitionModel('weights/')
       $('#loader').hide()
-
-      $('.content').get(0).style.marginTop = '0%';
 
       faceMatcher = await createFaceMatcher();
 

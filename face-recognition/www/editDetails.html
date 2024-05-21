@@ -36,8 +36,8 @@
     <div class="row side-by-side">
       <!-- person selection -->
       <label for="selectPerson">Select Person:</label>
-      <input list="personList" id="selectPerson" type="text" class="inputCustom bold">
-      <datalist id="personList"></datalist>
+      <select id="selectPerson" type="text" class="selectCustom bold">
+      </select>
     </div>
 
     <div class="highlightedSection row side-by-side" id="registeredFaceImages">
@@ -62,27 +62,8 @@
 
     <div class="row side-by-side">
       <label for="country">Nationality:</label>
-      <input list="countryList" id="country" type="text" class="inputCustom bold">
-      <datalist id="countryList">
-        <option value="India">India</option>
-        <option value="Pakistan">Pakistan</option>
-        <option value="Somalia">Somalia</option>
-        <option value="Iran">Iran</option>
-        <option value="Afghanistan">Afghanistan</option>
-        <option value="East Africa">East Africa</option>
-        <option value="Kenya">Kenya</option>
-        <option value="Male">Male</option>
-        <option value="Burundi">Burundi</option>
-        <option value="Rwanda">Rwanda</option>
-        <option value="Uganda">Uganda</option>
-        <option value="Maldives">Maldives</option>
-        <option value="Male">Male</option>
-        <option value="Tajikistan">Tajikistan</option>
-        <option value="Turkmenistan">Turkmenistan</option>
-        <option value="Kazakhstan">Kazakhstan</option>
-        <option value="Kyrgyz Republic">Kyrgyz Republic</option>
-        <option value="Uzbekistan">Uzbekistan</option>
-      </datalist>
+      <select id="country" type="text" class="selectCustom bold">
+      </select>
     </div>
     <div class="row side-by-side">
       <label for="category">Categoty:</label>
@@ -119,6 +100,8 @@
     let person_db = null;
     let faces_docs = null;
     let selectedPerson = null;
+    let defaultCountiesList = 'India,Pakistan,Somalia,Iran,Afghanistan,East Africa,Kenya,Male,Burundi,Rwanda,Uganda,Maldives,Tajikistan,Turkmenistan,Kazakhstan,Kyrgyz Republic,Uzbekistan'
+
 
     function getQueryParams() {
       let qs = window.location.search || document.location.search;
@@ -192,6 +175,7 @@
 
     async function changePerson(name) {
       $('#selectPerson').val(name)
+      //$('#selectPerson').material_select()
       selectedPerson = await docExists(person_db, name, {attachments: true})
       if(!selectedPerson) {
         console.log('No record for selected person:', name, '. Looking in registered faces db.')
@@ -214,8 +198,11 @@
       $('#name').val(selectedPerson.name)
       $('#age').val('age' in selectedPerson ? selectedPerson.age : '')
       $('#gender').val('gender' in selectedPerson ? selectedPerson.gender : '')
+      //$('#gender').material_select()
       $('#country').val(selectedPerson.country)
+      //$('#country').material_select()
       $('#category').val('category' in selectedPerson ? selectedPerson.category : '')
+      //$('#category').material_select()
       showRegisteredImages(name)
     }
 
@@ -226,7 +213,14 @@
 
     async function run() {
       $('.content').get(0).style.marginTop = '0%';
+      $('.content').get(0).style.height = `${window.screen.height}px`;
 
+      let faces_settings_db = new PouchDB('faces_settings_db')
+      let settings = await docExists(faces_settings_db, 'settings')
+      if(settings) {
+        let countries = settings.countries ? settings.countries : defaultCountiesList
+        countries.trim().split(',').forEach(c => $('#country').append(`<option value="${c.trim()}">${c.trim()}</option>`))
+      }
       faces_db = new PouchDB('faces_db')
       faces_docs = await faces_db.allDocs({include_docs: true, attachments: true})
       let names = faces_docs.rows.map(d => 
@@ -236,9 +230,10 @@
         let opt = document.createElement('option')
         opt.value = n._id
         opt.innerHTML = n.name
-        $('#personList').append(opt)
+        $('#selectPerson').append(opt)
       })
       $('#selectPerson').on('change', onPersonSelected)
+      //$('#selectPerson').material_select()
       person_db = new PouchDB('person_db')
       let params = getQueryParams()
       if(names.length > 0 && 'id' in params) {

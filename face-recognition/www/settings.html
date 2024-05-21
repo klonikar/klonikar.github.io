@@ -145,6 +145,10 @@
       <label for="zoom">Zoom:</label>
       <input id="zoom" type="number" class="inputCustom bold">
     </div>
+    <div class="row side-by-side">
+      <label for="countries">Countries:</label>
+      <textarea id="countries" class="textareaCustom bold"></textarea>
+    </div>
 
   <footer>
     <img src="images/logo_36x36.png" >
@@ -157,6 +161,7 @@
 
   <script>
     let use_cordova_plugin = window.cordova;
+    let defaultCountiesList = 'India,Pakistan,Somalia,Iran,Afghanistan,East Africa,Kenya,Male,Burundi,Rwanda,Uganda,Maldives,Tajikistan,Turkmenistan,Kazakhstan,Kyrgyz Republic,Uzbekistan'
 
     async function docExists(db, docId) {
       let ret = await db.get(docId).then((doc) => doc).catch(() => false)
@@ -205,6 +210,8 @@
 
     async function run() {
       $('.content').get(0).style.marginTop = '0%';
+      $('.content').get(0).style.height = `${window.screen.height}px`;
+
 
       let faces_settings_db = new PouchDB('faces_settings_db')
       let settings = await docExists(faces_settings_db, 'settings')
@@ -224,11 +231,17 @@
         $('#longitude').val(settings.longitude ? settings.longitude : '')
         $('#camera').val(settings.camera ? settings.camera : 'front')
         $('#zoom').val(settings.zoom ? settings.zoom : 10)
+        $('#countries').val(settings.countries ? settings.countries : defaultCountiesList)
       }
       $('#latitude').on('change', updateResults)
       $('#longitude').on('change', updateResults)
-      $('#camera').on('change', updateResults)
+      $('#camera').on('change', function() {
+        //$('#camera').material_select()
+        updateResults()
+      })
+
       $('#zoom').on('change', updateResults)
+      $('#countries').on('change', updateResults)
 
       navigator.geolocation.getCurrentPosition(geolocationSuccess,
                                                geolocationError,
@@ -247,6 +260,7 @@
       settings['longitude'] = $('#longitude').val()
       settings['camera'] = $('#camera').val()
       settings['zoom'] = parseInt($('#zoom').val())
+      settings['countries'] = $('#countries').val().trim()
       await faces_settings_db.put(settings)
     }
 
