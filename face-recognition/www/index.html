@@ -432,7 +432,8 @@
             performDetection(videoEl);
           };
           $('#inputVideo').attr('src', base64Image);
-
+          //CameraPreview.hide();
+          $('.content').get(0).style.height = '';
         };
         let errorCallback = function (pluginResult) {
           //$('#status').html('<span class="error">' + pluginResult + '</span>');

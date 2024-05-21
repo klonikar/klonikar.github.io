@@ -32,7 +32,7 @@
 <body>
   <div class="app">
   <div id="navbar"></div>
-  <div class="content center-content page-container">
+  <div class="content fillScreen center-content page-container">
     <div class="row side-by-side">
       <!-- person selection -->
       <label for="selectPerson">Select Person:</label>
@@ -213,7 +213,7 @@
 
     async function run() {
       $('.content').get(0).style.marginTop = '0%';
-      $('.content').get(0).style.height = `${window.screen.height}px`;
+      //$('.content').get(0).style.height = `${window.screen.height}px`;
 
       let faces_settings_db = new PouchDB('faces_settings_db')
       let settings = await docExists(faces_settings_db, 'settings')
@@ -232,6 +232,7 @@
         opt.innerHTML = n.name
         $('#selectPerson').append(opt)
       })
+      $('#selectPerson').get(0).selectedIndex = -1
       $('#selectPerson').on('change', onPersonSelected)
       //$('#selectPerson').material_select()
       person_db = new PouchDB('person_db')
