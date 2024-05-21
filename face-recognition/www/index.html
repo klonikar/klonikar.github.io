@@ -19,29 +19,52 @@
   <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
   <script src="js/materialize.min.js"></script>
   <style type="text/css">
-    .selectedFaces {
-      left: 900px;
-      top: 0px;
-      margin-top: 50px;
-      position: absolute;
+    #facesContainer {
+      margin-top: 5px;
+      min-height: 200px;
+      max-height: 200px;
+      overflow: auto;
+    }
+
+    #facesContainer canvas {
+      margin-top: 5px;
+      margin-left: 10px;
+      min-height: 150px;
+      max-height: 150px;
+    }
+
+    #selectedFaces {
+      margin-top: 5px;
+      min-height: 250px;
+      max-height: 250px;
+      overflow: auto;
     }
 
     #selectedFaces canvas {
-      margin-top: 10px;
+      margin-top: 5px;
       margin-left: 10px;
+      min-height: 150px;
+      max-height: 150px;
     }
 
     .recognized_image_container {
       max-width: 50%;
       display: inline-grid;
+      min-height: 200px;
+      max-height: 200px;
+      overflow: auto;
     }
 
     .recognized_image {
       max-width: 55%;
+      min-height: 150px;
+      max-height: 150px;
     }
 
     .selected_recognized_image {
       max-width: 25%;
+      min-height: 150px;
+      max-height: 150px;
     }
 
     .confirmationButton {
@@ -56,16 +79,16 @@
   <div class="app">
   <div id="navbar"></div>
   <div class="center-content page-container">
-      <fieldset class="fieldsetCustom">
-        <legend>Start/Stop/Switch</legend>
-        <button id="btnToggleCamera" class="smallMarginRight">Start Camera</button>
-        <button id="btnSwitchCamera">Switch Camera</button>
-      </fieldset>
+    <fieldset class="fieldsetCustom">
+      <legend>Start/Stop/Switch</legend>
+      <button id="btnToggleCamera" class="smallMarginRight">Start Camera</button>
+      <button id="btnSwitchCamera">Switch Camera</button>
+    </fieldset>
 
-      <fieldset class="fieldsetCustom">
-        <legend>Status</legend>
-        <label id="status"></label>
-      </fieldset>
+    <fieldset class="fieldsetCustom">
+      <legend>Status</legend>
+      <label id="status"></label>
+    </fieldset>
     <div class="progress" id="loader">
       <div class="indeterminate"></div>
     </div>
@@ -74,22 +97,22 @@
       <canvas id="overlay" />
     </div>
     <b>Detected Faces:</b>
-      <div id="facesContainer" class="row side-by-side"></div>
+    <div id="facesContainer" class="row side-by-side"></div>
     <!--
     <b>Original Faces:</b>
       <div id="originalFacesContainer" class="row side-by-side"></div>
     -->
     <div class="highlightedSection row side-by-side" id="registeredFaceImages" style="display: none;">
     </div>
-  <div class="row side-by-side" id="selectedFaces"> 
-    <b> Selected Faces </b>
+    <b> Selected Faces: </b>
     <br/>
-  </div>
-  <div class="row side-by-side"> 
-    <label for="selectedFacesName">Name:</label>
-    <input type="text" id="selectedFacesName" class="bold" placeholder="Enter Person Name" />
-    <button class="waves-effect waves-light btn" onclick="registerFaces();" >Register</button>
-  </div>
+    <div class="row side-by-side" id="selectedFaces"> 
+    </div>
+    <div class="row side-by-side"> 
+      <label for="selectedFacesName">Name:</label>
+      <input type="text" id="selectedFacesName" class="bold" placeholder="Enter Person Name" />
+      <button class="waves-effect waves-light btn" onclick="registerFaces();" >Register</button>
+    </div>
 
   </div>
   </div>
