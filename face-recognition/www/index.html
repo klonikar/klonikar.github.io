@@ -56,7 +56,7 @@
     }
 
     .recognized_image {
-      max-width: 55%;
+      /*max-width: 55%;*/
       min-height: 150px;
       max-height: 150px;
     }
@@ -350,6 +350,7 @@
         $('#registeredFaceImages').append(`<b>Country: ${personRec.country}</b><br/>`)
         $('#registeredFaceImages').append(`<b>Age: ${personRec.age}</b><br/>`)
         $('#registeredFaceImages').append(`<b>Gender: ${personRec.gender}</b><br/>`)
+        $('#registeredFaceImages').append(`<b>Category: ${personRec.category}</b><br/>`)
       }
       else {
         $('#registeredFaceImages').append(`<b>Registered Images of ${name}</b><br/>`)

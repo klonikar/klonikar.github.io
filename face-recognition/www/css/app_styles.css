@@ -51,10 +51,6 @@ fieldset {
 	margin: 8px 0;
 }
 
-img {
-	max-width: 75%;
-}
-
 label {
 	color: darkred !important;
 	font-weight: bold;
@@ -141,10 +137,16 @@ img.info{
 	margin-right: 10px;
 }
 
+img {
+	max-width: 80%;
+	margin-left: 70px;
+}
+
 #overlay, .overlay {
   position: absolute;
   top: 0;
   left: 0;
+  margin-left: 70px;
 }
 
 .footer_area {
@@ -169,4 +171,8 @@ input::placeholder {
 .textareaCustom {
 	width: 65% !important;
 	height: 150px;
+}
+
+#navbar {
+	margin-left: -50px;
 }

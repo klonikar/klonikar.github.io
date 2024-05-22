@@ -66,12 +66,8 @@
       </select>
     </div>
     <div class="row side-by-side">
-      <label for="category">Categoty:</label>
+      <label for="category">Category:</label>
       <select id="category" class="selectCustom bold">
-        <option value="normal">Normal Person</option>
-        <option value="govtSecurity">Govt Security</option>
-        <option value="pvtSecurity">Private Security</option>
-        <option value="criminal">Criminal</option>
       </select>
     </div>
 
@@ -102,6 +98,7 @@
     let faces_docs = null;
     let selectedPerson = null;
     let defaultCountiesList = 'India,Pakistan,Somalia,Iran,Afghanistan,East Africa,Kenya,Male,Burundi,Rwanda,Uganda,Maldives,Tajikistan,Turkmenistan,Kazakhstan,Kyrgyz Republic,Uzbekistan'
+    let defaultCategories = 'Normal Person,Govt Security,Private Security,Criminal';
 
 
     function getQueryParams() {
@@ -220,6 +217,8 @@
       if(settings) {
         let countries = settings.countries ? settings.countries : defaultCountiesList
         countries.trim().split(',').forEach(c => $('#country').append(`<option value="${c.trim()}">${c.trim()}</option>`))
+        let categories = settings.categories ? settings.categories : defaultCategories;
+        categories.trim().split(',').forEach(c => $('#category').append(`<option value="${c.trim()}">${c.trim()}</option>`))
       }
       faces_db = new PouchDB('faces_db')
       faces_docs = await faces_db.allDocs({include_docs: true, attachments: true})

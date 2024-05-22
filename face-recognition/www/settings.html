@@ -149,6 +149,10 @@
       <label for="countries">Countries:</label>
       <textarea id="countries" class="textareaCustom bold"></textarea>
     </div>
+    <div class="row side-by-side">
+      <label for="categories">Categories:</label>
+      <textarea id="categories" class="textareaCustom bold"></textarea>
+    </div>
 
   </div>
   </div>
@@ -162,7 +166,8 @@
 
   <script>
     let use_cordova_plugin = window.cordova;
-    let defaultCountiesList = 'India,Pakistan,Somalia,Iran,Afghanistan,East Africa,Kenya,Male,Burundi,Rwanda,Uganda,Maldives,Tajikistan,Turkmenistan,Kazakhstan,Kyrgyz Republic,Uzbekistan'
+    let defaultCountiesList = 'India,Pakistan,Somalia,Iran,Afghanistan,East Africa,Kenya,Male,Burundi,Rwanda,Uganda,Maldives,Tajikistan,Turkmenistan,Kazakhstan,Kyrgyz Republic,Uzbekistan';
+    let defaultCategories = 'Normal Person,Govt Security,Private Security,Criminal';
 
     async function docExists(db, docId) {
       let ret = await db.get(docId).then((doc) => doc).catch(() => false)
@@ -232,6 +237,7 @@
         $('#camera').val(settings.camera ? settings.camera : 'front')
         $('#zoom').val(settings.zoom ? settings.zoom : 10)
         $('#countries').val(settings.countries ? settings.countries : defaultCountiesList)
+        $('#categories').val(settings.categories ? settings.categories : defaultCategories)
       }
       $('#latitude').on('change', updateResults)
       $('#longitude').on('change', updateResults)
@@ -242,6 +248,7 @@
 
       $('#zoom').on('change', updateResults)
       $('#countries').on('change', updateResults)
+      $('#categories').on('change', updateResults)
 
       navigator.geolocation.getCurrentPosition(geolocationSuccess,
                                                geolocationError,
@@ -261,6 +268,7 @@
       settings['camera'] = $('#camera').val()
       settings['zoom'] = parseInt($('#zoom').val())
       settings['countries'] = $('#countries').val().trim()
+      settings['categories'] = $('#categories').val().trim()
       await faces_settings_db.put(settings)
     }
 
