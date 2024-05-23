@@ -71,7 +71,7 @@
       max-width: 50%;
       border-radius: 8px;
       border-color: #2ab7a9;
-      margin-top: 5px;
+      margin-left: 10px;
     }
   </style>
 </head>
@@ -363,15 +363,24 @@
           img.className = 'selected_recognized_image'
           $('#registeredFaceImages').append(img)
       })
-      let button = document.createElement('button')
-      button.className = 'confirmationButton'
-      button.innerHTML = 'Edit ' + name
-      button.classList.add('row', 'side-by-side')
-      button.onclick = function() {
+      let span = document.createElement('span')
+      span.classList.add('row', 'side-by-side')
+      let editButton = document.createElement('button')
+      editButton.className = 'confirmationButton'
+      editButton.innerHTML = 'Edit ' + name
+      editButton.onclick = function() {
         return confirmRecognizedFace(label)
       }
+      let hideButton = document.createElement('button')
+      hideButton.className = 'confirmationButton'
+      hideButton.innerHTML = 'Hide Details'
+      hideButton.onclick = function() {
+        return $('#registeredFaceImages').hide()
+      }
+      span.append(editButton)
+      span.append(hideButton)
       $('#registeredFaceImages').append('<br/>')
-      $('#registeredFaceImages').append(button)
+      $('#registeredFaceImages').append(span)
     }
 
     function confirmRecognizedFace(recognizedFaceLabel) {

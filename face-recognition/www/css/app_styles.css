@@ -139,14 +139,14 @@ img.info{
 
 img {
 	max-width: 80%;
-	margin-left: 70px;
+	margin-left: 10%;
 }
 
 #overlay, .overlay {
   position: absolute;
   top: 0;
   left: 0;
-  margin-left: 70px;
+  margin-left: 10%;
 }
 
 .footer_area {
