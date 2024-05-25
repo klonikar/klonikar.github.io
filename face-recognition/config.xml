@@ -15,6 +15,7 @@
         <allow-intent href="market:*" />
         <icon src="www/images/indian_navy.png" width="57" height="57" density="mdpi" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="www/images/indian_navy.png" />
+        <preference name="SplashScreenBackgroundColor" value="#C2DFFF" />
         <preference name="loadUrlTimeoutValue" value="700000" />
         <preference name="android-minSdkVersion" value="22" />
         <!--preference name="android-targetSdkVersion" value="33" /-->

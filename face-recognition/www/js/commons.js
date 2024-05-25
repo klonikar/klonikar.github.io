@@ -68,10 +68,9 @@ function renderNavBar(navbarId, exampleUri) {
   navbar.appendChild(menuButton)
 
   const li = document.createElement('li')
-  const githubLink = document.createElement('a')
+  const githubLink = document.createElement('span')
   githubLink.classList.add('waves-effect', 'waves-light', 'side-by-side')
   githubLink.id = 'github-link'
-  githubLink.href = 'https://parachutetech.ai'
   const githubLinkIcon = document.createElement('img')
   githubLinkIcon.src = 'images/logo_36x36.png'
   githubLink.appendChild(githubLinkIcon)

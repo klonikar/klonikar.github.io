@@ -216,9 +216,15 @@
       let settings = await docExists(faces_settings_db, 'settings')
       if(settings) {
         let countries = settings.countries ? settings.countries : defaultCountiesList
-        countries.trim().split(',').forEach(c => $('#country').append(`<option value="${c.trim()}">${c.trim()}</option>`))
+        countries.trim().split(',').forEach(c => { 
+                                  if(c) 
+                                    $('#country').append(`<option value="${c.trim()}">${c.trim()}</option>`)
+                                  })
         let categories = settings.categories ? settings.categories : defaultCategories;
-        categories.trim().split(',').forEach(c => $('#category').append(`<option value="${c.trim()}">${c.trim()}</option>`))
+        categories.trim().split(',').forEach(c => {
+                                  if(c)
+                                    $('#category').append(`<option value="${c.trim()}">${c.trim()}</option>`)
+                                  })
       }
       faces_db = new PouchDB('faces_db')
       faces_docs = await faces_db.allDocs({include_docs: true, attachments: true})

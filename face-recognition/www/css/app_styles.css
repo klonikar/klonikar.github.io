@@ -137,12 +137,7 @@ img.info{
 	margin-right: 10px;
 }
 
-img {
-	max-width: 80%;
-	margin-left: 10%;
-}
-
-video {
+#inputVideo {
 	max-width: 80%;
 	margin-left: 10%;
 }

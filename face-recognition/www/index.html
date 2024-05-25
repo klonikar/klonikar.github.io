@@ -556,6 +556,7 @@
       await faceapi.loadFaceLandmarkModel('weights/')
       await faceapi.loadFaceRecognitionModel('weights/')
       $('#loader').hide()
+      $('#btnSwitchCamera').hide() // Hiding this as it does not work consistently
 
       faceMatcher = await createFaceMatcher();
 
