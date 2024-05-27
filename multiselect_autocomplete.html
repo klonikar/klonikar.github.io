@@ -1,0 +1,55 @@
+<html>
+<head>
+<title> multiple select autocomplete </title>
+<style type="text/css">
+
+</style>
+<link href="http://harvesthq.github.io/chosen/chosen.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://harvesthq.github.io/chosen/chosen.jquery.js"></script>
+</head>
+<body>
+  <p> 
+    From <a href="https://stackoverflow.com/questions/26594101/autocomplete-multiselect-field-with-results-displayed-in-a-div-below"> Details here </a>
+  </p>
+  <div id="citySelector"> </div>
+  <div id="stateSelector"> </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  let multiSelectCityId = '#cities';
+  let multiSelectStateId = '#states';
+  let multiSelectClass = '.chosen-select-width';
+
+  $('#citySelector').append('<select data-placeholder="Start typing to select a city" multiple class="chosen-select-width" id="cities"></select>')
+  $('#citySelector').append('<br/>Get the selected values using $("#cities").val(). Its an array of strings.<br/>')
+  $('#stateSelector').append('<select data-placeholder="Start typing to select a state" multiple class="chosen-select-width" id="states"></select>')
+  $('#stateSelector').append('<br/>Get the selected values using $("#states").val(). Its an array of strings.<br/>')
+
+  'Amsterdam,Atlanta,Calgary,Chicago,Denver,Dubai,Frankfurt,Hong Kong,Honolulu,Houston,Kuala Lumpur,London,Los Angeles'.split(',').forEach(o => $(multiSelectCityId).append(`<option>${o}</option>`))
+
+  'Karnataka,Maharashtra,Madhya Pradesh,Uttar Pradesh,Nagaland,Gujarat,Sikkim,Assam,Mizoram,Meghalaya,Manipur'.split(',').forEach(o => $(multiSelectStateId).append(`<option>${o}</option>`))
+
+  $(multiSelectClass).chosen({
+    width: "35%"
+  });
+
+  $(multiSelectClass).change(function(e, chosen) {
+    $a = $("<div/>", {
+      text: chosen.selected
+    }).append(
+      $("<span/>", {
+        text: "x",
+        on: {
+          click: function() {
+            $(this).parent().remove();
+          }
+        }
+      }));
+  });
+
+});
+</script>
+
+</body>
+</html>
