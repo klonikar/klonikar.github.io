@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+  <meta http-equiv="Content-Security-Policy"
+    content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /-->
@@ -26,66 +28,73 @@
     .selected_recognized_image {
       max-width: 25%;
     }
-
   </style>
 </head>
+
 <body>
   <div class="app">
-  <div id="navbar"></div>
-  <div class="center-content page-container">
-    <div class="row side-by-side">
-      <!-- person selection -->
-      <label for="selectPerson">Select Person:</label>
-      <select id="selectPerson" type="text" class="selectCustom bold">
-      </select>
-    </div>
+    <div id="navbar"></div>
+    <div class="center-content page-container">
+      <table>
+        <tbody>
+          <tr>
+            <td><label for="selectPerson">Select Person:</label></td>
+            <td>
+              <select id="selectPerson" type="text" class="selectCustom bold">
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <div class="highlightedSection row side-by-side" id="registeredFaceImages">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Person details -->
+            <td> <label for="name">Full Name:</label></td>
+            <td> <input id="name" type="text" class="inputWideCustom bold"></td>
+          </tr>
+          <tr>
 
-    <div class="highlightedSection row side-by-side" id="registeredFaceImages">
-    </div>
-    <!-- Person details -->
-    <div class="row side-by-side">
-      <label for="name">Full Name:</label>
-      <input id="name" type="text" class="inputWideCustom bold">
-    </div>
-    <div class="row side-by-side">
-      <label for="age">Age:</label>
-      <input id="age" type="number" class="inputCustom bold">
-    </div>
-    <div class="row side-by-side">
-      <label for="gender">Gender:</label>
-      <select id="gender" class="selectCustom bold">
-        <option value="M">Male</option>
-        <option value="F">Female</option>
-        <option value="O">Other</option>
-      </select>
-    </div>
+            <td> <label for="age">Age:</label></td>
+            <td> <input id="age" type="number" class="inputCustom bold"></td>
+          </tr>
+          <tr>
+            <td> <label for="gender">Gender:</label></td>
+            <td> <select id="gender" class="selectCustom bold">
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="O">Other</option>
+              </select></td>
+          </tr>
+          <tr>
 
-    <div class="row side-by-side">
-      <label for="country">Nationality:</label>
-      <select id="country" type="text" class="selectCustom bold">
-      </select>
-    </div>
-    <div class="row side-by-side">
-      <label for="category">Category:</label>
-      <select id="category" class="selectCustom bold">
-      </select>
-    </div>
+            <td> <label for="country">Nationality:</label></td>
+            <td> <select id="country" type="text" class="selectCustom bold">
+              </select></td>
+          </tr>
+          <tr>
+            <td> <label for="category">Category:</label></td>
+            <td> <select id="category" class="selectCustom bold">
+              </select></td>
+          </tr>
 
-    <!-- Save person -->
-    <div class="row side-by-side">
-      <button
-        class="waves-effect waves-light btn"
-        onclick="savePersonDetails()"
-      >
-        <i class="material-icons left">Save</i>
-      </button>
-    </div>
+        </tbody>
+      </table>
+      <!-- Save person -->
+      <div class="row side-by-side">
+        <button class="waves-effect waves-light btn" onclick="savePersonDetails()">
+          <i class="material-icons left">Save</i>
+        </button>
+      </div>
 
-  </div>
+    </div>
   </div>
 
   <footer>
-    <img src="images/logo_36x36.png" >
+    <img src="images/logo_36x36.png">
     <span class="footer_area">Powered By INICAI and PTPL </span>
   </footer>
 
@@ -106,17 +115,17 @@
       qs = qs.split("+").join(" ");
 
       let params = {}, tokens,
-          re = /[?&]?([^=]+)=([^&]*)/g;
+        re = /[?&]?([^=]+)=([^&]*)/g;
 
       while (tokens = re.exec(qs)) {
-          params[decodeURIComponent(tokens[1])]
-              = decodeURIComponent(tokens[2]);
+        params[decodeURIComponent(tokens[1])]
+          = decodeURIComponent(tokens[2]);
       }
 
       return params;
     }
 
-    async function docExists(db, docId, options={}) {
+    async function docExists(db, docId, options = {}) {
       let ret = await db.get(docId, options).then((doc) => doc).catch(() => false)
       return ret
     }
@@ -130,11 +139,11 @@
     async function removeFromDb(db, doc) { await db.remove(doc.id, doc.value.rev) }
 
     async function clearFacesDB(db) {
-        let alldocs = await db.allDocs()
-        await Promise.all(alldocs.rows.map(
-          async doc => {
-            removeFromDb(db, doc)
-          }))
+      let alldocs = await db.allDocs()
+      await Promise.all(alldocs.rows.map(
+        async doc => {
+          removeFromDb(db, doc)
+        }))
     }
 
     async function savePersonDetails() {
@@ -145,7 +154,7 @@
       selectedPerson.category = $('#category').val()
       // TODO: Add other fields from the UI to selectedPerson
       let personDbRec = await docExists(person_db, selectedPerson._id, {})
-      if(personDbRec) {
+      if (personDbRec) {
         selectedPerson._rev = personDbRec._rev
       }
       let ret = await person_db.put(selectedPerson)
@@ -156,7 +165,7 @@
     function showRegisteredImages(name) {
       $('#registeredFaceImages').empty()
       let filteredNames = faces_docs.rows.filter(d => d.doc._id == name)
-      if(!filteredNames || filteredNames.length == 0) {
+      if (!filteredNames || filteredNames.length == 0) {
         console.log(`No face registered by ${name}`)
         $('#registeredFaceImages').html(`No face registered by ${name}`)
         return
@@ -164,22 +173,22 @@
       let selectedPersonFaceDoc = filteredNames[0].doc
       let imageAttachments = Object.keys(selectedPersonFaceDoc._attachments).filter(k => k.split('.')[1] == 'png')
       imageAttachments.forEach((a, i) => {
-          let img = new Image()
-          img.src = "data:image/png;base64," + selectedPersonFaceDoc._attachments[a].data
-          img.className = 'selected_recognized_image'
-          $('#registeredFaceImages').append(img)
+        let img = new Image()
+        img.src = "data:image/png;base64," + selectedPersonFaceDoc._attachments[a].data
+        img.className = 'selected_recognized_image'
+        $('#registeredFaceImages').append(img)
       })
     }
 
     async function changePerson(name) {
       $('#selectPerson').val(name)
       //$('#selectPerson').material_select()
-      selectedPerson = await docExists(person_db, name, {attachments: true})
-      if(!selectedPerson) {
+      selectedPerson = await docExists(person_db, name, { attachments: true })
+      if (!selectedPerson) {
         console.log('No record for selected person:', name, '. Looking in registered faces db.')
         let filteredNames = faces_docs.rows.filter(d => d.doc._id == name)
         console.log(`Registered faces for ${name}:`, filteredNames)
-        if(filteredNames && filteredNames.length > 0) {
+        if (filteredNames && filteredNames.length > 0) {
           let selectedPersonFaceDoc = filteredNames[0].doc
           selectedPerson = {
             '_id': selectedPersonFaceDoc._id,
@@ -214,22 +223,22 @@
 
       let faces_settings_db = new PouchDB('faces_settings_db')
       let settings = await docExists(faces_settings_db, 'settings')
-      if(settings) {
+      if (settings) {
         let countries = settings.countries ? settings.countries : defaultCountiesList
-        countries.trim().split(',').forEach(c => { 
-                                  if(c) 
-                                    $('#country').append(`<option value="${c.trim()}">${c.trim()}</option>`)
-                                  })
+        countries.trim().split(',').forEach(c => {
+          if (c)
+            $('#country').append(`<option value="${c.trim()}">${c.trim()}</option>`)
+        })
         let categories = settings.categories ? settings.categories : defaultCategories;
         categories.trim().split(',').forEach(c => {
-                                  if(c)
-                                    $('#category').append(`<option value="${c.trim()}">${c.trim()}</option>`)
-                                  })
+          if (c)
+            $('#category').append(`<option value="${c.trim()}">${c.trim()}</option>`)
+        })
       }
       faces_db = new PouchDB('faces_db')
-      faces_docs = await faces_db.allDocs({include_docs: true, attachments: true})
-      let names = faces_docs.rows.map(d => 
-        {return {name: d.doc.name, _id: d.doc._id};
+      faces_docs = await faces_db.allDocs({ include_docs: true, attachments: true })
+      let names = faces_docs.rows.map(d => {
+        return { name: d.doc.name, _id: d.doc._id };
       })
       names.forEach((n, i) => {
         let opt = document.createElement('option')
@@ -242,7 +251,7 @@
       //$('#selectPerson').material_select()
       person_db = new PouchDB('person_db')
       let params = getQueryParams()
-      if(names.length > 0 && 'id' in params) {
+      if (names.length > 0 && 'id' in params) {
         let id = params['id']
         changePerson(id)
       }
@@ -256,15 +265,15 @@
       run()
     }
 
-    if(use_cordova_plugin)
+    if (use_cordova_plugin)
       document.addEventListener('deviceready', pageOnDeviceReady, false);
     else
-      $(document).ready(function() {
-      renderNavBar('#navbar', 'editDetails.html')
-      run()
-    })
+      $(document).ready(function () {
+        renderNavBar('#navbar', 'editDetails.html')
+        run()
+      })
 
-    window.onbeforeunload =  function(){
+    window.onbeforeunload = function () {
       console.log("Saving results before leaving page")
       updateResults()
     };
@@ -276,4 +285,5 @@
 
   </script>
 </body>
+
 </html>

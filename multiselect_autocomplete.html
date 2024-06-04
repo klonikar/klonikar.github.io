@@ -35,7 +35,7 @@ $(document).ready(function() {
   });
 
   $(multiSelectClass).change(function(e, chosen) {
-    $a = $("<div/>", {
+    let $a = $("<div/>", {
       text: chosen.selected
     }).append(
       $("<span/>", {

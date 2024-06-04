@@ -5,7 +5,7 @@
     <author email="innovations@parachutetech.ai" href="https://parachutetech.ai">
         Parachute Technologies and Indian Navy Incubation Center for Artificial Intelligence
     </author>
-    <content src="index.html" />
+    <content src="splash.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -13,10 +13,12 @@
     <preference name="AndroidXEnabled" value="true" />
     <platform name="android">
         <allow-intent href="market:*" />
+        <preference name="android-minSdkVersion" value="33" />
         <icon src="www/images/indian_navy.png" width="57" height="57" density="mdpi" />
-        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="www/images/indian_navy.png" />
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="www/images/indian_navy_full.png" />
         <preference name="AndroidWindowSplashScreenBackground" value="#C2DFFF" />
         <preference name="AndroidWindowSplashScreenIconBackgroundColor" value="#FFDFC2" />
+        <preference name="AndroidWindowSplashScreenAnimationDuration" value="1" />
         <preference name="loadUrlTimeoutValue" value="700000" />
         <preference name="android-minSdkVersion" value="22" />
         <!--preference name="android-targetSdkVersion" value="33" /-->

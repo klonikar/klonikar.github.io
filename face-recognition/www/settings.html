@@ -39,22 +39,19 @@
     <div class="progress" id="loader">
       <div class="indeterminate"></div>
     </div>
-    <div class="row side-by-side">
-      <!-- face_detector_selection_control -->
-      <div id="face_detector_selection_control" class="row input-field" style="margin-right: 20px;">
+    <table><tbody>
+      <tr>
+      <td> <label for="selectFaceDetector">Select Face Detector:</label> </td>
+      <td>
         <select id="selectFaceDetector">
           <option value="ssd_mobilenetv1">SSD Mobilenet V1</option>
           <option value="tiny_face_detector">Tiny Face Detector</option>
         </select>
-        <label>Select Face Detector</label>
-      </div>
-
-    </div>
-
-    <!-- ssd_mobilenetv1_controls -->
-    <span id="ssd_mobilenetv1_controls">
-      <div class="row side-by-side">
-        <label for="minConfidence">Min Confidence:</label>
+      </td>
+      </tr>
+      <tr>
+        <td> <label for="minConfidence">Min Confidence:</label> </td>
+        <td>
         <input disabled value="0.5" id="minConfidence" type="text" class="inputCustom bold">
         <button
           class="waves-effect waves-light btn"
@@ -68,15 +65,12 @@
         >
           <i class="material-icons left">+</i>
         </button>
-      </div>
-    </span>
-    <!-- ssd_mobilenetv1_controls -->
+      </td>
+    </tr>
 
-    <!-- tiny_face_detector_controls -->
-    <span id="tiny_face_detector_controls">
-      <div class="row side-by-side">
-        <div class="row input-field" style= "margin-right: 20px;">
-          <select id="inputSize">
+    <tr>
+      <td> <label for="inputSize">Input Size</label> </td>
+       <td>   <select id="inputSize">
             <option value="" disabled selected>Input Size:</option>
             <option value="128">128 x 128</option>
             <option value="160">160 x 160</option>
@@ -86,10 +80,11 @@
             <option value="512">512 x 512</option>
             <option value="608">608 x 608</option>
           </select>
-          <label for="inputSize">Input Size</label>
-        </div>
-        <label for="scoreThreshold">Score Threshold:</label>
-        <input disabled value="0.5" id="scoreThreshold" type="text" class="inputCustom bold">
+        </td>
+      </tr>
+      <tr>
+        <td> <label for="scoreThreshold">Score Threshold:</label> </td>
+        <td> <input disabled value="0.5" id="scoreThreshold" type="text" class="inputCustom bold">
         <button
           class="waves-effect waves-light btn"
           onclick="onDecreaseScoreThreshold()"
@@ -102,13 +97,11 @@
         >
           <i class="material-icons left">+</i>
         </button>
-      </div>
-    </span>
-    <!-- tiny_face_detector_controls -->
-
-    <!-- face recognition max distance between embeddings -->
-    <div class="row side-by-side">
-      <label for="maxFRThreshold">Max FR Distance:</label>
+      </td>
+      </tr>
+      <tr>
+      <td> <label for="maxFRThreshold">Max FR Distance:</label> </td>
+      <td>
       <input disabled value="0.55" id="maxFRThreshold" type="text" class="inputCustom bold">
       <button
         class="waves-effect waves-light btn"
@@ -122,38 +115,41 @@
       >
         <i class="material-icons left">+</i>
       </button>
-    </div>
+    </td>
+    </tr>
 
     <!-- Location lat long -->
-    <div class="row side-by-side">
-      <label for="latitude">Latitude:</label>
-      <input id="latitude" type="text" class="inputCustom bold">
-    </div>
-    <div class="row side-by-side">
-      <label for="longitude">Longitude:</label>
-      <input id="longitude" type="text" class="inputCustom bold">
-    </div>
+    <tr class="row side-by-side">
+      <td><label for="latitude">Latitude:</label></td>
+      <td><input id="latitude" type="text" class="inputCustom bold"></td>
+    </tr>
+    <tr class="row side-by-side">
+      <td><label for="longitude">Longitude:</label></td>
+      <td><input id="longitude" type="text" class="inputCustom bold"></td>
+    </tr>
     <!-- Camera Settings -->
-    <div class="row side-by-side">
-      <label for="camera">Default Camera:</label>
-      <select id="camera" class="selectCustom bold">
+    <tr class="row side-by-side">
+      <td><label for="camera">Default Camera:</label></td>
+      <td><select id="camera" class="selectCustom bold">
         <option value="back">Back camera</option>
         <option value="front">Front camera</option>
       </select>
-    </div>
-    <div class="row side-by-side">
-      <label for="zoom">Zoom:</label>
-      <input id="zoom" type="number" class="inputCustom bold">
-    </div>
-    <div class="row side-by-side">
-      <label for="countries">Countries:</label>
-      <textarea id="countries" class="textareaCustom bold"></textarea>
-    </div>
-    <div class="row side-by-side">
-      <label for="categories">Categories:</label>
-      <textarea id="categories" class="textareaCustom bold"></textarea>
-    </div>
+      </td>
+    </tr>
+    <tr class="row side-by-side">
+      <td><label for="zoom">Zoom:</label></td>
+      <td><input id="zoom" type="number" class="inputCustom bold"></td></td>
+    </tr>
+    <tr class="row side-by-side">
+      <td><label for="countries">Countries:</label></td>
+      <td><textarea id="countries" class="textareaCustom bold"></textarea></</td>>
+    </tr>
+    <tr class="row side-by-side">
+      <td><label for="categories">Categories:</label></td>
+      <td><textarea id="categories" class="textareaCustom bold"></textarea></td>
+    </tr>
 
+  </tbody></table>
   </div>
   </div>
 
