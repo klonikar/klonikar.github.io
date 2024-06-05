@@ -21,16 +21,17 @@
   <style type="text/css">
     #facesContainer {
       margin-top: 5px;
-      min-height: 200px;
-      max-height: 200px;
+      min-height: 160px;
+      max-height: 160px;
       overflow: auto;
+      margin-bottom: 5px;
     }
 
     #facesContainer canvas {
       margin-top: 5px;
       margin-left: 10px;
-      min-height: 150px;
-      max-height: 150px;
+      min-height: 100px;
+      max-height: 100px;
     }
 
     #selectedFaces {
@@ -43,15 +44,15 @@
     #selectedFaces canvas {
       margin-top: 5px;
       margin-left: 10px;
-      min-height: 150px;
-      max-height: 150px;
+      min-height: 100px;
+      max-height: 100px;
     }
 
     .recognized_image_container {
       max-width: 50%;
       display: inline-grid;
-      min-height: 200px;
-      max-height: 200px;
+      min-height: 160px;
+      max-height: 160px;
       overflow: auto;
     }
 
@@ -68,7 +69,7 @@
     }
 
     .confirmationButton {
-      max-width: 50%;
+      max-width: 75%;
       border-radius: 8px;
       border-color: #2ab7a9;
       margin-left: 10px;
@@ -91,6 +92,9 @@
     </fieldset>
     <div class="progress" id="loader">
       <div class="indeterminate"></div>
+    </div>
+    <div>
+        <image id="hiddenPreview" style="max-width: 100%;display: none;" >
     </div>
     <div style="position: relative" class="margin">
       <video onloadedmetadata="onPlay(this)" id="inputVideo" autoplay muted playsinline></video>
@@ -132,6 +136,8 @@
     let faceMatcher = null;
     let defaultCamera = 'back';
     let defaultZoomLevel = 10;
+    let faces_db = null;
+    let person_db = null;
 
     // Default settings. 
     const SSD_MOBILENETV1 = 'ssd_mobilenetv1'
@@ -193,7 +199,7 @@
       const maxAvailableImagesPerClass = 5
       const numImagesForTraining = Math.min(selectedFacesData.length, maxAvailableImagesPerClass)
 
-      let db = new PouchDB('faces_db');
+      let db = faces_db;
 
       if(clearDb) {
         console.log('Clearing existing face embedding DB...')
@@ -271,7 +277,7 @@
 
     // fetch first image of each class and compute their descriptors
     async function createFaceMatcher() {
-      let db = new PouchDB('faces_db');
+      let db = faces_db;
 
       let alldocs = await db.allDocs({include_docs: true, attachments: true})
       let labeledFaceDescriptors = alldocs.rows.map(row => {
@@ -299,7 +305,7 @@
 
     async function registerFaces() {
       let name = document.getElementById("selectedFacesName").value;
-      let db = new PouchDB('faces_db');
+      let db = faces_db;
       let faceRec = await docExists(db, name);
       if(faceRec) {
         let ret = confirm(`${name} is already registered. Do you want to continue?`);
@@ -336,14 +342,13 @@
       let name = label.split('(')[0].trim()
       $('#registeredFaceImages').get(0).style.display = 'block'
       $('#registeredFaceImages').empty()
-      let db = new PouchDB('faces_db');
+      let db = faces_db;
       let selectedPersonFaceDoc = await docExists(db, name, {attachments: true})
       if(!selectedPersonFaceDoc) {
         console.log(`No face registered by ${name}`)
         $('#registeredFaceImages').html(`No face registered by ${name}`)
         return
       }
-      let person_db = new PouchDB('person_db')
       let personRec = await docExists(person_db, name)
       if(personRec) {
         $('#registeredFaceImages').append(`<b>Full Name: ${personRec.name}</b><br/>`)
@@ -390,6 +395,20 @@
       }
     }
 
+    async function getBoxColor(label) {
+      let faceName = label.split('(')[0].trim()
+      if(faceName == 'unknown') {
+        return 'red';
+      }
+      else {
+        let faceExists = await docExists(person_db, faceName);
+        if(faceExists)
+          return 'green';
+        else
+          return '#ebab34';
+      }
+    }
+
     async function performDetection(videoEl) {
       const ts = Date.now()
       const options = getFaceDetectorOptions();
@@ -404,19 +423,21 @@
         const alignedFaceImages = await faceapi.extractFaces(videoEl, alignedDetections)
 
         const canvas = $('#overlay').get(0)
-        const dims = faceapi.matchDimensions(canvas, videoEl, videoEl.tagName.toLocaleLowerCase() == 'video')
+        let displayedImage = videoEl.tagName.toLocaleLowerCase() == 'video' ? videoEl : $('#inputVideo').get(0)
+        const dims = faceapi.matchDimensions(canvas, displayedImage, videoEl.tagName.toLocaleLowerCase() == 'video')
         // resize detection and landmarks in case displayed image is smaller than
         // original size
         const resizedResults = faceapi.resizeResults(detections, dims)
         const results_images = zip2(resizedResults, alignedFaceImages)
 
         $('#facesContainer').empty()
-        results_images.forEach((result_and_image) => {
+        results_images.forEach(async (result_and_image) => {
           let [result, croppedCanvas] = result_and_image
           let descriptor = result.descriptor
           let detection = result.detection
           const label = faceMatcher.findBestMatch(descriptor).toString()
-          const options = { label }
+          const boxColor = await getBoxColor(label);
+          const options = { label, boxColor }
           const drawBox = new faceapi.draw.DrawBox(detection.box, options)
           drawBox.draw(canvas)
 
@@ -461,11 +482,13 @@
         };
         let successCallback = function (imgData) {
           $('#status').html('Ok');
+          let hiddenPreview = $('#hiddenPreview').get(0);
           let base64Image = 'data:image/jpeg;base64,' + imgData;
-          videoEl.onload = function() {
-            performDetection(videoEl);
+          hiddenPreview.onload = function() {
+            performDetection(hiddenPreview);
           };
           $('#inputVideo').attr('src', base64Image);
+          $('#hiddenPreview').attr('src', base64Image);
           //CameraPreview.hide();
         };
         let errorCallback = function (pluginResult) {
@@ -525,6 +548,8 @@
       document.body.style.minHeight = `${window.screen.height}px`;
       // load face detection model
       let faces_settings_db = new PouchDB('faces_settings_db')
+      faces_db = new PouchDB('faces_db')
+      person_db = new PouchDB('person_db')
       let settings = await docExists(faces_settings_db, 'settings')
       if(settings) { // Get from settings
         selectedFaceDetector = settings.faceDetector
