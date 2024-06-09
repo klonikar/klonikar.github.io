@@ -141,14 +141,14 @@ img.info{
 
 #inputVideo {
 	max-width: 50%;
-	margin-left: 10%;
+	margin-left: 22%;
 }
 
 #overlay, .overlay {
   position: absolute;
   top: 0;
   left: 0;
-  margin-left: 10%;
+  margin-left: 22%;
 }
 
 .footer_area {

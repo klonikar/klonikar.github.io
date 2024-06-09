@@ -74,10 +74,65 @@
       border-color: #2ab7a9;
       margin-left: 10px;
     }
+    .header {
+    background-color: #c1a300;
+    height: 70px; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    padding: 0 10px; 
+    text-align: center;
+}
+
+.header .logo-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+.header .logo {
+    height: 80%; 
+    width: auto; 
+}
+
+.header .title-container {
+    text-align: center;
+    flex: 1; 
+    color: #1a237e; 
+}
+.header .title-container h1,
+.header .title-container h4 {
+    margin: 0;
+}
+
+.header .title-container h1 {
+    font-size: 24px; 
+}
+
+.header .title-container h4 {
+    font-size: 16px; 
+  }
+.header_welcome_text{
+  color: #1a237e;
+}
+
   </style>
 </head>
 <body>
   <div class="app">
+    <header class="header">
+      <div class="logo-container">
+          <img src="./images/indian_navy1.png" alt="Logo 1" class="logo">
+          <div class="title-container">
+              <h1 class="header_welcome_text">SATYAPAN.AI</h1>
+              <h4>AI Based Interrogation Systems</h4>
+          </div>
+          <img src="./images/logo-1.png" alt="Logo 2" class="logo">
+      </div>
+  </header>
+  
   <div id="navbar"></div>
   <div class="center-content page-container">
     <fieldset class="fieldsetCustom">
@@ -120,7 +175,12 @@
 
   </div>
   </div>
-
+  <!-- <footer class="footer">
+    <button class="nav-button"><span class="material-icons">home</span></button>
+    <button class="nav-button"><span class="material-icons">apps</span></button>
+    <button class="nav-button"><span class="material-icons">settings</span></button>
+    <button class="nav-button"><span class="material-icons">person</span></button>
+</footer> -->
   <footer>
     <img src="images/logo_36x36.png" >
     <span class="footer_area">Powered By INICAI and PTPL </span>
