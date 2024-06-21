@@ -11,6 +11,7 @@
     <title>Satyapan.AI</title>
 
     <link rel="stylesheet" href="css/materialize.css">
+    <script type="text/javascript" src="js/pouchdb.min.js"> </script>
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
 
@@ -121,7 +122,7 @@
         </div>
 
         <label class="label_div" for="username">Username</label>
-        <input type="text" id="username" name="username" value="Indian Navy" required>
+        <input type="text" id="username" name="username" value="IndianNavy" required>
         <label class="label_div" for="password">Password</label>
         <input type="password" id="password" name="password" value="********" required>
         <div class="signin">
@@ -135,8 +136,21 @@
     </div>
     <script src="cordova.js"></script>
     <script>
-        function logInHandle(event) {
+        async function docExists(db, docId, options = {}) {
+            let ret = await db.get(docId, options).then((doc) => doc).catch(() => false)
+            return ret
+        }
+
+        async function logInHandle(event) {
             event.preventDefault();
+            let loggedInUserDb = new PouchDB('faces_loggedin_user_db')
+            let loggedInUser = await docExists(loggedInUserDb, 'loggedin_user')
+            if(!loggedInUser) {
+                loggedInUser = {'_id': 'loggedin_user'}
+            }
+            loggedInUser['username'] = $('#username').val()
+            loggedInUser['loginTime'] = new Date()
+            await loggedInUserDb.put(loggedInUser)
             window.location.href = 'index.html';
         }
         document.addEventListener("deviceready", function () {

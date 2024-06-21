@@ -121,11 +121,15 @@
     <!-- Location lat long -->
     <tr class="row side-by-side">
       <td><label for="latitude">Latitude:</label></td>
-      <td><input id="latitude" type="text" class="inputCustom bold"></td>
+      <td><input id="latitude" type="text" class="inputHalfCustom bold"></td>
     </tr>
     <tr class="row side-by-side">
       <td><label for="longitude">Longitude:</label></td>
-      <td><input id="longitude" type="text" class="inputCustom bold"></td>
+      <td><input id="longitude" type="text" class="inputHalfCustom bold"></td>
+    </tr>
+    <tr class="row side-by-side">
+      <td><label for="locationName">Vessel Details:</label></td>
+      <td><input id="locationName" placeholder="Vessel (Type, Colour, Registration No)" type="text" class="inputWideCustom bold"></td>
     </tr>
     <!-- Camera Settings -->
     <tr class="row side-by-side">
@@ -148,6 +152,10 @@
       <td><label for="categories">Categories:</label></td>
       <td><textarea id="categories" class="textareaCustom bold"></textarea></td>
     </tr>
+    <tr class="row side-by-side">
+      <td><label for="documentTypes">Document Types:</label></td>
+      <td><textarea id="documentTypes" class="textareaCustom bold"></textarea></td>
+    </tr>
 
   </tbody></table>
   </div>
@@ -164,6 +172,7 @@
     let use_cordova_plugin = window.cordova;
     let defaultCountiesList = 'India,Pakistan,Somalia,Iran,Afghanistan,East Africa,Kenya,Male,Burundi,Rwanda,Uganda,Maldives,Tajikistan,Turkmenistan,Kazakhstan,Kyrgyz Republic,Uzbekistan';
     let defaultCategories = 'Normal Person,Govt Security,Private Security,Criminal';
+    let defaultDocumentTypes = 'Passport,Country ID,Ration Card,Refugee Card,Aadhaar,Driving License';
 
     async function docExists(db, docId) {
       let ret = await db.get(docId).then((doc) => doc).catch(() => false)
@@ -230,13 +239,16 @@
         $('#scoreThreshold').val(scoreThreshold)
         $('#latitude').val(settings.latitude ? settings.latitude : '')
         $('#longitude').val(settings.longitude ? settings.longitude : '')
+        $('#locationName').val(settings.locationName ? settings.locationName : '')
         $('#camera').val(settings.camera ? settings.camera : 'back')
         $('#zoom').val(settings.zoom ? settings.zoom : 10)
         $('#countries').val(settings.countries ? settings.countries : defaultCountiesList)
         $('#categories').val(settings.categories ? settings.categories : defaultCategories)
+        $('#documentTypes').val(settings.documentTypes ? settings.documentTypes : defaultDocumentTypes)
       }
       $('#latitude').on('change', updateResults)
       $('#longitude').on('change', updateResults)
+      $('#locationName').on('change', updateResults)
       $('#camera').on('change', function() {
         //$('#camera').material_select()
         updateResults()
@@ -245,6 +257,7 @@
       $('#zoom').on('change', updateResults)
       $('#countries').on('change', updateResults)
       $('#categories').on('change', updateResults)
+      $('#documentTypes').on('change', updateResults)
 
       navigator.geolocation.getCurrentPosition(geolocationSuccess,
                                                geolocationError,
@@ -259,12 +272,14 @@
       settings['inputSize'] = inputSize
       settings['scoreThreshold'] = scoreThreshold
       settings['maxFRThreshold'] = maxFRThreshold
-      settings['latitude'] = $('#latitude').val()
-      settings['longitude'] = $('#longitude').val()
+      settings['latitude'] = $('#latitude').val().trim()
+      settings['longitude'] = $('#longitude').val().trim()
+      settings['locationName'] = $('#locationName').val().trim()
       settings['camera'] = $('#camera').val()
       settings['zoom'] = parseInt($('#zoom').val())
       settings['countries'] = $('#countries').val().trim()
       settings['categories'] = $('#categories').val().trim()
+      settings['documentTypes'] = $('#documentTypes').val().trim()
       await faces_settings_db.put(settings)
     }
 

@@ -47,6 +47,14 @@ button{
 	padding:6px;
 }
 
+.deleteButton {
+    color:white;
+    background-color: #F44336;
+    margin-left: 5px;
+	margin-bottom: 5px;
+	max-width: 50px;
+}
+
 fieldset {
 	border: 1px solid #808080;
 	border-radius: 3px;
@@ -123,16 +131,40 @@ img.info{
 	display: inline-flex;
 }
 
+.selectHalfCustom {
+	width: 60% !important;
+	display: inline-flex;
+}
+
+.selectWideCustom {
+	width: 100% !important;
+	display: inline-flex;
+}
+
 .inputCustom {
 	width: 25% !important;
 }
 
+.inputHalfCustom {
+	width: 45% !important;
+}
+
 .inputWideCustom {
-	width: 65% !important;
+	width: 100% !important;
 }
 
 .fieldsetCustom {
 	display: flex;
+}
+
+.fieldsetHalfCustom {
+	display: flex;
+	max-width: 50%;
+}
+
+.fieldsetFullCustom {
+	display: flex;
+	max-width: 100%;
 }
 
 .smallMarginRight {

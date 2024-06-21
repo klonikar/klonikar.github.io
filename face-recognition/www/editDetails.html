@@ -28,6 +28,22 @@
     .selected_recognized_image {
       max-width: 25%;
     }
+
+    .docImage {
+      width: 200px;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+    .buttons_and_image_container {
+      margin-left: 5px;
+      margin-bottom: 5px;
+      border-style: solid;
+      display: inline-grid;
+      min-height: 270px;
+      max-height: 270px;
+    }
+
   </style>
 </head>
 
@@ -40,7 +56,7 @@
           <tr>
             <td><label for="selectPerson">Select Person:</label></td>
             <td>
-              <select id="selectPerson" type="text" class="selectCustom bold">
+              <select id="selectPerson" class="selectHalfCustom bold">
               </select>
             </td>
           </tr>
@@ -51,42 +67,138 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <!-- Person details -->
-            <td> <label for="name">Full Name:</label></td>
-            <td> <input id="name" type="text" class="inputWideCustom bold"></td>
-          </tr>
-          <tr>
-
-            <td> <label for="age">Age:</label></td>
-            <td> <input id="age" type="number" class="inputCustom bold"></td>
-          </tr>
-          <tr>
-            <td> <label for="gender">Gender:</label></td>
-            <td> <select id="gender" class="selectCustom bold">
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-                <option value="O">Other</option>
-              </select></td>
-          </tr>
-          <tr>
-
-            <td> <label for="country">Nationality:</label></td>
-            <td> <select id="country" type="text" class="selectCustom bold">
-              </select></td>
-          </tr>
-          <tr>
-            <td> <label for="category">Category:</label></td>
-            <td> <select id="category" class="selectCustom bold">
-              </select></td>
-          </tr>
-
         </tbody>
       </table>
+      <fieldset>
+        <legend>Personal Details</legend>
+        <table>
+          <tbody>
+            <tr>
+              <!-- Person details -->
+              <td> <label for="name">Full Name:</label></td>
+              <td> <input id="name" placeholder="Full Name" type="text" class="inputWideCustom bold"></td>
+            </tr>
+            <tr>
+              <td> <label for="age">Age:</label></td>
+              <td> <input id="age" type="number" class="inputCustom bold"></td>
+            </tr>
+            <tr>
+              <td> <label for="gender">Gender:</label></td>
+              <td> <select id="gender" class="selectCustom bold">
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                  <option value="O">Other</option>
+                </select></td>
+            </tr>
+            <tr>
+              <td><label for="identificationMarks">Identification Marks:</label></td>
+              <td><input id="identificationMarks" placeholder="Identification Marks" type="text" class="inputWideCustom bold"></td>
+            </tr>
+            <tr>
+              <td> <label for="country">Nationality:</label></td>
+              <td> <select id="country" class="selectHalfCustom bold">
+                </select></td>
+            </tr>
+            <tr>
+              <td> <label for="category">Category:</label></td>
+              <td> <select id="category" class="selectHalfCustom bold">
+                </select></td>
+            </tr>              
+          </tbody>
+        </table>
+      </fieldset>
+      <fieldset>
+        <legend>Interrogation Details</legend>
+        <table>
+          <tbody>
+            <tr>
+              <td><label for="remarks">Remarks:</label></td>
+              <td><input id="remarks" placeholder="Remarks/Notes" type="text" class="inputWideCustom bold"></td>
+            </tr>  
+          </tbody>
+        </table>
+      </fieldset>
+      <table>
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;">
+              <fieldset class="fieldsetFullCustom">
+                <legend>Date/Time</legend>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td><label for="date">Date:</label></td>
+                      <td><input id="date" type="date" class="inputWideCustom bold"></td>
+                      <td><label for="time">Time:</label></td>
+                      <td><input id="time" type="time" class="inputWideCustom bold"></td>
+                    </tr>  
+                  </tbody>
+                </table>
+              </fieldset>        
+            </td>
+            <td style="vertical-align: top;">
+              <fieldset class="fieldsetFullCustom">
+                <legend>Location</legend>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td><label for="latitude">Latitude:</label></td>
+                      <td><input id="latitude" type="text" class="inputWideCustom bold"></td>
+                      <td><label for="longitude">Longitude:</label></td>
+                      <td><input id="longitude" type="text" class="inputWideCustom bold"></td>
+                    </tr>
+                    <tr>
+                      <td><label for="locationName">Vessel Details:</label></td>
+                      <td><input id="locationName" placeholder="Vessel Details (Type, Colour, Registration No)" type="text" class="inputWideCustom bold"></td>
+                    </tr>  
+                  </tbody>
+                </table>
+              </fieldset>        
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <fieldset class="fieldsetCustom">
+        <legend>Documents</legend>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <div class="highlightedSection row side-by-side" id="existingDocuments">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><button id="btnToggleCamera" onclick="addDocuments();">Add Documents</button></td>
+            </tr>
+            <tr>
+              <td>
+                  <label for="documentType">Document Type:</label>
+                  <select id="documentType" class="selectHalfCustom bold">
+                  </select>
+              </td>
+            </tr>
+            <tr>
+              <td><img src="" alt="" id="originalPicture" style="margin-left: 15%;max-width: 70%;" /></td>
+            </tr>
+            <tr>
+              <td><button onclick="addDocumentToView();">Add</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
+      <div>
+        <h3>History of interrogations</h3>
+      </div>
+      <div id="interrogationsHistoryTable">
+      </div>
       <!-- Save person -->
       <div class="row side-by-side">
         <button class="waves-effect waves-light btn" onclick="savePersonDetails()">
-          <i class="material-icons left">Save</i>
+          <i class="material-icons left">&#x1f4be; Save</i>
+        </button>
+        <button style="max-width: 100%;vertical-align: middle;" class="deleteButton" onclick="deletePersonDetails()">
+          <i style="font-size: large;" class="material-icons left">&#x2718; Delete</i>
         </button>
       </div>
 
@@ -104,11 +216,14 @@
     let use_cordova_plugin = window.cordova;
     let faces_db = null;
     let person_db = null;
-    let faces_docs = null;
     let selectedPerson = null;
     let defaultCountiesList = 'India,Pakistan,Somalia,Iran,Afghanistan,East Africa,Kenya,Male,Burundi,Rwanda,Uganda,Maldives,Tajikistan,Turkmenistan,Kazakhstan,Kyrgyz Republic,Uzbekistan'
     let defaultCategories = 'Normal Person,Govt Security,Private Security,Criminal';
+    let defaultDocumentTypes = 'Passport,Country ID,Ration Card,Refugee Card,Aadhaar,Driving License'
 
+    let isCameraOn = false;
+    let content_margin = '0%';
+    let defaultZoomLevel = 10;
 
     function getQueryParams() {
       let qs = window.location.search || document.location.search;
@@ -124,6 +239,172 @@
 
       return params;
     }
+
+    function addDocuments() {
+      if(isCameraOn) {
+        stopCamera();
+        $('#btnToggleCamera').html('Add Documents');
+        $('#originalPicture').hide();
+      }
+      else {
+        startCamera();
+        $('#btnToggleCamera').html('Stop Camera');
+        $('#originalPicture').show();
+        setTimeout(() => takeSnapshot(), 35);
+      }
+    }
+
+    function takeSnapshot() {
+      var options = {
+        quality: 85
+      };
+      var successCallback = function (imgData) {
+        var base64Image = 'data:image/jpeg;base64,' + imgData;
+        // Show captured image
+        $('#originalPicture').attr('src', base64Image);
+        if(isCameraOn)
+          setTimeout(() => takeSnapshot(), 35);
+      };
+      var errorCallback = function (pluginResult) {
+        console.log('Error in taking snapshot: ' + pluginResult + '.');
+        if(isCameraOn)
+          setTimeout(() => takeSnapshot(), 35);
+      };
+      CameraPreview.takeSnapshot(options, successCallback, errorCallback);
+    }
+
+    function getRandomString() {
+      let r = (Math.random() + 1).toString(36).substring(2);
+      return r;
+    }
+
+    async function deleteRegisteredFaceHandler(evt) {
+      let confirmation = confirm('Do you want to remove the registered face?')
+      if(!confirmation) {
+        console.log('Deleting face image not confirmed.')
+        return;
+      }
+      let img_id = evt.target.getAttribute('data-image-id')
+      $('#container_' + img_id).remove()
+      // Remove from DB if it exists
+      if(!selectedPerson) {
+        return;
+      }
+      let doc = await docExists(faces_db, selectedPerson._id)
+      img_id = img_id.replaceAll('_', '.')
+      let ret = await faces_db.removeAttachment(selectedPerson._id, img_id, doc._rev)
+      doc._rev = ret.rev
+      ret = await faces_db.removeAttachment(selectedPerson._id, img_id.replaceAll('png', 'bin'), doc._rev)
+      doc._rev = ret.rev
+    }
+
+    async function deleteDocHandler(evt) {
+      let confirmation = confirm('Do you want to remove the document?')
+      if(!confirmation) {
+        console.log('Deleting document not confirmed.')
+        return;
+      }
+      let img_id = evt.target.getAttribute('data-image-id')
+      $('#container_' + img_id).remove()
+      // Remove from DB if it exists
+      if(!selectedPerson) {
+        return;
+      }
+      let ret = await person_db.removeAttachment(selectedPerson._id, img_id, selectedPerson._rev)
+      selectedPerson._rev = ret.rev
+    }
+
+    async function addDocumentToView() {
+      console.log('Saving doc to DB.');
+      let img = new Image()
+      let modifiedDocType = $('#documentType').val().replaceAll(' ', '_')
+      img.id = 'doc_' + modifiedDocType + '_' + getRandomString()
+      img.className = 'docImage'
+      img.src = $('#originalPicture').get(0).src
+      let span = document.createElement('span')
+      span.id = 'container_' + img.id
+      span.className = 'buttons_and_image_container'
+      let docType = document.createElement('b')
+      docType.innerHTML = $('#documentType').val()
+      let button = document.createElement('button')
+      button.innerHTML = '&#x2718;'
+      button.className = 'deleteButton'
+      button.setAttribute('data-image-id', img.id)
+      button.onclick = deleteDocHandler
+      span.appendChild(docType)
+      span.appendChild(img)
+      span.appendChild(button)
+      $('#existingDocuments').append(span)
+      if(selectedPerson) {
+        let ret = await person_db.putAttachment(selectedPerson._id, img.id, selectedPerson._rev, img.src.split('base64,')[1], 'image/jpeg');
+        selectedPerson._rev = ret.rev
+        console.log('Saved doc to DB.')
+      }
+    }
+
+    function showDocumentImages(name) {
+      $('#existingDocuments').empty()
+      if (!selectedPerson) {
+        console.log('No person selected')
+        return
+      }
+      if(!selectedPerson._attachments || Object.keys(selectedPerson._attachments).length == 0) {
+        console.log(`${name} has no documents`)
+        return
+      }
+      let imageAttachments = Object.keys(selectedPerson._attachments).filter(k => k.startsWith('doc_'))
+      imageAttachments.forEach((a, i) => {
+        let img = new Image()
+        img.id = a.replaceAll('.', '_')
+        img.src = "data:image/jpeg;base64," + selectedPerson._attachments[a].data
+        img.className = 'docImage'
+        let span = document.createElement('span')
+        span.id = 'container_' + img.id
+        span.className = 'buttons_and_image_container'
+        let docType = document.createElement('b')
+        let first_ = a.indexOf('_')
+        let last_ = a.lastIndexOf('_')
+        docType.innerHTML = a.substring(first_ + 1, last_).replaceAll('_', ' ')
+        let button = document.createElement('button')
+        button.innerHTML = '&#x2718;'
+        button.className = 'deleteButton'
+        button.setAttribute('data-image-id', img.id)
+        button.onclick = deleteDocHandler
+        span.appendChild(docType)
+        span.appendChild(img)
+        span.appendChild(button)
+        $('#existingDocuments').append(span)
+      })
+    }
+
+    function startCamera() {
+        // Initialize the CameraPreview
+        let cwidth = String(window.screen.width - 40);
+        let cheight = String(window.screen.width - 40); // same as width
+        let optCameraDirection = 'back';
+        CameraPreview.startCamera({x: '20', y: '20', width: cwidth, height: cheight, camera: optCameraDirection, tapPhoto: false, toBack: true, previewDrag: true});
+        document.addEventListener("backbutton", stopCamera, false);
+        isCameraOn = true;
+        let successCallback = function (pluginResult) {
+          console.log('Zoom success: ' + pluginResult + '.');
+        };
+        let errorCallback = function (pluginResult) {
+          console.log('Zoom error: ' + pluginResult + '.');
+        };
+        CameraPreview.setZoom(defaultZoomLevel, successCallback, errorCallback);
+    }
+
+    function stopCamera() {
+      CameraPreview.stopCamera();
+      document.removeEventListener("backbutton", stopCamera, false);
+      isCameraOn = false;
+    }
+
+    window.onbeforeunload =  function(){
+      console.log('before unload... stopping camera.')
+      if(use_cordova_plugin)
+        stopCamera();
+    };
 
     async function docExists(db, docId, options = {}) {
       let ret = await db.get(docId, options).then((doc) => doc).catch(() => false)
@@ -147,59 +428,168 @@
     }
 
     async function savePersonDetails() {
+      let name = $('#selectPerson').val();
+      if(!name) {
+        console.log('no person selected...');
+        return;
+      }
+      console.log(`Saving ${name} to DB.`)
+      selectedPerson = await docExists(person_db, name, { attachments: true })
       selectedPerson.name = $('#name').val()
       selectedPerson.age = $('#age').val()
       selectedPerson.gender = $('#gender').val()
       selectedPerson.country = $('#country').val()
       selectedPerson.category = $('#category').val()
-      // TODO: Add other fields from the UI to selectedPerson
-      let personDbRec = await docExists(person_db, selectedPerson._id, {})
-      if (personDbRec) {
-        selectedPerson._rev = personDbRec._rev
+      selectedPerson.identificationMarks = $('#identificationMarks').val()
+      selectedPerson.latestRemarks = $('#remarks').val()
+      selectedPerson.latestDate = $('#date').val()
+      selectedPerson.latestTime = $('#time').val()
+      selectedPerson.latestLongitude = $('#longitude').val()
+      selectedPerson.latestLatitude = $('#latitude').val()
+      selectedPerson.latestLocationName = $('#locationName').val()
+
+      if(!selectedPerson.interrogationHistory) {
+        selectedPerson.interrogationHistory = []
       }
+      let loggedInUserDb = new PouchDB('faces_loggedin_user_db')
+      let loggedInUser = await docExists(loggedInUserDb, 'loggedin_user')
+      if(selectedPerson.latestDate && selectedPerson.latestTime) {
+        selectedPerson.interrogationHistory.push({
+            'date': selectedPerson.latestDate,
+            'time': selectedPerson.latestTime,
+            'latitude': selectedPerson.latestLatitude,
+            'longitude': selectedPerson.latestLongitude,
+            'locationName': selectedPerson.latestLocationName,
+            'interrogator': loggedInUser.username,
+            'remarks': selectedPerson.latestRemarks,
+            'documents': Array.from($('#existingDocuments b')).map(b => b.innerHTML).join(',')
+          })
+      }
+
       let ret = await person_db.put(selectedPerson)
+      selectedPerson._rev = ret.rev
       console.log('Saved person data. Status:', ret)
-      // TODO: Save the person name to faces_db also if it has changed.
+      showInterrogationHistory(selectedPerson.interrogationHistory, selectedPerson.name, 'interrogationsHistoryTable')
     }
 
-    function showRegisteredImages(name) {
+    async function deletePersonDetails() {
+      let name = $('#selectPerson').val();
+      if(!name) {
+        console.log('no person selected...');
+        return;
+      }
+      let confirmation = confirm(`Delete person ${name}?`)
+      if(!confirmation) {
+        return;
+      }
+      console.log(`Deleting ${name} from DB.`)
+      selectedPerson = await docExists(person_db, name)
+      let ret = null;
+      if(selectedPerson) {
+        ret = await person_db.remove(name, selectedPerson._rev)
+        console.log('Delete person status: ', ret)
+      }
+      else {
+        console.log(`${name} did not exist in person records`)
+      }
+      let selectedFace = await docExists(faces_db, name)
+      ret = await faces_db.remove(name, selectedFace._rev)
+      console.log('Delete face status: ', ret)
+      let deletedOpt = Array.from($('#selectPerson option')).filter(o => o.value == name)
+      deletedOpt[0].remove()
+    }
+
+    async function showRegisteredImages(name) {
       $('#registeredFaceImages').empty()
-      let filteredNames = faces_docs.rows.filter(d => d.doc._id == name)
-      if (!filteredNames || filteredNames.length == 0) {
+      let selectedPersonFaceDoc = await docExists(faces_db, name, { attachments: true })
+      if (!selectedPersonFaceDoc || !selectedPersonFaceDoc._attachments || Object.keys(selectedPersonFaceDoc._attachments).length == 0) {
         console.log(`No face registered by ${name}`)
         $('#registeredFaceImages').html(`No face registered by ${name}`)
         return
       }
-      let selectedPersonFaceDoc = filteredNames[0].doc
+
       let imageAttachments = Object.keys(selectedPersonFaceDoc._attachments).filter(k => k.split('.')[1] == 'png')
       imageAttachments.forEach((a, i) => {
         let img = new Image()
+        img.id = a.replaceAll('.', '_')
         img.src = "data:image/png;base64," + selectedPersonFaceDoc._attachments[a].data
-        img.className = 'selected_recognized_image'
-        $('#registeredFaceImages').append(img)
+        img.className = 'docImage'
+        let span = document.createElement('span')
+        span.id = 'container_' + img.id
+        span.className = 'buttons_and_image_container'
+        let button = document.createElement('button')
+        button.innerHTML = '&#x2718;'
+        button.className = 'deleteButton'
+        button.setAttribute('data-image-id', img.id)
+        button.onclick = deleteRegisteredFaceHandler
+        span.appendChild(img)
+        span.appendChild(button)
+        $('#registeredFaceImages').append(span)
       })
     }
 
-    async function changePerson(name) {
+    function addCellToRow(cellData, row) {
+      let cell = document.createElement('td')
+      cell.innerHTML = cellData
+      row.appendChild(cell)
+    }
+
+    function showInterrogationHistory(interrogationHistory, personName, parentDivName) {
+      if(!interrogationHistory) {
+        console.log("No interrogation history found for ", personName)
+        $('#' + parentDivName).empty()
+        return
+      }
+      let table = document.createElement('table')
+      let thead = document.createElement('thead')
+      let headrow = document.createElement('tr')
+      let columnHeaders = ['Date', 'Time', 'Lat', 'Long', 'Vessel', 'Interrogator', 'Docs', 'Remarks']
+      columnHeaders.forEach(c => {
+        let cell = document.createElement('td')
+        cell.innerHTML = `<b>${c}</b>`
+        headrow.appendChild(cell)
+      })
+      thead.appendChild(headrow)
+      table.appendChild(thead)
+      let tbody = document.createElement('tbody')
+      interrogationHistory.forEach(h => {
+        let row = document.createElement('tr')
+        addCellToRow(h['date'], row)
+        addCellToRow(h['time'], row)
+        addCellToRow(h['latitude'], row)
+        addCellToRow(h['longitude'], row)
+        addCellToRow(h['locationName'], row)
+        addCellToRow(h['interrogator'], row)
+        addCellToRow(h['documents'], row)
+        addCellToRow(h['remarks'], row)
+        tbody.appendChild(row)
+      })
+      table.appendChild(tbody)
+      $('#' + parentDivName).empty()
+      $('#' + parentDivName).append(table)
+    }
+
+    async function changePerson(name, createFreshInterrogation = false) {
       $('#selectPerson').val(name)
       //$('#selectPerson').material_select()
       selectedPerson = await docExists(person_db, name, { attachments: true })
       if (!selectedPerson) {
         console.log('No record for selected person:', name, '. Looking in registered faces db.')
-        let filteredNames = faces_docs.rows.filter(d => d.doc._id == name)
-        console.log(`Registered faces for ${name}:`, filteredNames)
-        if (filteredNames && filteredNames.length > 0) {
-          let selectedPersonFaceDoc = filteredNames[0].doc
+        let selectedPersonFaceDoc = await docExists(faces_db, name, { attachments: true })
+        console.log(`Registered faces for ${name}:`, selectedPersonFaceDoc)
+        if (selectedPersonFaceDoc) {
           selectedPerson = {
             '_id': selectedPersonFaceDoc._id,
             'name': selectedPersonFaceDoc.name
           }
           $('#name').val(selectedPerson.name)
           showRegisteredImages(name)
+          showDocumentImages(name)
         }
         else {
           console.log('No registered face by name: ', name)
         }
+        $('#interrogationsHistoryTable').empty()
         return;
       }
       $('#name').val(selectedPerson.name)
@@ -209,8 +599,24 @@
       $('#country').val(selectedPerson.country)
       //$('#country').material_select()
       $('#category').val('category' in selectedPerson ? selectedPerson.category : '')
+      $('#remarks').val('latestRemarks' in selectedPerson ? selectedPerson.latestRemarks : '')
+      $('#identificationMarks').val('identificationMarks' in selectedPerson ? selectedPerson.identificationMarks : '')
+      if(createFreshInterrogation) {
+        // Do nothing. run function already entered fresh values
+      }
+      else {
+        // Set from DB values
+        $('#latitude').val(selectedPerson.latitude ? selectedPerson.latitude : $('#latitude').val())
+        $('#longitude').val(selectedPerson.longitude ? selectedPerson.longitude : $('#longitude').val())
+        $('#locationName').val(selectedPerson.locationName ? selectedPerson.locationName : $('#locationName').val())
+        $('#date').val('')
+        $('#time').val('')
+      }
+      // show interrogation history
       //$('#category').material_select()
       showRegisteredImages(name)
+      showDocumentImages(name)
+      showInterrogationHistory(selectedPerson.interrogationHistory, selectedPerson.name, 'interrogationsHistoryTable')
     }
 
     async function onPersonSelected(e) {
@@ -234,9 +640,24 @@
           if (c)
             $('#category').append(`<option value="${c.trim()}">${c.trim()}</option>`)
         })
+        let documentTypes = settings.documentTypes ? settings.documentTypes : defaultDocumentTypes;
+        documentTypes.trim().split(',').forEach(c => {
+          if (c)
+            $('#documentType').append(`<option value="${c.trim()}">${c.trim()}</option>`)
+        })
+        $('#latitude').val(settings.latitude ? settings.latitude : '')
+        $('#longitude').val(settings.longitude ? settings.longitude : '')
+        $('#locationName').val(settings.locationName ? settings.locationName : '')
+        let d = new Date()
+        let dd = ('0' + d.getDate()).slice(-2)
+        let mon = ('0' + d.getMonth()).slice(-2)
+        $('#date').val(d.getFullYear() + '-' + mon + '-' + dd)
+        let hh = ('0' + d.getHours()).slice(-2)
+        let mm = ('0' + d.getMinutes()).slice(-2)
+        $('#time').val(hh + ':' + mm)
       }
       faces_db = new PouchDB('faces_db')
-      faces_docs = await faces_db.allDocs({ include_docs: true, attachments: true })
+      let faces_docs = await faces_db.allDocs({ include_docs: true })
       let names = faces_docs.rows.map(d => {
         return { name: d.doc.name, _id: d.doc._id };
       })
@@ -253,7 +674,7 @@
       let params = getQueryParams()
       if (names.length > 0 && 'id' in params) {
         let id = params['id']
-        changePerson(id)
+        changePerson(id, true)
       }
     }
 
@@ -278,10 +699,18 @@
       updateResults()
     };
 
+    window.onbeforeunload =  function(){
+      console.log('before unload... stopping camera.')
+      if(use_cordova_plugin)
+        stopCamera();
+    };
+
     /*
     window.onunload = function(){
+      console.log('unload... stopping camera.')
+      stopCamera();
     };
-*/
+	*/
 
   </script>
 </body>

@@ -398,6 +398,47 @@
       containerElem.remove()
     };
 
+    function addCellToRow(cellData, row) {
+      let cell = document.createElement('td')
+      cell.innerHTML = cellData
+      row.appendChild(cell)
+    }
+
+    function showInterrogationHistory(interrogationHistory, personName, parentDivName) {
+      if(!interrogationHistory) {
+        console.log("No interrogation history found for ", personName)
+        $('#' + parentDivName).empty()
+        return
+      }
+      let table = document.createElement('table')
+      let thead = document.createElement('thead')
+      let headrow = document.createElement('tr')
+      let columnHeaders = ['Date', 'Time', 'Lat', 'Long', 'Vessel', 'Interrogator', 'Docs', 'Remarks']
+      columnHeaders.forEach(c => {
+        let cell = document.createElement('td')
+        cell.innerHTML = `<b>${c}</b>`
+        headrow.appendChild(cell)
+      })
+      thead.appendChild(headrow)
+      table.appendChild(thead)
+      let tbody = document.createElement('tbody')
+      interrogationHistory.forEach(h => {
+        let row = document.createElement('tr')
+        addCellToRow(h['date'], row)
+        addCellToRow(h['time'], row)
+        addCellToRow(h['latitude'], row)
+        addCellToRow(h['longitude'], row)
+        addCellToRow(h['locationName'], row)
+        addCellToRow(h['interrogator'], row)
+        addCellToRow(h['documents'], row)
+        addCellToRow(h['remarks'], row)
+        tbody.appendChild(row)
+      })
+      table.appendChild(tbody)
+      $('#' + parentDivName).empty()
+      $('#' + parentDivName).append(table)
+    }
+
     async function showRegisteredImages(label) {
       let name = label.split('(')[0].trim()
       $('#registeredFaceImages').get(0).style.display = 'block'
@@ -411,11 +452,11 @@
       }
       let personRec = await docExists(person_db, name)
       if(personRec) {
-        $('#registeredFaceImages').append(`<b>Full Name: ${personRec.name}</b><br/>`)
-        $('#registeredFaceImages').append(`<b>Country: ${personRec.country}</b><br/>`)
-        $('#registeredFaceImages').append(`<b>Age: ${personRec.age}</b><br/>`)
-        $('#registeredFaceImages').append(`<b>Gender: ${personRec.gender}</b><br/>`)
-        $('#registeredFaceImages').append(`<b>Category: ${personRec.category}</b><br/>`)
+        let identificationMarks = personRec.identificationMarks ? personRec.identificationMarks : 'None'
+        let personDetails = '<table><thead><tr><td><b>Name</b></td><td><b>Country</b></td><td><b>Age</b></td><td><b>Gender</b></td><td><b>Category</b></td></tr></thead>'
+        personDetails += `<tbody><tr><td>${personRec.name}</td><td>${personRec.country}</td><td>${personRec.age}</td><td>${personRec.gender}</td><td>${personRec.category}</td></tr>`
+        personDetails += `<tr><td><b>Identification Marks:</b></td><td>${identificationMarks}</td></tbody></table>`
+        $('#registeredFaceImages').append(personDetails)
       }
       else {
         $('#registeredFaceImages').append(`<b>Registered Images of ${name}</b><br/>`)
@@ -446,6 +487,10 @@
       span.append(hideButton)
       $('#registeredFaceImages').append('<br/>')
       $('#registeredFaceImages').append(span)
+      let historyDiv = document.createElement('div')
+      historyDiv.id = 'historyDiv'
+      $('#registeredFaceImages').append(historyDiv)
+      showInterrogationHistory(personRec.interrogationHistory, personRec.name, 'historyDiv')
     }
 
     function confirmRecognizedFace(recognizedFaceLabel) {
@@ -601,7 +646,10 @@
       let errorCallback = function (pluginResult) {
         $('#status').html('<span class="error">' + pluginResult + '</span>');
       };
-      CameraPreview.switchCamera(successCallback, errorCallback);
+      //CameraPreview.switchCamera(successCallback, errorCallback);
+      stopCamera();
+      defaultCamera = defaultCamera == 'back' ? 'front' : 'back'
+      startCamera()
     }
 
     async function run() {
@@ -641,7 +689,7 @@
       await faceapi.loadFaceLandmarkModel('weights/')
       await faceapi.loadFaceRecognitionModel('weights/')
       $('#loader').hide()
-      $('#btnSwitchCamera').hide() // Hiding this as it does not work consistently
+      //$('#btnSwitchCamera').hide() // Hiding this as it does not work consistently
 
       faceMatcher = await createFaceMatcher();
 

@@ -28,7 +28,7 @@ var app = {
 
 		$('#btnSwitchCamera').on('click', app.switchCamera);
 		$('#btnHideShowToggle').on('click', app.hide);
-		$('#btnToggle').on('click', app.tottleLiveView);
+		$('#btnToggle').on('click', app.toggleLiveView);
 		$('#btnTakePicture').on('click', app.takePicture);
 		$('#btnTakeSnapshot').on('click', app.takeSnapshot);
 		$('#btnSetPreviewSize').on('click', set.previewSize);
@@ -137,7 +137,7 @@ var app = {
 		$('#btnHideShowToggle').html('Show');
 	},
 	content_margin: '100%',
-	tottleLiveView: function() {
+	toggleLiveView: function() {
 		if(app.content_margin == '0%') {
 			app.content_margin = '100%';
 		}
