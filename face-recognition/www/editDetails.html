@@ -435,6 +435,9 @@
       }
       console.log(`Saving ${name} to DB.`)
       selectedPerson = await docExists(person_db, name, { attachments: true })
+      if (!selectedPerson) {
+        selectedPerson = { '_id': $('#selectPerson').val() }
+      }
       selectedPerson.name = $('#name').val()
       selectedPerson.age = $('#age').val()
       selectedPerson.gender = $('#gender').val()
