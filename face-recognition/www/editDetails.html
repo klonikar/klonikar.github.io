@@ -556,7 +556,7 @@
       table.appendChild(thead)
       let tbody = document.createElement('tbody')
 
-      interrogationHistory.reverse().forEach(h => {
+      interrogationHistory.toReversed().forEach(h => {
         let row = document.createElement('tr')
         addCellToRow(h['date'], row)
         addCellToRow(h['time'], row)
