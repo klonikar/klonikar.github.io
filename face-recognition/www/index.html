@@ -430,7 +430,7 @@
       thead.appendChild(headrow)
       table.appendChild(thead)
       let tbody = document.createElement('tbody')
-      interrogationHistory.forEach(h => {
+      interrogationHistory.reverse().forEach(h => {
         let row = document.createElement('tr')
         addCellToRow(h['date'], row)
         addCellToRow(h['time'], row)
