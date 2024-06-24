@@ -364,7 +364,11 @@
     }
 
     async function registerFaces() {
-      let name = document.getElementById("selectedFacesName").value;
+      let name = document.getElementById("selectedFacesName").value.trim();
+      if(name.length == 0) {
+        alert('Enter name of a person to register the selected faces.');
+        return;
+      }
       let db = faces_db;
       let faceRec = await docExists(db, name);
       if(faceRec) {
@@ -376,6 +380,10 @@
       console.log("Registering selected faces as: " + name);
       var faces = $("#selectedFaces canvas");
       var selectedFaces = faces.filter(f => { return faces[f].style.opacity && faces[f].style.opacity == 0.5; });
+      if(selectedFaces.length == 0) {
+        alert('Select at least one face to register a person');
+        return;
+      }
       var selectedFacesData = selectedFaces.map(f => { return selectedFaces[f].toDataURL(); });
       console.log(selectedFacesData);
       await saveFaceToDB(name, selectedFacesData);
