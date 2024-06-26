@@ -19,20 +19,39 @@
   <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
   <script src="js/materialize.min.js"></script>
   <style type="text/css">
-    .selectedFaces {
-      left: 900px;
-      top: 0px;
-      margin-top: 50px;
+    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
       position: absolute;
+      opacity: 1;
+      pointer-events: auto !important;
+      margin-left: 10px;
     }
 
-    #selectedFaces canvas {
-      margin-top: 10px;
-      margin-left: 10px;
+    .syncButton {
+      margin-left: 50px;
     }
   </style>
 </head>
 <body>
+  <div id="authorSignature" style="display: none;">
+    <pre>
+    KKKKKKKKK    KKKKKKK  iiii                                                           LLLLLLLLLLL                                                  iiii  kkkkkkkk                                              
+    K:::::::K    K:::::K i::::i                                                          L:::::::::L                                                 i::::i k::::::k                                              
+    K:::::::K    K:::::K  iiii                                                           L:::::::::L                                                  iiii  k::::::k                                              
+    K:::::::K   K::::::K                                                                 LL:::::::LL                                                        k::::::k                                              
+    KK::::::K  K:::::KKKiiiiiiirrrrr   rrrrrrrrr   aaaaaaaaaaaaa  nnnn  nnnnnnnn           L:::::L                  ooooooooooo   nnnn  nnnnnnnn    iiiiiii  k:::::k    kkkkkkkaaaaaaaaaaaaa  rrrrr   rrrrrrrrr   
+      K:::::K K:::::K   i:::::ir::::rrr:::::::::r  a::::::::::::a n:::nn::::::::nn         L:::::L                oo:::::::::::oo n:::nn::::::::nn  i:::::i  k:::::k   k:::::k a::::::::::::a r::::rrr:::::::::r  
+      K::::::K:::::K     i::::ir:::::::::::::::::r aaaaaaaaa:::::an::::::::::::::nn        L:::::L               o:::::::::::::::on::::::::::::::nn  i::::i  k:::::k  k:::::k  aaaaaaaaa:::::ar:::::::::::::::::r 
+      K:::::::::::K      i::::irr::::::rrrrr::::::r         a::::ann:::::::::::::::n       L:::::L               o:::::ooooo:::::onn:::::::::::::::n i::::i  k:::::k k:::::k            a::::arr::::::rrrrr::::::r
+      K:::::::::::K      i::::i r:::::r     r:::::r  aaaaaaa:::::a  n:::::nnnn:::::n       L:::::L               o::::o     o::::o  n:::::nnnn:::::n i::::i  k::::::k:::::k      aaaaaaa:::::a r:::::r     r:::::r
+      K::::::K:::::K     i::::i r:::::r     rrrrrrraa::::::::::::a  n::::n    n::::n       L:::::L               o::::o     o::::o  n::::n    n::::n i::::i  k:::::::::::k     aa::::::::::::a r:::::r     rrrrrrr
+      K:::::K K:::::K    i::::i r:::::r           a::::aaaa::::::a  n::::n    n::::n       L:::::L               o::::o     o::::o  n::::n    n::::n i::::i  k:::::::::::k    a::::aaaa::::::a r:::::r            
+    KK::::::K  K:::::KKK i::::i r:::::r          a::::a    a:::::a  n::::n    n::::n       L:::::L         LLLLLLo::::o     o::::o  n::::n    n::::n i::::i  k::::::k:::::k  a::::a    a:::::a r:::::r            
+    K:::::::K   K::::::Ki::::::ir:::::r          a::::a    a:::::a  n::::n    n::::n     LL:::::::LLLLLLLLL:::::Lo:::::ooooo:::::o  n::::n    n::::ni::::::ik::::::k k:::::k a::::a    a:::::a r:::::r            
+    K:::::::K    K:::::Ki::::::ir:::::r          a:::::aaaa::::::a  n::::n    n::::n     L::::::::::::::::::::::Lo:::::::::::::::o  n::::n    n::::ni::::::ik::::::k  k:::::ka:::::aaaa::::::a r:::::r            
+    K:::::::K    K:::::Ki::::::ir:::::r           a::::::::::aa:::a n::::n    n::::n     L::::::::::::::::::::::L oo:::::::::::oo   n::::n    n::::ni::::::ik::::::k   k:::::ka::::::::::aa:::ar:::::r            
+    KKKKKKKKK    KKKKKKKiiiiiiiirrrrrrr            aaaaaaaaaa  aaaa nnnnnn    nnnnnn     LLLLLLLLLLLLLLLLLLLLLLLL   ooooooooooo     nnnnnn    nnnnnniiiiiiiikkkkkkkk    kkkkkkkaaaaaaaaaa  aaaarrrrrrr            
+    </pre>
+  </div>
   <div class="app">
   <div id="navbar"></div>
   <div class="center-content page-container">
@@ -156,6 +175,17 @@
       <td><label for="documentTypes">Document Types:</label></td>
       <td><textarea id="documentTypes" class="textareaCustom bold"></textarea></td>
     </tr>
+    <tr class="row side-by-side">
+      <td><label for="syncserver">Sync with:</label></td>
+      <td><input id="syncserver" placeholder="https://admin:admin@192.168.1.1:6984" value="https://admin:admin@192.168.1.1:6984" type="url" class="inputWideCustom bold"></td></td>
+    </tr>
+    <tr class="row side-by-side">
+      <td>
+        <label for="syncFromServer">Sync From Server</label>
+        <input type="checkbox" id="syncFromServer" title="Sync From Server" />
+      </td>
+      <td><button class="syncButton" onclick="syncWithServer();">Sync</button></td>
+    </tr>
 
   </tbody></table>
   </div>
@@ -245,10 +275,12 @@
         $('#countries').val(settings.countries ? settings.countries : defaultCountiesList)
         $('#categories').val(settings.categories ? settings.categories : defaultCategories)
         $('#documentTypes').val(settings.documentTypes ? settings.documentTypes : defaultDocumentTypes)
+        $('#syncserver').val(settings.syncserver ? settings.syncserver : 'https://admin:admin@192.168.1.1:6984')
       }
       $('#latitude').on('change', updateResults)
       $('#longitude').on('change', updateResults)
       $('#locationName').on('change', updateResults)
+      $('#syncserver').on('change', updateResults)
       $('#camera').on('change', function() {
         //$('#camera').material_select()
         updateResults()
@@ -280,7 +312,36 @@
       settings['countries'] = $('#countries').val().trim()
       settings['categories'] = $('#categories').val().trim()
       settings['documentTypes'] = $('#documentTypes').val().trim()
+      settings['syncserver'] = $('#syncserver').val().trim()
       await faces_settings_db.put(settings)
+    }
+
+    async function syncWithServer() {
+      let syncserver = $('#syncserver').val()
+      let syncDBs = ['faces_db', 'person_db']
+      let dbNameSuffix = new Date().getTime()
+      let syncFromServer = $('#syncFromServer').get(0).checked
+      for(let db of syncDBs) {
+        if(syncFromServer) {
+          let remoteDB = syncserver + '/' + db
+          let localDB = db + '_remote'
+          await PouchDB.replicate(remoteDB, localDB);
+          console.log(`Sync for ${remoteDB} ==> ${localDB} completed...`)
+        }
+        else {
+          let remoteDB = syncserver + '/' + db + '_' + dbNameSuffix
+          await PouchDB.replicate(db, remoteDB)
+          console.log(`Sync for ${db} ==> ${remoteDB} completed...`)
+        }
+      }
+      if(syncFromServer) {
+        alert(`DB Sync from ${syncserver}/${syncDBs.join(", ")} completed.`)
+      }
+      else {
+        let remoteDBNames = syncDBs.map(s => s + '_' + dbNameSuffix).join(', ')
+        alert(`DB Sync to ${syncserver}/${remoteDBNames} completed.`)
+
+      }
     }
 
     async function pageOnDeviceReady() {
