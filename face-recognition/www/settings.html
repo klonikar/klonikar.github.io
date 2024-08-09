@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+  <meta http-equiv="Content-Security-Policy"
+    content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /-->
   <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
   <title>Settings</title>
-
+  <link href="fonts/remixicon/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/app_styles.css" />
+  <link href="fonts/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <script src="js/commons.js"></script>
   <script type="text/javascript" src="js/pouchdb.min.js"> </script>
   <script src="js/faceDetectionControls.js"></script>
@@ -19,7 +22,8 @@
   <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
   <script src="js/materialize.min.js"></script>
   <style type="text/css">
-    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+    [type="checkbox"]:not(:checked),
+    [type="checkbox"]:checked {
       position: absolute;
       opacity: 1;
       pointer-events: auto !important;
@@ -27,10 +31,103 @@
     }
 
     .syncButton {
-      margin-left: 50px;
+      margin-left: 20px;
+      background: skyblue;
+      color: #fff;
+      border: none;
+      width: 150px;
+      border-radius: 6px;
+    }
+
+    .syncToButton{
+      margin-left: 20px;
+      background: skyblue;
+      color: #fff;
+      border: none;
+      width: 150px;
+      border-radius: 6px;
+    }
+
+    .checkConnection {
+      margin-left: 40px;
+      background: skyblue;
+      color: #fff;
+      border: none;
+      width: 150px;
+      border-radius: 6px;
+    }
+
+    .busyElement {
+      background-color: grey;
+    }
+
+    .errorElement {
+      background-color: darkred;
+    }
+
+    .waves-effect {
+      background: #c1a300 !important;
+      font-size: 25px !important;
+    }
+
+    .waves-effect:focus {
+      background: #c1a300 !important;
+    }
+
+    .select-dropdown {
+      display: none !important;
+    }
+
+    select {
+      display: block !important;
+    }
+
+    .caret {
+      display: none !important;
+    }
+
+    .select-wrapper {
+      border: none !important;
+    }
+
+    textarea {
+      color: #fff;
+    }
+
+    .selectTagStyle {
+      width: 65%;
+      display: inline-flex;
+      color: #fff !important;
+      border-radius: 6px !important;
+      margin-left: 25px !important;
+    }
+
+    .zoom_input {
+      width: 40% !important;
+    }
+
+    .sync-check {
+      margin-left: -120px !important;
+    }
+
+    .min_confidence {
+      width: 56% !important;
+    }
+
+    .add_sub_btn {
+      font-weight: bold;
+    }
+
+    .lat_long {
+      width: 66% !important;
+    }
+
+    .input_Sync_with {
+      width: 98% !important;
     }
   </style>
 </head>
+
 <body>
   <div id="authorSignature" style="display: none;">
     <pre>
@@ -53,150 +150,181 @@
     </pre>
   </div>
   <div class="app">
-  <div id="navbar"></div>
-  <div class="center-content page-container">
-    <div class="progress" id="loader">
-      <div class="indeterminate"></div>
-    </div>
-    <table><tbody>
-      <tr>
-      <td> <label for="selectFaceDetector">Select Face Detector:</label> </td>
-      <td>
-        <select id="selectFaceDetector">
-          <option value="ssd_mobilenetv1">SSD Mobilenet V1</option>
-          <option value="tiny_face_detector">Tiny Face Detector</option>
-        </select>
-      </td>
-      </tr>
-      <tr>
-        <td> <label for="minConfidence">Min Confidence:</label> </td>
-        <td>
-        <input disabled value="0.5" id="minConfidence" type="text" class="inputCustom bold">
-        <button
-          class="waves-effect waves-light btn"
-          onclick="onDecreaseMinConfidence()"
-        >
-          <i class="material-icons left">-</i>
-        </button>
-        <button
-          class="waves-effect waves-light btn"
-          onclick="onIncreaseMinConfidence()"
-        >
-          <i class="material-icons left">+</i>
-        </button>
-      </td>
-    </tr>
+    <header class="header">
+      <div class="logo-container">
+        <img src="./images/indian_navy1.png" alt="Logo 1" class="logo">
+        <div class="title-container">
+          <h1 class="header_welcome_text">SATYAPAN.AI</h1>
+          <h4>AI Based Interrogation Systems</h4>
+        </div>
+        <img src="./images/logo-1.png" alt="Logo 2" class="logo">
+      </div>
+    </header>
+    <div id="navbar"></div>
+    <div class="center-content page-container">
+      <div class="progress" id="loader">
+        <div class="indeterminate"></div>
+      </div>
 
-    <tr>
-      <td> <label for="inputSize">Input Size</label> </td>
-       <td>   <select id="inputSize">
-            <option value="" disabled selected>Input Size:</option>
-            <option value="128">128 x 128</option>
-            <option value="160">160 x 160</option>
-            <option value="224">224 x 224</option>
-            <option value="320">320 x 320</option>
-            <option value="416">416 x 416</option>
-            <option value="512">512 x 512</option>
-            <option value="608">608 x 608</option>
+      <div class="row">
+        <div class="col-12 d-flex mt-2">
+          <label for="selectFaceDetector">Select Face Detector</label>
+          <select id="selectFaceDetector" class="selectHalfCustom ms-1">
+            <option value="ssd_mobilenetv1">SSD Mobilenet V1</option>
+            <option value="tiny_face_detector">Tiny Face Detector</option>
           </select>
-        </td>
-      </tr>
-      <tr>
-        <td> <label for="scoreThreshold">Score Threshold:</label> </td>
-        <td> <input disabled value="0.5" id="scoreThreshold" type="text" class="inputCustom bold">
-        <button
-          class="waves-effect waves-light btn"
-          onclick="onDecreaseScoreThreshold()"
-        >
-          <i class="material-icons left">-</i>
-        </button>
-        <button
-          class="waves-effect waves-light btn"
-          onclick="onIncreaseScoreThreshold()"
-        >
-          <i class="material-icons left">+</i>
-        </button>
-      </td>
-      </tr>
-      <tr>
-      <td> <label for="maxFRThreshold">Max FR Distance:</label> </td>
-      <td>
-      <input disabled value="0.55" id="maxFRThreshold" type="text" class="inputCustom bold">
-      <button
-        class="waves-effect waves-light btn"
-        onclick="onDecreaseFRThreshold()"
-      >
-        <i class="material-icons left">-</i>
-      </button>
-      <button
-        class="waves-effect waves-light btn"
-        onclick="onIncreaseFRThreshold()"
-      >
-        <i class="material-icons left">+</i>
-      </button>
-    </td>
-    </tr>
+        </div>
 
-    <!-- Location lat long -->
-    <tr class="row side-by-side">
-      <td><label for="latitude">Latitude:</label></td>
-      <td><input id="latitude" type="number" class="inputHalfCustom bold"></td>
-    </tr>
-    <tr class="row side-by-side">
-      <td><label for="longitude">Longitude:</label></td>
-      <td><input id="longitude" type="number" class="inputHalfCustom bold"></td>
-    </tr>
-    <tr class="row side-by-side">
-      <td><label for="locationName">Vessel Details:</label></td>
-      <td><input id="locationName" placeholder="Vessel (Type, Colour, Registration No)" type="text" class="inputWideCustom bold"></td>
-    </tr>
-    <!-- Camera Settings -->
-    <tr class="row side-by-side">
-      <td><label for="camera">Default Camera:</label></td>
-      <td><select id="camera" class="selectCustom bold">
-        <option value="back">Back camera</option>
-        <option value="front">Front camera</option>
-      </select>
-      </td>
-    </tr>
-    <tr class="row side-by-side">
-      <td><label for="zoom">Zoom:</label></td>
-      <td><input id="zoom" type="number" class="inputCustom bold"></td></td>
-    </tr>
-    <tr class="row side-by-side">
-      <td><label for="countries">Countries:</label></td>
-      <td><textarea id="countries" class="textareaCustom bold"></textarea></</td>>
-    </tr>
-    <tr class="row side-by-side">
-      <td><label for="categories">Categories:</label></td>
-      <td><textarea id="categories" class="textareaCustom bold"></textarea></td>
-    </tr>
-    <tr class="row side-by-side">
-      <td><label for="documentTypes">Document Types:</label></td>
-      <td><textarea id="documentTypes" class="textareaCustom bold"></textarea></td>
-    </tr>
-    <tr class="row side-by-side">
-      <td><label for="syncserver">Sync with:</label></td>
-      <td><input id="syncserver" placeholder="https://admin:admin@192.168.1.1:6984" value="https://admin:admin@192.168.1.1:6984" type="url" class="inputWideCustom bold"></td></td>
-    </tr>
-    <tr class="row side-by-side">
-      <td>
-        <label for="syncFromServer">Sync From Server</label>
-        <input type="checkbox" id="syncFromServer" title="Sync From Server" />
-      </td>
-      <td><button class="syncButton" onclick="syncWithServer();">Sync</button></td>
-    </tr>
+        <span id="ssd_mobilenetv1_controls">
+          <div class="ssd_mobilenetv1_controls col-12 mt-4 d-flex">
+            <label for="minConfidence">Min Confidence</label>
+            <input disabled value="0.5" id="minConfidence" type="text" class="min_confidence bold form-control"
+              style="margin-left: 12px !important;width: 55% !important;">
+            <button class="waves-effect waves-light btn mt-1 ms-1" onclick="onDecreaseMinConfidence()">
+              <i class="ri-subtract-line add_sub_btn"></i>
+            </button>
+            <button class="waves-effect waves-light btn mt-1 ms-1" onclick="onIncreaseMinConfidence()">
+              <i class="ri-add-fill add_sub_btn"></i>
+            </button>
+          </div>
+        </span>
 
-  </tbody></table>
+        <span id="tiny_face_detector_controls">
+          <div class="tiny_face_detector_controls col-12 mt-2 d-flex">
+            <label for="scoreThreshold">Score Threshold</label>
+            <input disabled value="0.5" id="scoreThreshold" type="text" class="inputCustom bold form-control ms-1">
+            <button class="waves-effect waves-light btn mt-1 ms-1" onclick="onDecreaseScoreThreshold()">
+              <i class="ri-subtract-line add_sub_btn"></i>
+            </button>
+            <button class="waves-effect waves-light btn mt-1 ms-1" onclick="onIncreaseScoreThreshold()">
+              <i class="ri-add-fill add_sub_btn"></i>
+            </button>
+          </div>
+          <div class="tiny_face_detector_controls col-6 mt-2 d-flex">
+            <label for="inputSize">Input Size</label>
+            <select id="inputSize" class="selectTagStyle">
+              <!-- <option value="" disabled selected>Input Size:</option> -->
+              <option value="128">128 x 128</option>
+              <option value="160">160 x 160</option>
+              <option value="224">224 x 224</option>
+              <option value="320">320 x 320</option>
+              <option value="416">416 x 416</option>
+              <option value="512">512 x 512</option>
+              <option value="608">608 x 608</option>
+            </select>
+          </div>
+        </span>
+
+        <div class="col-12 mt-2 d-flex">
+          <label for="maxFRThreshold">Max FR Difference</label>
+          <input disabled value="0.55" id="maxFRThreshold" type="text" class="inputCustom bold form-control ms-1">
+          <button class="waves-effect waves-light btn mt-1 ms-1" onclick="onDecreaseFRThreshold()">
+            <i class="ri-subtract-line add_sub_btn"></i>
+          </button>
+          <button class="waves-effect waves-light btn mt-1 ms-1" onclick="onIncreaseFRThreshold()">
+            <i class="ri-add-fill add_sub_btn"></i>
+          </button>
+        </div>
+
+        <div class="col-6 mt-2 d-flex">
+          <label for="zoom">Zoom Level</label>
+          <input id="zoom" type="number" class="inputCustom zoom_input bold ms-1">
+        </div>
+        <div class="col-6 mt-2 d-flex">
+          <label for="latitude">Latitude</label>
+          <input id="latitude" type="number" class="bold form-control lat_long" style="margin-left: 64px !important;">
+        </div>
+        <div class="col-6 mt-2 d-flex">
+          <label for="longitude">Longitude</label>
+          <input id="longitude" type="number" class="bold form-control lat_long ms-1">
+        </div>
+
+        <div class="col-12 mt-2 d-flex">
+          <label for="locationName">Vessel Details</label>
+          <input id="locationName" placeholder="Vessel (Type, Colour, Registration No)" type="text"
+            class="inputWideCustom bold form-control ms-3">
+        </div>
+
+        <div class="col-6 mt-2 d-flex" style="display: none !important;">
+          <label for="camera">Default Camera</label>
+          <select id="camera" class="selectCustom bold ms-2">
+            <option value="front">Front camera</option>
+            <option value="back">Back camera</option>
+          </select>
+        </div>
+
+        <div class="row mt-2 d-flex">
+          <div class="col-2">
+            <label for="countries">Countries</label>
+          </div>
+          <div class="col-10">
+            <textarea id="countries" class="textareaCustom bold ms-2"></textarea>
+          </div>
+        </div>
+        <div class="row mt-2 d-flex">
+          <div class="col-2">
+            <label for="categories">Categories</label>
+          </div>
+          <div class="col-10">
+            <textarea id="categories" class="textareaCustom bold ms-2"></textarea>
+          </div>
+        </div>
+        <div class="row mt-2 d-flex">
+          <div class="col-2">
+            <label for="documentTypes">Documents</label>
+          </div>
+          <div class="col-10">
+            <textarea id="documentTypes" class="textareaCustom bold ms-2"></textarea>
+          </div>
+        </div>
+        <div class="row mt-2 d-flex">
+          <div class="col-2">
+            <label for="syncserver">Sync with</label>
+          </div>
+          <div class="col-10">
+            <input id="syncserver" placeholder="https://admin:admin@192.168.1.1:6984"
+              value="https://admin:admin@192.168.1.1:6984" type="url" class="input_Sync_with bold form-control ms-2">
+          </div>
+        </div>
+
+        <div class="hstack gap-2 justify-content-center d-flex">
+          <button class="checkConnection" onclick="this.blur();checkConnectionToServer();"><i class="ri-loop-right-line"></i> Check Connectivity</button>
+          <button class="syncToButton" onclick="this.blur();syncToServer();"><i class="ri-loop-right-line"></i> Sync To Server</button>
+          <button class="syncButton" onclick="this.blur();syncFromServer();"><i class="ri-loop-right-line"></i> Sync From Server</button>
+        </div>
+        <!-- <div class="col-12 mt-2">
+          <label for="syncFromServer">Sync From Server</label>
+          <input type="checkbox" id="syncFromServer" title="Sync From Server" class="mt-2" />
+          <button class="syncButton" onclick="syncWithServer();"><i class="ri-loop-right-line"></i>  Data Sync</button>
+        </div> -->
+      </div>
+    </div>
   </div>
-  </div>
+  <footer class="footer">
+    <div class="frame-div">
+      <a href="./index.html"><i class="ri-home-7-fill" style="color: gray;"></i></a>
+      <p class="footer_text" style="color: gray !important;">Home</p>
+    </div>
+    <div class="frame-div">
+      <a href="./editDetails.html"><i class="ri-layout-grid-2-fill" style="color: gray;"></i></a>
+      <p class="footer_text" style="color: gray !important;">Respondents</p>
+    </div>
+    <div class="frame-div">
+      <a href="./settings.html"><i class="ri-settings-5-fill"></i></i></a>
+      <p class="footer_text">Settings</p>
+    </div>
+    <div class="frame-div">
+      <a href="./userDetails.html"><i class="ri-user-3-fill" style="color: gray;"></i></i></a>
+      <p class="footer_text" style="color: gray !important;">Users</p>
+    </div>
+    <!-- <div class="frame-div">
+      <a href="./webcamTest.html"><i class="ri-camera-fill" style="color: gray !important;"></i></a>
+      <p class="footer_text" style="color: gray !important;">Diagnostic</p>
+  </div> -->
 
-  <footer>
-    <img src="images/logo_36x36.png" >
-    <span class="footer_area">Powered By INICAI and PTPL </span>
   </footer>
-
   <script src="cordova.js"></script>
+  <script src="fonts/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     let use_cordova_plugin = window.cordova;
@@ -218,44 +346,43 @@
     async function removeFromDb(db, doc) { await db.remove(doc.id, doc.value.rev) }
 
     async function clearFacesDB(db) {
-        let alldocs = await db.allDocs()
-        await Promise.all(alldocs.rows.map(
-          async doc => {
-            removeFromDb(db, doc)
-          }))
+      let alldocs = await db.allDocs()
+      await Promise.all(alldocs.rows.map(
+        async doc => {
+          removeFromDb(db, doc)
+        }))
     }
 
     // onSuccess Callback
     // This method accepts a Position object, which contains the
     // current GPS coordinates
     //
-    var geolocationSuccess = function(position) {
-        console.log('Latitude: '          + position.coords.latitude          + '\n' +
-              'Longitude: '         + position.coords.longitude         + '\n' +
-              'Altitude: '          + position.coords.altitude          + '\n' +
-              'Accuracy: '          + position.coords.accuracy          + '\n' +
-              'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-              'Heading: '           + position.coords.heading           + '\n' +
-              'Speed: '             + position.coords.speed             + '\n' +
-              'Timestamp: '         + position.timestamp                + '\n');
-        $('#latitude').val(position.coords.latitude);
-        $('#longitude').val(position.coords.longitude);
-        updateResults();
+    var geolocationSuccess = function (position) {
+      console.log('Latitude: ' + position.coords.latitude + '\n' +
+        'Longitude: ' + position.coords.longitude + '\n' +
+        'Altitude: ' + position.coords.altitude + '\n' +
+        'Accuracy: ' + position.coords.accuracy + '\n' +
+        'Altitude Accuracy: ' + position.coords.altitudeAccuracy + '\n' +
+        'Heading: ' + position.coords.heading + '\n' +
+        'Speed: ' + position.coords.speed + '\n' +
+        'Timestamp: ' + position.timestamp + '\n');
+      $('#latitude').val(position.coords.latitude);
+      $('#longitude').val(position.coords.longitude);
+      updateResults();
     };
 
     // onError Callback receives a PositionError object
     //
     function geolocationError(error) {
-        console.log('Error in obtaining geolocation:', error);
+      console.log('Error in obtaining geolocation:', error);
     }
 
     async function run() {
       document.body.style.minHeight = `${window.screen.height}px`;
-
-
+      initFaceDetectionControls()
       let faces_settings_db = new PouchDB('faces_settings_db')
       let settings = await docExists(faces_settings_db, 'settings')
-      if(settings) { // Get from settings
+      if (settings) { // Get from settings
         await changeFaceDetector(settings.faceDetector, false)
         changeInputSize(settings.inputSize)
         maxFRThreshold = settings.maxFRThreshold
@@ -281,7 +408,7 @@
       $('#longitude').on('change', updateResults)
       $('#locationName').on('change', updateResults)
       $('#syncserver').on('change', updateResults)
-      $('#camera').on('change', function() {
+      $('#camera').on('change', function () {
         //$('#camera').material_select()
         updateResults()
       })
@@ -292,8 +419,8 @@
       $('#documentTypes').on('change', updateResults)
 
       navigator.geolocation.getCurrentPosition(geolocationSuccess,
-                                               geolocationError,
-                                              { maximumAge: 10000, timeout: 10000, enableHighAccuracy: true });
+        geolocationError,
+        { maximumAge: 10000, timeout: 10000, enableHighAccuracy: true });
     }
 
     async function updateResults() {
@@ -316,50 +443,146 @@
       await faces_settings_db.put(settings)
     }
 
-    async function syncWithServer() {
-      let syncserver = $('#syncserver').val()
-      let syncDBs = ['faces_db', 'person_db']
-      let dbNameSuffix = new Date().getTime()
-      let syncFromServer = $('#syncFromServer').get(0).checked
-      for(let db of syncDBs) {
-        if(syncFromServer) {
-          let remoteDB = syncserver + '/' + db
-          let localDB = db + '_remote'
-          await PouchDB.replicate(remoteDB, localDB);
-          console.log(`Sync for ${remoteDB} ==> ${localDB} completed...`)
-        }
-        else {
-          let remoteDB = syncserver + '/' + db + '_' + dbNameSuffix
-          await PouchDB.replicate(db, remoteDB)
-          console.log(`Sync for ${db} ==> ${remoteDB} completed...`)
-        }
-      }
-      if(syncFromServer) {
-        alert(`DB Sync from ${syncserver}/${syncDBs.join(", ")} completed.`)
-      }
-      else {
-        let remoteDBNames = syncDBs.map(s => s + '_' + dbNameSuffix).join(', ')
-        alert(`DB Sync to ${syncserver}/${remoteDBNames} completed.`)
+    async function fetchWithTimeout(resource, options = {}) {
+      const { timeout = 5000 } = options;
+      
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
 
-      }
+      const response = await fetch(resource, {
+        ...options,
+        signal: controller.signal  
+      });
+      clearTimeout(id);
+
+      return response;
     }
 
+    async function checkConnectionToServer() {
+      let syncserver = $('#syncserver').val();
+      let [proto, server] = syncserver.split('//');
+      let urlToTest = proto + '//' + server.split('@')[1];
+      $('.checkConnection').get(0).classList.add('busyElement');
+      try {
+        let res = await fetch(urlToTest, { signal: AbortSignal.timeout(5000) });
+        //let res = await fetchWithTimeout(urlToTest);
+        console.log(`Connection to server ${syncserver} successful.`);
+        $('.syncToButton').get(0).classList.remove('errorElement');
+        $('.syncButton').get(0).classList.remove('errorElement');
+      }
+      catch (err) {
+        $('.syncToButton').get(0).classList.add('errorElement');
+        $('.syncButton').get(0).classList.add('errorElement');
+        if (err.name === "TimeoutError") {
+          alert(`Timeout in connecting to server: ${err.name}, message: ${err.message}`);
+        } else if (err.name === "AbortError") {
+          alert(`Can not connect to server: ${err.name}, message: ${err.message}`);
+        } else if (err.name === "TypeError") {
+          alert(`Error in connecting to server: ${err.name}, message: ${err.message}`);
+        } else {
+          // A network error, or some other problem.
+          alert(`Error: type: ${err.name}, message: ${err.message}`);
+        }
+      }
+      $('.checkConnection').get(0).classList.remove('busyElement');
+    }
+
+    async function syncFromServer() {
+      let syncserver = $('#syncserver').val();
+      let syncDBs = ['faces_db', 'person_db'];
+      $('.syncButton').get(0).classList.add('busyElement');
+      try {
+        for (let db of syncDBs) {
+            let remoteDB = syncserver + '/' + db;
+            let localDB = db;
+            let status = await new PouchDB(localDB).destroy();
+            console.log('Localdb destroyed. Now replicating from remote DB...', status);
+            status = await PouchDB.replicate(remoteDB, localDB);
+            console.log(`Sync for ${remoteDB} ==> ${localDB} completed...`, status);
+        }
+        $('.syncButton').get(0).classList.remove('errorElement');
+        alert(`DB Sync from ${syncserver}/${syncDBs.join(", ")} completed.`);
+      }
+      catch(err) {
+        $('.syncButton').get(0).classList.add('errorElement');
+        alert(`Error: type: ${err.name}, message: ${err.message}`);
+      }
+      $('.syncButton').get(0).classList.remove('busyElement');
+    }
+
+    async function syncToServer() {
+      let syncserver = $('#syncserver').val();
+      let syncDBs = ['faces_db', 'person_db'];
+      let dbNameSuffix = new Date().getTime();
+      $('.syncToButton').get(0).classList.add('busyElement');
+      try {
+        for (let db of syncDBs) {
+            let remoteDB = syncserver + '/' + db + '_' + dbNameSuffix;
+            let localDB = db;
+            let status = await PouchDB.replicate(localDB, remoteDB);
+            console.log(`Sync for ${db} ==> ${remoteDB} completed...`, status);
+        }
+        $('.syncToButton').get(0).classList.remove('errorElement');
+        let remoteDBNames = syncDBs.map(s => s + '_' + dbNameSuffix).join(', ');
+        alert(`DB Sync to ${syncserver}/${remoteDBNames} completed.`);
+      }
+      catch(err) {
+        $('.syncToButton').get(0).classList.add('errorElement');
+        alert(`Error: type: ${err.name}, message: ${err.message}`);
+      }
+      $('.syncToButton').get(0).classList.remove('busyElement');
+    }
+
+
+//     async function syncWithServer() {
+//       let syncserver = $('#syncserver').val()
+//       let syncDBs = ['faces_db', 'person_db']
+//       let dbNameSuffix = new Date().getTime()
+//       let syncFromServer = $('#syncFromServer').get(0).checked
+//       for (let db of syncDBs) {
+//         if (syncFromServer) {
+//           let remoteDB = syncserver + '/' + db
+//           let localDB = db //+ '_remote'
+//           let status = await new PouchDB(localDB).destroy();
+//           console.log('Localdb destroyed. Now replicating from remote DB...', status)
+//           status = await PouchDB.replicate(remoteDB, localDB);
+//           console.log(`Sync for ${remoteDB} ==> ${localDB} completed...`, status)
+//         }
+//         else {
+//           let remoteDB = syncserver + '/' + db + '_' + dbNameSuffix
+//           let localDB = db
+//           let status = await PouchDB.replicate(localDB, remoteDB)
+//           console.log(`Sync for ${db} ==> ${remoteDB} completed...`, status)
+//         }
+//       }
+//       if (syncFromServer) {
+//         alert(`DB Sync from ${syncserver}/${syncDBs.join(", ")} completed.`)
+//       }
+//       else {
+//         let remoteDBNames = syncDBs.map(s => s + '_' + dbNameSuffix).join(', ')
+//         alert(`DB Sync to ${syncserver}/${remoteDBNames} completed.`)
+
+//       }
+//     }
+//  async function syncToServer(){
+  
+//  }
     async function pageOnDeviceReady() {
       renderNavBar('#navbar', 'settings.html')
       initFaceDetectionControls()
       run()
     }
 
-    if(use_cordova_plugin)
+    if (use_cordova_plugin)
       document.addEventListener('deviceready', pageOnDeviceReady, false);
     else
-      $(document).ready(function() {
-      renderNavBar('#navbar', 'settings.html')
-      initFaceDetectionControls()
-      run()
-    })
+      $(document).ready(function () {
+        renderNavBar('#navbar', 'settings.html')
+        initFaceDetectionControls()
+        run()
+      })
 
-    window.onbeforeunload =  function(){
+    window.onbeforeunload = function () {
       console.log("Saving results before leaving page")
       updateResults()
     };
@@ -371,4 +594,6 @@
 
   </script>
 </body>
+
+
 </html>

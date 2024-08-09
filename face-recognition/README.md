@@ -106,7 +106,7 @@ git switch --detach tags/3.3.3.post4
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 nvm install v16.20.2
 nvm use v16.20.2
-sudo apt install python3.12-venv
+sudo apt install python3.12-venv # python3.11-venv for ubuntu 23.04
 ./configure
 make release
 # After successfull build, its available in rel/couchdb/bin
@@ -119,6 +119,7 @@ rel/couchdb/bin/couchdb
 # Firewall port
 sudo apt install ufw
 sudo ufw enable
+sudo ufw allow 6984
 # enable cors on couchdb: https://pouchdb.com/errors.html
 npm install -g add-cors-to-couchdb
 export NODE_TLS_REJECT_UNAUTHORIZED='0'

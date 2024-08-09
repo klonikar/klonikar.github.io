@@ -1,0 +1,20 @@
+{
+    "android": {
+        "debug": {
+            "keystore": "./satyapan.keystore",
+            "storePassword": "ptpl@123",
+            "alias": "satyapan",
+            "password" : "ptpl@123",
+            "keystoreType": "pkcs12",
+            "packageType": "apk"
+        },
+        "release": {
+            "keystore": "./satyapan.keystore",
+            "storePassword": "ptpl@123",
+            "alias": "satyapan",
+            "password" : "ptpl@123",
+            "keystoreType": "pkcs12",
+            "packageType": "apk"
+        }
+    }
+}

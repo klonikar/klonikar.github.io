@@ -44,28 +44,28 @@ function renderNavBar(navbarId, exampleUri) {
 
   ]
 
-  const navbar = $(navbarId).get(0)
-  const pageContainer = $('.page-container').get(0)
+  // const navbar = $(navbarId).get(0)
+  // const pageContainer = $('.page-container').get(0)
 
-  const header = document.createElement('h5')
-  const matchingExample = examples.find(ex => ex.uri === exampleUri)
-  header.innerHTML = matchingExample ? matchingExample.name : exampleUri
-  pageContainer.insertBefore(header, pageContainer.children[0])
-  pageContainer.insertBefore(navbar, pageContainer.children[0])
+  // // const header = document.createElement('h5')
+  // // const matchingExample = examples.find(ex => ex.uri === exampleUri)
+  // // header.innerHTML = matchingExample ? matchingExample.name : exampleUri
+  // // pageContainer.insertBefore(header, pageContainer.children[0])
+  // pageContainer.insertBefore(navbar, pageContainer.children[0])
 
-  const menuContent = document.createElement('ul')
-  menuContent.id = 'slide-out'
-  menuContent.classList.add('side-nav')
-  navbar.appendChild(menuContent)
+  // const menuContent = document.createElement('ul')
+  // menuContent.id = 'slide-out'
+  // menuContent.classList.add('side-nav')
+  // navbar.appendChild(menuContent)
 
-  const menuButton = document.createElement('a')
-  menuButton.href='#'
-  menuButton.classList.add('button-collapse', 'show-on-large')
-  menuButton.setAttribute('data-activates', 'slide-out')
-  const menuButtonIcon = document.createElement('img')
-  menuButtonIcon.src = 'images/menu_icon.png'
-  menuButton.appendChild(menuButtonIcon)
-  navbar.appendChild(menuButton)
+  // const menuButton = document.createElement('a')
+  // menuButton.href='#'
+  // menuButton.classList.add('button-collapse', 'show-on-large')
+  // menuButton.setAttribute('data-activates', 'slide-out')
+  // const menuButtonIcon = document.createElement('img')
+  // menuButtonIcon.src = 'images/menu_icon.png'
+  // menuButton.appendChild(menuButtonIcon)
+  // navbar.appendChild(menuButton)
 
   const li = document.createElement('li')
   const githubLink = document.createElement('span')
@@ -82,7 +82,7 @@ function renderNavBar(navbarId, exampleUri) {
   githubLinkIcon2.src = 'images/indian_navy_36x36.png'
   githubLink.appendChild(githubLinkIcon2)
   li.appendChild(githubLink)
-  menuContent.appendChild(li)
+  // menuContent.appendChild(li)
 
   examples
     .forEach(ex => {
@@ -98,7 +98,7 @@ function renderNavBar(navbarId, exampleUri) {
       span.style.whiteSpace = 'nowrap'
       a.appendChild(span)
       li.appendChild(a)
-      menuContent.appendChild(li)
+      // menuContent.appendChild(li)
     })
 
   $('.button-collapse').sideNav({

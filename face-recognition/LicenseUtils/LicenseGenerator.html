@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy"
+        content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height, initial-scale=1.0" />
+    <title>App License Generator</title>
+    <link rel="stylesheet" type="text/css" href="../www/css/app_styles.css" />
+    <script type="text/javascript" src="../www/js/licenseUtils.js"> </script>
+    <style>
+        .textAreaColor {
+            color: blue !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h1> Generate License </h1>
+    <div>
+        <button onclick="generateKeyPair();">Generate Key Pair</button>
+    </div>
+    <div>
+        <label for="privateKey">Private Key: </label>
+        <textarea id="privateKey" placeholder="Private Key" class="textareaCustom bold textAreaColor ms-2"></textarea>
+    </div>
+    <div>
+        <label for="publicKey">Public Key: </label>
+        <textarea id="publicKey" placeholder="Public Key" class="textareaCustom bold textAreaColor ms-2"></textarea>
+    </div>
+    <div>
+        <label for="documentToBeSigned">Document/Device Id:</label>
+        <textarea id="documentToBeSigned" placeholder="Document/Device Id to be signed" class="textareaCustom bold textAreaColor ms-2"></textarea>
+    </div>
+    <div>
+        <label for="generatedSignature">Document/Device Id:</label>
+        <textarea id="generatedSignature" placeholder="Generated Signature" readonly class="textareaCustom bold textAreaColor ms-2"></textarea>
+        <button onclick="generateSignature();">Generate Signature</button>
+    </div>
+    <div>
+        <label for="signature">Signature:</label>
+        <textarea id="signature" placeholder="Signature" class="textareaCustom bold textAreaColor ms-2"></textarea>
+        <button onclick="verifySignature();">Verify Signature</button>
+    </div>
+
+    <script>
+        async function generateKeyPair() {
+            console.log('Generating public/private key pair');
+			let keyPair = await window.CryptoKeyUtils.keyPair();
+			let exportedPrivateKey = await window.CryptoKeyUtils.exportPrivateKey2Str(keyPair.privateKey);
+			let exportedPublicKey = await window.CryptoKeyUtils.exportPublicKey2Str(keyPair.publicKey);
+			console.log('publicKey:', exportedPublicKey);
+			console.log('privateKey:', exportedPublicKey);
+            document.getElementById('privateKey').value = exportedPrivateKey;
+            document.getElementById('publicKey').value = exportedPublicKey;
+        }
+
+        async function generateSignature() {
+            console.log('Generating signature of document');
+            let exportedPrivateKey = document.getElementById('privateKey').value;
+            if(!exportedPrivateKey) {
+                alert('Enter public key to verify signature.');
+                return;
+            }
+			let importedPrivateKey = await window.CryptoKeyUtils.importPrivateKeyFromStr(exportedPrivateKey);
+            let documentToBeSigned = document.getElementById('documentToBeSigned').value;
+			let signatureStr = await window.CryptoKeyUtils.signStr(documentToBeSigned, importedPrivateKey);
+			console.log('message signature:', signatureStr);
+            document.getElementById('generatedSignature').value = signatureStr;
+        }
+
+        async function verifySignature() {
+            console.log('Verifying signature of document');
+            let exportedPublicKey = document.getElementById('publicKey').value;
+            if(!exportedPublicKey) {
+                alert('Enter public key to verify signature.');
+                return;
+            }
+            let importedPublicKey = await window.CryptoKeyUtils.importPublicKeyFromStr(exportedPublicKey);
+            let signature = document.getElementById('signature').value;
+            let documentToBeSigned = document.getElementById('documentToBeSigned').value;
+            let verifyResult = await window.CryptoKeyUtils.verifyStr(documentToBeSigned, signature, importedPublicKey);
+            alert(verifyResult ? "Document verified" : "Document Tampered");
+        }
+    </script>
+</body>
+</html>

@@ -19,33 +19,33 @@ function round(num, prec) {
     return Math.floor(num * f) / f;
 }
 
-function onIncreaseFRThreshold() {
+async function onIncreaseFRThreshold() {
   maxFRThreshold = Math.min(round(maxFRThreshold + 0.05), 1.0)
   $('#maxFRThreshold').val(maxFRThreshold)
-  updateResults()
+  await updateResults()
 }
 
-function onDecreaseFRThreshold() {
+async function onDecreaseFRThreshold() {
   maxFRThreshold = Math.max(round(maxFRThreshold - 0.05), 0.1)
   $('#maxFRThreshold').val(maxFRThreshold)
-  updateResults()
+  await updateResults()
 }
 
-function onIncreaseMinConfidence() {
+async function onIncreaseMinConfidence() {
   minConfidence = Math.min(round(minConfidence + 0.05), 1.0)
   $('#minConfidence').val(minConfidence)
-  updateResults()
+  await  updateResults()
 }
 
-function onDecreaseMinConfidence() {
+async function onDecreaseMinConfidence() {
   minConfidence = Math.max(round(minConfidence - 0.05), 0.1)
   $('#minConfidence').val(minConfidence)
-  updateResults()
+  await updateResults()
 }
 
-function onInputSizeChanged(e) {
+async function onInputSizeChanged(e) {
   changeInputSize(e.target.value)
-  updateResults()
+  await updateResults()
 }
 
 function changeInputSize(size) {
@@ -53,19 +53,18 @@ function changeInputSize(size) {
 
   const inputSizeSelect = $('#inputSize')
   inputSizeSelect.val(inputSize)
-  inputSizeSelect.material_select()
 }
 
-function onIncreaseScoreThreshold() {
+async function onIncreaseScoreThreshold() {
   scoreThreshold = Math.min(round(scoreThreshold + 0.05), 1.0)
   $('#scoreThreshold').val(scoreThreshold)
-  updateResults()
+  await updateResults()
 }
 
-function onDecreaseScoreThreshold() {
+async function onDecreaseScoreThreshold() {
   scoreThreshold = Math.max(round(scoreThreshold - 0.05), 0.1)
   $('#scoreThreshold').val(scoreThreshold)
-  updateResults()
+  await updateResults()
 }
 
 function onIncreaseMinFaceSize() {
@@ -93,12 +92,14 @@ function isFaceDetectionModelLoaded() {
 
 async function changeFaceDetector(detector, loadSelectedModel = true) {
   ['#ssd_mobilenetv1_controls', '#tiny_face_detector_controls']
-    .forEach(id => $(id).hide())
+    .forEach(id => {
+      console.log('hiding ', id)
+      $(id).hide()
+    })
 
   selectedFaceDetector = detector
   const faceDetectorSelect = $('#selectFaceDetector')
   faceDetectorSelect.val(detector)
-  faceDetectorSelect.material_select()
 
   $('#loader').show()
   if (loadSelectedModel && !isFaceDetectionModelLoaded()) {
@@ -113,17 +114,15 @@ async function onSelectedFaceDetectorChanged(e) {
   selectedFaceDetector = e.target.value
 
   await changeFaceDetector(e.target.value, typeof faceapi != 'undefined')
-  updateResults()
+  await updateResults()
 }
 
 function initFaceDetectionControls() {
   const faceDetectorSelect = $('#selectFaceDetector')
   faceDetectorSelect.val(selectedFaceDetector)
   faceDetectorSelect.on('change', onSelectedFaceDetectorChanged)
-  faceDetectorSelect.material_select()
 
   const inputSizeSelect = $('#inputSize')
   inputSizeSelect.val(inputSize)
   inputSizeSelect.on('change', onInputSizeChanged)
-  inputSizeSelect.material_select()
 }

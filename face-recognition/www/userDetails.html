@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy"
+        content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
+    <title>Settings</title>
+    <link href="fonts/remixicon/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/app_styles.css" />
+    <link href="fonts/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="js/commons.js"></script>
+    <script type="text/javascript" src="js/pouchdb.min.js"> </script>
+    <link rel="stylesheet" href="css/materialize.css">
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <style type="text/css">
+        .userdetails_form {
+            margin-left: 175px;
+            margin-top: 75px;
+        }
+
+        .reset_btn {
+            color: #fff;
+            background-color: skyblue;
+            border-radius: 6px;
+        }
+
+        .avatar-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            margin-left: 10px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid white;
+        }
+
+        .avatar-icon {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(38, 42, 112, 1);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .avatar-icon i {
+            font-size: 45px;
+        }
+
+        .avatar-input {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="logo-container">
+                <img src="./images/indian_navy1.png" alt="Logo 1" class="logo">
+                <div class="title-container">
+                    <h1 class="header_welcome_text">SATYAPAN.AI</h1>
+                    <h4>AI Based Interrogation Systems</h4>
+                </div>
+                <img src="./images/logo-1.png" alt="Logo 2" class="logo">
+            </div>
+        </header>
+
+        <div class="center-content page-container">
+            <div class="row userdetails_form">
+                <div class="col-12">
+                    <div class="avatar-container">
+                        <div class="avatar-icon" id="avatar">
+                            <i class="ri-user-3-fill"></i>
+                        </div>
+                        <input type="file" id="avatarInput" class="avatar-input" accept="image/*">
+                    </div>
+                </div>
+                <div class="col-12 mt-2">
+                    <label for="">Name</label>
+                    <input id="" type="text" value="IndianNavy" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label for="">Rank</label>
+                    <select id="rank_id" class="selectHalfCustom form-control" style="width: 78% !important;">
+                        <option value="commander">Commander</option>
+                        <option value="captain">Captain</option>
+                        <option value="midshipman">Midshipman</option>
+                        <option value="commodore">Commodore</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label for="">Personnel No.</label>
+                    <input id="" type="text" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label for="">Mother Ship</label>
+                    <input id="" type="text" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label for="">Command</label>
+                    <input id="" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 text-center mt-3">
+                <button class="btn reset_btn">
+                    Change Password
+                </button>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="frame-div">
+            <a href="./index.html"><i class="ri-home-7-fill" style="color: gray;"></i></a>
+            <p class="footer_text" style="color: gray !important;">Home</p>
+        </div>
+        <div class="frame-div">
+            <a href="./editDetails.html"><i class="ri-layout-grid-2-fill" style="color: gray;"></i></a>
+            <p class="footer_text" style="color: gray !important;">Respondents</p>
+        </div>
+        <div class="frame-div">
+            <a href="./settings.html"><i class="ri-settings-5-fill" style="color: gray;"></i></a>
+            <p class="footer_text" style="color: gray !important;">Settings</p>
+        </div>
+        <div class="frame-div">
+            <a href="./userDetails.html"><i class="ri-user-3-fill"></i></a>
+            <p class="footer_text">Users</p>
+        </div>
+        <!-- <div class="frame-div">
+            <a href="./userDetails.html"><i class="ri-camera-fill" style="color: gray !important;"></i></a>
+            <p class="footer_text" style="color: gray !important;">Diagnostic</p>
+        </div> -->
+    </footer>
+    <script src="cordova.js"></script>
+    <script src="fonts/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('avatar').addEventListener('click', function () {
+            document.getElementById('avatarInput').click();
+        });
+
+        document.getElementById('avatarInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const avatar = document.getElementById('avatar');
+                    avatar.style.backgroundImage = `url(${e.target.result})`;
+                    avatar.style.backgroundSize = 'cover';
+                    avatar.style.backgroundPosition = 'center';
+                    avatar.innerHTML = ''; // Remove the icon
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+
+
+
+</html>

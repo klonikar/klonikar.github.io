@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+  <meta http-equiv="Content-Security-Policy"
+    content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /-->
   <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
   <title>AI Based Interrogation System</title>
-
+  <link href="fonts/remixicon/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/app_styles.css" />
   <script src="js/face-api.js"></script>
   <script src="js/commons.js"></script>
@@ -74,116 +76,245 @@
       border-color: #2ab7a9;
       margin-left: 10px;
     }
+
     .header {
-    background-color: #c1a300;
-    height: 70px; 
-    display: flex;
-    align-items: center; 
-    justify-content: center; 
-    padding: 0 10px; 
-    text-align: center;
-}
+      background-color: #c1a300;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      text-align: center;
+    }
 
-.header .logo-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  }
+    .header .logo-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
 
-.header .logo {
-    height: 80%; 
-    width: auto; 
-}
+    .header .logo {
+      height: 80%;
+      width: auto;
+    }
 
-.header .title-container {
-    text-align: center;
-    flex: 1; 
-    color: #1a237e; 
-}
-.header .title-container h1,
-.header .title-container h4 {
-    margin: 0;
-}
+    .header .title-container {
+      text-align: center;
+      flex: 1;
+      color: #1a237e;
+    }
 
-.header .title-container h1 {
-    font-size: 24px; 
-}
+    .header .title-container h1,
+    .header .title-container h4 {
+      margin: 0;
+    }
 
-.header .title-container h4 {
-    font-size: 16px; 
-  }
-.header_welcome_text{
-  color: #1a237e;
-}
+    .header .title-container h1 {
+      font-size: 30px;
+    }
 
+    .header .title-container h4 {
+      font-size: 20px;
+    }
+
+    .header_welcome_text {
+      color: #1a237e;
+    }
+
+    .video_div {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-left: 17%;
+      margin-top: 10px;
+    }
+
+    #inputVideo {
+      display: inline-block;
+      border: 3px solid white;
+    }
+
+    #btnToggleCamera {
+      display: inline-block;
+      margin-left: 10px;
+      background: none;
+      border: none;
+      margin-left: 20px;
+      /* Adjust margin as needed */
+    }
+
+    #status {
+      color: #9e9e9e !important;
+    }
+
+    .status_label {
+      color: #fff !important;
+      background-color: #e25b74;
+      border: none;
+      font-size: larger;
+      width: 125px;
+      height: 30px;
+    }
+
+    .play_pause {
+      font-size: 70px;
+      color: #c1a300;
+    }
+
+    .detected_faces {
+      background-color: skyblue;
+      border: none;
+      font-size: larger;
+      width: 125px;
+    }
+
+    .selected_faces {
+      background-color: green;
+      border: none;
+      font-size: larger;
+      width: 125px;
+      margin-top: 20px !important;
+    }
+
+    .register_btn {
+      background-color: #c1a300;
+      border-radius: 10px;
+      font-size: larger;
+    }
+
+    .side-by-side {
+      align-items: center;
+      /* Center items vertically */
+    }
+
+    .register_btn_div {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .camara_switch {
+      font-size: 70px;
+      color: #c1a300;
+      background: none;
+      border: none;
+      margin-right: 5%;
+    }
+
+    #btnSwitchCamera {
+      background: none !important;
+    }
+
+    .edit_btn {
+      background: green !important;
+      border: none !important;
+      border-color: none !important;
+    }
+
+    .hide_edit_btn {
+      margin-bottom: 20px !important;
+
+    }
+
+    .hide_btn {
+      background: #FF0000 !important;
+      border: none !important;
+      border-color: none !important;
+    }
+
+    .view_btn {
+      background: #2ab7a9 !important;
+      border-color: none !important;
+
+    }
   </style>
 </head>
+
 <body>
   <div class="app">
     <header class="header">
       <div class="logo-container">
-          <img src="./images/indian_navy1.png" alt="Logo 1" class="logo">
-          <div class="title-container">
-              <h1 class="header_welcome_text">SATYAPAN.AI</h1>
-              <h4>AI Based Interrogation Systems</h4>
-          </div>
-          <img src="./images/logo-1.png" alt="Logo 2" class="logo">
+        <img src="./images/indian_navy1.png" alt="Logo 1" class="logo">
+        <div class="title-container">
+          <h1 class="header_welcome_text">SATYAPAN.AI</h1>
+          <h4>AI Based Interrogation Systems</h4>
+        </div>
+        <img src="./images/logo-1.png" alt="Logo 2" class="logo">
       </div>
-  </header>
-  
-  <div id="navbar"></div>
-  <div class="center-content page-container">
-    <fieldset class="fieldsetCustom">
-      <legend>Start/Stop/Switch</legend>
-      <button id="btnToggleCamera" class="smallMarginRight">Start Camera</button>
-      <button id="btnSwitchCamera">Switch Camera</button>
-    </fieldset>
+    </header>
 
-    <fieldset class="fieldsetCustom">
-      <legend>Status</legend>
-      <label id="status"></label>
-    </fieldset>
-    <div class="progress" id="loader">
-      <div class="indeterminate"></div>
-    </div>
-    <div>
-        <image id="hiddenPreview" style="max-width: 100%;display: none;" >
-    </div>
-    <div style="position: relative" class="margin">
-      <video onloadedmetadata="onPlay(this)" id="inputVideo" autoplay muted playsinline></video>
-      <canvas id="overlay" />
-    </div>
-    <b>Detected Faces:</b>
-    <div id="facesContainer" class="row side-by-side"></div>
-    <!--
-    <b>Original Faces:</b>
-      <div id="originalFacesContainer" class="row side-by-side"></div>
-    -->
-    <div class="highlightedSection row side-by-side" id="registeredFaceImages" style="display: none;">
-    </div>
-    <b> Selected Faces: </b>
-    <br/>
-    <div class="row side-by-side" id="selectedFaces"> 
-    </div>
-    <div class="row side-by-side"> 
-      <label for="selectedFacesName">Name:</label>
-      <input type="text" id="selectedFacesName" class="bold" placeholder="Enter Person Name" />
-      <button class="waves-effect waves-light btn" onclick="registerFaces();" >Register</button>
-    </div>
+    <div class="center-content page-container">
 
+
+      <div class="">
+        <button class="status_label"><b>Status</b></button>
+        <label id="status"></label>
+      </div>
+      <div class="progress" id="loader">
+        <div class="indeterminate"></div>
+      </div>
+      <div>
+
+        <image id="hiddenPreview" style="max-width: 100%;display: none;">
+      </div>
+      <div class="video_div">
+        <button id="btnSwitchCamera" class="camara_switch"><i class="ri-camera-switch-line"></i></button>
+        <div style="display: flex;">
+          <video onloadedmetadata="onPlay(this)" id="inputVideo" autoplay muted playsinline></video>
+          <canvas id="overlay"></canvas>
+          <button id="btnToggleCamera" class="smallMarginRight"><i class="ri-play-circle-line play_pause"></i></button>
+        </div>
+
+      </div>
+
+      <button class="detected_faces"><b>Detected Faces</b></button>
+
+      <div id="facesContainer" class="row side-by-side"></div>
+
+      <div class="highlightedSection row side-by-side" id="registeredFaceImages" style="display: none;">
+      </div>
+      <button class="selected_faces"><b> Selected Faces </b></button>
+
+      <br />
+      <div class="row side-by-side" id="selectedFaces">
+      </div>
+      <div class="row side-by-side ">
+        <div style="display: flex; margin-left: 25px !important; margin-top: 20px !important;">
+          <label for="selectedFacesName">Name</label>
+          <input type="text" id="selectedFacesName" class="bold" placeholder="Enter Person Name" />
+        </div>
+
+        <div class="register_btn_div">
+          <button class="waves-effect waves-light register_btn btn" onclick="registerFaces();">Register</button>
+        </div>
+      </div>
+
+    </div>
   </div>
-  </div>
-  <!-- <footer class="footer">
-    <button class="nav-button"><span class="material-icons">home</span></button>
-    <button class="nav-button"><span class="material-icons">apps</span></button>
-    <button class="nav-button"><span class="material-icons">settings</span></button>
-    <button class="nav-button"><span class="material-icons">person</span></button>
-</footer> -->
-  <footer>
-    <img src="images/logo_36x36.png" >
-    <span class="footer_area">Powered By INICAI and PTPL </span>
+  <footer class="footer">
+    <div class="frame-div">
+      <a href="./index.html"><i class="ri-home-7-fill"></i></a>
+      <p class="footer_text">Home</p>
+    </div>
+    <div class="frame-div">
+      <a href="./editDetails.html"><i class="ri-layout-grid-2-fill" style="color: gray;"></i></a>
+      <p class="footer_text" style="color: gray !important;">Respondents</p>
+    </div>
+    <div class="frame-div">
+      <a href="./settings.html"><i class="ri-settings-5-fill" style="color: gray;"></i></i></a>
+      <p class="footer_text" style="color: gray !important;">Settings</p>
+    </div>
+    <div class="frame-div">
+      <a href="./userDetails.html"><i class="ri-user-3-fill" style="color: gray;"></i></i></a>
+      <p class="footer_text" style="color: gray !important;">Users</p>
+    </div>
+    <!-- <div class="frame-div">
+      <a href="./webcamTest.html"><i class="ri-camera-fill" style="color: gray !important;"></i></a>
+      <p class="footer_text" style="color: gray !important;">Diagnostic</p>
+  </div> -->
+
   </footer>
 
   <script src="cordova.js"></script>
@@ -234,7 +365,7 @@
         : new faceapi.TinyFaceDetectorOptions({ inputSize, scoreThreshold })
     }
 
-    async function docExists(db, docId, options={}) {
+    async function docExists(db, docId, options = {}) {
       let ret = await db.get(docId, options).then((doc) => doc).catch(() => false)
       return ret
     }
@@ -248,11 +379,11 @@
     async function removeFromDb(db, doc) { await db.remove(doc.id, doc.value.rev) }
 
     async function clearFacesDB(db) {
-        let alldocs = await db.allDocs()
-        await Promise.all(alldocs.rows.map(
-          async doc => {
-            removeFromDb(db, doc)
-          }))
+      let alldocs = await db.allDocs()
+      await Promise.all(alldocs.rows.map(
+        async doc => {
+          removeFromDb(db, doc)
+        }))
     }
 
     async function saveFaceToDB(className, selectedFacesData, clearDb = false) {
@@ -261,7 +392,7 @@
 
       let db = faces_db;
 
-      if(clearDb) {
+      if (clearDb) {
         console.log('Clearing existing face embedding DB...')
         await clearFacesDB(db)
       }
@@ -271,19 +402,19 @@
         'name': className
       }
       let existingDoc = await docExists(db, className)
-      if(existingDoc) {
+      if (existingDoc) {
         console.log('doc for ' + className + ' exists.', existingDoc)
         doc = existingDoc
       }
       else {
         doc._attachments = {}
       }
-      for (let i = 0;i < numImagesForTraining; i++) {
+      for (let i = 0; i < numImagesForTraining; i++) {
         const imageUri = selectedFacesData.get(i)
         let attachmentId = `${className}${i}.png`
         let embeddingAttachmentId = `${attachmentId.split(".")[0]}.bin`
         let exists = await attachmentExists(db, className, attachmentId)
-        if(exists) {
+        if (exists) {
           console.log('Embedding exists for ' + className + ' and ' + attachmentId)
           //continue
         }
@@ -293,17 +424,17 @@
         let embeddingType = 'application/octet-stream'
         // Strip off "data:image/png;base64," from data url
         doc._attachments[attachmentId] = {
-          'content_type': 'text/png',
+          'content_type': 'image/png',
           'data': img.src.split('base64,')[1]
         }
         doc._attachments[embeddingAttachmentId] = {
           'content_type': embeddingType,
-          'data': new Blob([embedding], {'type': embeddingType})
+          'data': new Blob([embedding], { 'type': embeddingType })
         }
         // Add embedding to faceMatcher
-        if(faceMatcher) {
+        if (faceMatcher) {
           let existingDescriptor = faceMatcher.labeledDescriptors.filter(d => d._label == className)
-          if(existingDescriptor && existingDescriptor.length) {
+          if (existingDescriptor && existingDescriptor.length) {
             existingDescriptor[0]._descriptors.push(embedding)
           }
           else {
@@ -318,19 +449,19 @@
 
     // From https://gist.github.com/sketchpunk/f5fa58a56dcfe6168a9328e7c32a4fd4
     function base64_to_float32Array(attachment) {
-      let blob  = window.atob(attachment),
-          fLen  = blob.length / Float32Array.BYTES_PER_ELEMENT,           // How many floats can be made, but be even
-          dView = new DataView(new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT)),  // ArrayBuffer/DataView to convert 4 bytes into 1 float.
-          fAry  = new Float32Array(fLen),                     // Final Output at the correct size
-          p     = 0;                                // Position
+      let blob = window.atob(attachment),
+        fLen = blob.length / Float32Array.BYTES_PER_ELEMENT,           // How many floats can be made, but be even
+        dView = new DataView(new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT)),  // ArrayBuffer/DataView to convert 4 bytes into 1 float.
+        fAry = new Float32Array(fLen),                     // Final Output at the correct size
+        p = 0;                                // Position
 
-      for(let j=0; j < fLen; j++){
+      for (let j = 0; j < fLen; j++) {
         p = j * 4;
-        dView.setUint8(0,blob.charCodeAt(p));
-        dView.setUint8(1,blob.charCodeAt(p+1));
-        dView.setUint8(2,blob.charCodeAt(p+2));
-        dView.setUint8(3,blob.charCodeAt(p+3));
-        fAry[j] = dView.getFloat32(0,true);
+        dView.setUint8(0, blob.charCodeAt(p));
+        dView.setUint8(1, blob.charCodeAt(p + 1));
+        dView.setUint8(2, blob.charCodeAt(p + 2));
+        dView.setUint8(3, blob.charCodeAt(p + 3));
+        fAry[j] = dView.getFloat32(0, true);
       }
       return fAry;
     }
@@ -339,18 +470,18 @@
     async function createFaceMatcher() {
       let db = faces_db;
 
-      let alldocs = await db.allDocs({include_docs: true, attachments: true})
+      let alldocs = await db.allDocs({ include_docs: true, attachments: true })
       let labeledFaceDescriptors = alldocs.rows.map(row => {
         let descriptors = Object.keys(row.doc._attachments).filter(k => k.endsWith('.bin')).map(k => {
           let attachment = row.doc._attachments[k]
           return base64_to_float32Array(attachment.data)
         })
         return new faceapi.LabeledFaceDescriptors(
-            row.doc.name,
-            descriptors
-          )
+          row.doc.name,
+          descriptors
+        )
       })
-      if(labeledFaceDescriptors.length == 0) {
+      if (labeledFaceDescriptors.length == 0) {
         labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors('unknown', [new Float32Array(128)])
       }
       return new faceapi.FaceMatcher(labeledFaceDescriptors, maxFRThreshold)
@@ -365,22 +496,22 @@
 
     async function registerFaces() {
       let name = document.getElementById("selectedFacesName").value.trim();
-      if(name.length == 0) {
+      if (name.length == 0) {
         alert('Enter name of a person to register the selected faces.');
         return;
       }
       let db = faces_db;
       let faceRec = await docExists(db, name);
-      if(faceRec) {
+      if (faceRec) {
         let ret = confirm(`${name} is already registered. Do you want to continue?`);
-        if(!ret) {
+        if (!ret) {
           return;
         }
       }
       console.log("Registering selected faces as: " + name);
       var faces = $("#selectedFaces canvas");
       var selectedFaces = faces.filter(f => { return faces[f].style.opacity && faces[f].style.opacity == 0.5; });
-      if(selectedFaces.length == 0) {
+      if (selectedFaces.length == 0) {
         alert('Select at least one face to register a person');
         return;
       }
@@ -399,7 +530,7 @@
       let span = document.createElement("span");
       span.appendChild(elem);
       //span.appendChild(document.createElement('br'));
-      elem.onclick = function() {
+      elem.onclick = function () {
         return selectedFaceImageClickHandler(elem)
       }
       $('#selectedFaces').append(span);
@@ -413,15 +544,16 @@
     }
 
     function showInterrogationHistory(interrogationHistory, personName, parentDivName) {
-      if(!interrogationHistory) {
+      if (!interrogationHistory) {
         console.log("No interrogation history found for ", personName)
         $('#' + parentDivName).empty()
         return
       }
       let table = document.createElement('table')
+      table.className = 'table_style'
       let thead = document.createElement('thead')
       let headrow = document.createElement('tr')
-      let columnHeaders = ['Date', 'Time', 'Lat', 'Long', 'Vessel', 'Interrogator', 'Docs', 'Remarks']
+      let columnHeaders = ['Date', 'Time', 'Latitude', 'Longitude', 'Vessel', 'Interrogator', 'Docs', 'Remarks']
       columnHeaders.forEach(c => {
         let cell = document.createElement('td')
         cell.innerHTML = `<b>${c}</b>`
@@ -452,18 +584,17 @@
       $('#registeredFaceImages').get(0).style.display = 'block'
       $('#registeredFaceImages').empty()
       let db = faces_db;
-      let selectedPersonFaceDoc = await docExists(db, name, {attachments: true})
-      if(!selectedPersonFaceDoc) {
+      let selectedPersonFaceDoc = await docExists(db, name, { attachments: true })
+      if (!selectedPersonFaceDoc) {
         console.log(`No face registered by ${name}`)
         $('#registeredFaceImages').html(`No face registered by ${name}`)
         return
       }
       let personRec = await docExists(person_db, name)
-      if(personRec) {
+      if (personRec) {
         let identificationMarks = personRec.identificationMarks ? personRec.identificationMarks : 'None'
-        let personDetails = '<table><thead><tr><td><b>Name</b></td><td><b>Country</b></td><td><b>Age</b></td><td><b>Gender</b></td><td><b>Category</b></td></tr></thead>'
-        personDetails += `<tbody><tr><td>${personRec.name}</td><td>${personRec.country}</td><td>${personRec.age}</td><td>${personRec.gender}</td><td>${personRec.category}</td></tr>`
-        personDetails += `<tr><td><b>Identification Marks:</b></td><td>${identificationMarks}</td></tbody></table>`
+        let personDetails = '<table class="table_style"><thead><tr><td><b>Name</b></td><td><b>Country</b></td><td><b>Age</b></td><td><b>Gender</b></td><td><b>Category</b></td><td><b>Identification Marks</b></td></tr></thead>'
+        personDetails += `<tbody><tr><td>${personRec.name}</td><td>${personRec.country}</td><td>${personRec.age}</td><td>${personRec.gender}</td><td>${personRec.category}</td><td>${identificationMarks}</td></tr></tbody></table>`
         $('#registeredFaceImages').append(personDetails)
       }
       else {
@@ -472,23 +603,23 @@
 
       let imageAttachments = Object.keys(selectedPersonFaceDoc._attachments).filter(k => k.split('.')[1] == 'png')
       imageAttachments.forEach((a, i) => {
-          let img = new Image()
-          img.src = "data:image/png;base64," + selectedPersonFaceDoc._attachments[a].data
-          img.className = 'selected_recognized_image'
-          $('#registeredFaceImages').append(img)
+        let img = new Image()
+        img.src = "data:image/png;base64," + selectedPersonFaceDoc._attachments[a].data
+        img.className = 'selected_recognized_image'
+        $('#registeredFaceImages').append(img)
       })
       let span = document.createElement('span')
-      span.classList.add('row', 'side-by-side')
+      span.classList.add('row', 'side-by-side', 'hide_edit_btn')
       let editButton = document.createElement('button')
-      editButton.className = 'confirmationButton'
+      editButton.className = 'confirmationButton edit_btn'
       editButton.innerHTML = 'Edit ' + name
-      editButton.onclick = function() {
+      editButton.onclick = function () {
         return confirmRecognizedFace(label)
       }
       let hideButton = document.createElement('button')
-      hideButton.className = 'confirmationButton'
+      hideButton.className = 'confirmationButton hide_btn'
       hideButton.innerHTML = 'Hide Details'
-      hideButton.onclick = function() {
+      hideButton.onclick = function () {
         return $('#registeredFaceImages').hide()
       }
       span.append(editButton)
@@ -497,25 +628,30 @@
       $('#registeredFaceImages').append(span)
       let historyDiv = document.createElement('div')
       historyDiv.id = 'historyDiv'
+      historyDiv.className = 'table-responsive'
+      let history_heading = document.createElement('h2')
+      history_heading.id = 'history_heading'
+      history_heading.innerHTML = 'Interrogation History'
+      $('#registeredFaceImages').append(history_heading)
       $('#registeredFaceImages').append(historyDiv)
       showInterrogationHistory(personRec.interrogationHistory, personRec.name, 'historyDiv')
     }
 
     function confirmRecognizedFace(recognizedFaceLabel) {
       ret = confirm("Edit " + recognizedFaceLabel + '?')
-      if(ret) {
+      if (ret) {
         window.location.href = 'editDetails.html?id=' + recognizedFaceLabel.split('(')[0].trim();
       }
     }
 
     async function getBoxColor(label) {
       let faceName = label.split('(')[0].trim()
-      if(faceName == 'unknown') {
+      if (faceName == 'unknown') {
         return 'red';
       }
       else {
         let faceExists = await docExists(person_db, faceName);
-        if(faceExists)
+        if (faceExists)
           return 'green';
         else
           return '#ebab34';
@@ -530,8 +666,8 @@
       updateTimeStats(Date.now() - ts)
 
       if (detections) {
-        const alignedDetections = detections.map((det) => det.alignedRect )
-        const originalDetections = detections.map((det) => det.detection )
+        const alignedDetections = detections.map((det) => det.alignedRect)
+        const originalDetections = detections.map((det) => det.detection)
         const faceImages = await faceapi.extractFaces(videoEl, originalDetections)
         const alignedFaceImages = await faceapi.extractFaces(videoEl, alignedDetections)
 
@@ -556,7 +692,7 @@
 
           croppedCanvas.className = 'recognized_image'
           croppedCanvas.title = label
-          croppedCanvas.onclick = function() {
+          croppedCanvas.onclick = function () {
             return faceImageClickHandler(croppedCanvas, containerElem);
           };
 
@@ -564,11 +700,11 @@
           containerElem.className = 'recognized_image_container'
           containerElem.appendChild(croppedCanvas)
           let faceName = label.split('(')[0].trim()
-          if(faceName != 'unknown') {
+          if (faceName != 'unknown') {
             let button = document.createElement('button')
-            button.className = 'confirmationButton'
+            button.className = 'confirmationButton view_btn'
             button.innerHTML = 'View ' + faceName
-            button.onclick = function() {
+            button.onclick = function () {
               return showRegisteredImages(label)
             }
             containerElem.appendChild(button)
@@ -586,8 +722,8 @@
     async function onPlay() {
       const videoEl = $('#inputVideo').get(0);
 
-      if(use_cordova_plugin) {
-        if(!isCameraOn || !isFaceDetectionModelLoaded())
+      if (use_cordova_plugin) {
+        if (!isCameraOn || !isFaceDetectionModelLoaded())
           return setTimeout(() => onPlay(), globalTimeout);
 
         let cameraOptions = {
@@ -597,7 +733,7 @@
           $('#status').html('Ok');
           let hiddenPreview = $('#hiddenPreview').get(0);
           let base64Image = 'data:image/jpeg;base64,' + imgData;
-          hiddenPreview.onload = function() {
+          hiddenPreview.onload = function () {
             performDetection(hiddenPreview);
           };
           $('#inputVideo').attr('src', base64Image);
@@ -609,41 +745,42 @@
           $('#status').html('<span class="error">' + 'Camera is getting ready... Please wait.' + '</span>');
           setTimeout(() => onPlay(), globalTimeout)
         };
-        CameraPreview.takeSnapshot(cameraOptions, successCallback, errorCallback);
+        if(isCameraOn)
+          CameraPreview.takeSnapshot(cameraOptions, successCallback, errorCallback);
       }
       else {
-        if(videoEl.paused || videoEl.ended || !isFaceDetectionModelLoaded())
+        if (videoEl.paused || videoEl.ended || !isFaceDetectionModelLoaded())
           return setTimeout(() => onPlay(), globalTimeout);
         performDetection(videoEl);
       }
     }
 
     function startCamera() {
-        // Initialize the CameraPreview
-        let cwidth = String(window.screen.width - 40);
-        let cheight = String(window.screen.width - 40); // same as width
-        let optCameraDirection = defaultCamera;
-        CameraPreview.startCamera({x: '0', y: '0', width: cwidth, height: cheight, camera: optCameraDirection, tapPhoto: false, toBack: true, previewDrag: true});
-        document.addEventListener("backbutton", stopCamera, false);
-        isCameraOn = true;
-        $('#btnToggleCamera').html('Stop Camera');
-        $('#btnToggleCamera').on('click', stopCamera);
-        let successCallback = function (pluginResult) {
-          $('#status').html('<span class="success">Zoom: ' + pluginResult + '</span>');
-        };
-        let errorCallback = function (pluginResult) {
-          $('#status').html('<span class="error">' + pluginResult + '</span>');
-        };
-        CameraPreview.setZoom(defaultZoomLevel, successCallback, errorCallback);
+      // Initialize the CameraPreview
+      let cwidth = String(window.screen.width - 40);
+      let cheight = String(window.screen.width - 40); // same as width
+      let optCameraDirection = defaultCamera;
+      CameraPreview.startCamera({ x: '0', y: '0', width: cwidth, height: cheight, camera: optCameraDirection, tapPhoto: false, toBack: true, previewDrag: true });
+      document.addEventListener("backbutton", stopCamera, false);
+      isCameraOn = true;
+      $('#btnToggleCamera').html('<i class="ri-pause-circle-line play_pause"></i>');
+      $('#btnToggleCamera').on('click', stopCamera);
+      let successCallback = function (pluginResult) {
+        $('#status').html('<span class="success">Zoom: ' + pluginResult + '</span>');
+      };
+      let errorCallback = function (pluginResult) {
+        $('#status').html('<span class="error">' + pluginResult + '</span>');
+      };
+      CameraPreview.setZoom(defaultZoomLevel, successCallback, errorCallback);
 
-        onPlay();
+      onPlay();
     }
 
     function stopCamera() {
+      isCameraOn = false;
       CameraPreview.stopCamera();
       document.removeEventListener("backbutton", stopCamera, false);
-      isCameraOn = false;
-      $('#btnToggleCamera').html('Start Camera');
+      $('#btnToggleCamera').html('<i class="ri-play-circle-line play_pause"></i>');
       $('#btnToggleCamera').on('click', startCamera);
     }
 
@@ -667,7 +804,7 @@
       faces_db = new PouchDB('faces_db')
       person_db = new PouchDB('person_db')
       let settings = await docExists(faces_settings_db, 'settings')
-      if(settings) { // Get from settings
+      if (settings) { // Get from settings
         selectedFaceDetector = settings.faceDetector
         maxFRThreshold = settings.maxFRThreshold
         // ssd_mobilenetv1 options
@@ -703,13 +840,13 @@
 
       // try to access users webcam and stream the images
       // to the video element
-      if(use_cordova_plugin) {
+      if (use_cordova_plugin) {
         $('#inputVideo').remove();
         let overlayParent = $('#overlay').get(0).parentNode;
         let imgOverlay = new Image();
         imgOverlay.id = 'inputVideo';
-        //imgOverlay.style = "max-width: 50%";
         overlayParent.insertBefore(imgOverlay, overlayParent.children[0]);
+        document.getElementById('overlay').style.left = document.getElementById('inputVideo').offsetLeft + 'px';
         $('#btnSwitchCamera').on('click', switchCamera);
         startCamera();
       }
@@ -744,17 +881,17 @@
       run()
     }
 
-    if(use_cordova_plugin)
+    if (use_cordova_plugin)
       document.addEventListener('deviceready', pageOnDeviceReady, false);
     else
-      $(document).ready(function() {
-      renderNavBar('#navbar', 'index.html')
-      run()
-    })
+      $(document).ready(function () {
+        renderNavBar('#navbar', 'index.html')
+        run()
+      })
 
-    window.onbeforeunload =  function(){
+    window.onbeforeunload = function () {
       console.log('before unload... stopping camera.')
-      if(use_cordova_plugin)
+      if (use_cordova_plugin)
         stopCamera();
     };
 
@@ -763,8 +900,10 @@
       console.log('unload... stopping camera.')
       stopCamera();
     };
-	*/
+  */
 
   </script>
 </body>
+
+
 </html>

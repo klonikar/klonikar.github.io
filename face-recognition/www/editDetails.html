@@ -10,10 +10,12 @@
   <!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /-->
   <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height" />
   <title>Edit Details</title>
-
+  <link href="fonts/remixicon/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/app_styles.css" />
   <script src="js/commons.js"></script>
   <script type="text/javascript" src="js/pouchdb.min.js"> </script>
+  <link href="fonts/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
   <!-- link rel="stylesheet" href="css/index.css" -->
   <!--link rel="stylesheet" href="css/styles.css"-->
   <link rel="stylesheet" href="css/materialize.css">
@@ -40,179 +42,346 @@
       margin-bottom: 5px;
       border-style: solid;
       display: inline-grid;
-      min-height: 270px;
+      min-height: 220px;
       max-height: 270px;
     }
 
+    .documents_btn {
+      background: rgb(129, 30, 30);
+      border: none !important;
+      color: #fff !important;
+      border-radius: 6px;
+    }
+
+
+    .delete_btn {
+      background: red !important;
+      /* width: 100px; */
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .documents_btn :focus {
+      background: rgb(129, 30, 30) !important;
+
+    }
+
+    .delete_btn :focus {
+      background: red !important;
+    }
+
+    .save_btn {
+      background: green !important;
+      /* width: 100px; */
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .save_btn :focus {
+      background: green !important;
+    }
+
+    .buttons_and_image_container {
+      position: relative;
+      display: inline-block;
+      margin: 10px;
+    }
+
+    .docImage {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .deleteButton {
+      position: absolute;
+      top: -1px;
+      right: 0px;
+      background-color: red;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      width: 40px;
+      /* padding-bottom: 31px; */
+      height: 40px;
+    }
+
+    .deleteButton:hover {
+      color: darkred;
+    }
+
+    .inputRemarks {
+      width: 83% !important;
+    }
+
+
+    .inputWideCustom {
+      padding-right: 30px;
+    }
+
+    .clock-icon {
+      position: absolute;
+      right: 36px;
+      top: 34%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #fff;
+      font-size: 30px;
+    }
+
+    .date-icon {
+      position: absolute;
+      left: 154px;
+      top: 34%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #fff;
+      font-size: 30px;
+    }
+
+    .deleteButton:focus {
+      outline: none;
+      background-color: red !important;
+      color: #fff !important;
+    }
+
+    .buttons_and_image_container {
+      color: #fff !important;
+    }
+
+    .tdstyle {
+      color: #fff !important;
+      white-space: normal !important;
+    }
   </style>
 </head>
 
 <body>
+
   <div class="app">
-    <div id="navbar"></div>
+    <header class="header">
+      <div class="logo-container">
+        <img src="./images/indian_navy1.png" alt="Logo 1" class="logo">
+        <div class="title-container">
+          <h1 class="header_welcome_text">SATYAPAN.AI</h1>
+          <h4>AI Based Interrogation Systems</h4>
+        </div>
+        <img src="./images/logo-1.png" alt="Logo 2" class="logo">
+      </div>
+    </header>
     <div class="center-content page-container">
-      <table>
-        <tbody>
-          <tr>
-            <td><label for="selectPerson">Select Person:</label></td>
-            <td>
-              <select id="selectPerson" class="selectHalfCustom bold">
+      <div class="row mt-2">
+        <div class="col-12 d-flex">
+          <label id="selectedPersonLabel" for="selectPerson">Respondents</label>
+          <select id="selectPerson" class="selectHalfCustom bold ms-2">
+          </select>
+        </div>
+        <div class="col-12 d-flex">
+          <div class="highlightedSection side-by-side" id="registeredFaceImages">
+          </div>
+
+        </div>
+        <div class="row mt-4 mb-2">
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="name"> Name</label>
+            </div>
+            <div class="col-8">
+              <input id="name" placeholder="Full Name" type="text" class="form-control inputWideCustom bold ms-1">
+            </div>
+          </div>
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="age">Age</label>
+
+            </div>
+            <div class="col-8">
+              <input id="age" type="number" class="bold inputAge ms-1">
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row mb-2">
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="gender">Gender</label>
+            </div>
+            <div class="col-8">
+              <select id="gender" class="selectHalfCustom ms-1" style="color: #fff; width: 83% !important;">
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="O">Other</option>
               </select>
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>
-              <div class="highlightedSection row side-by-side" id="registeredFaceImages">
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <fieldset>
-        <legend>Personal Details</legend>
-        <table>
-          <tbody>
-            <tr>
-              <!-- Person details -->
-              <td> <label for="name">Full Name:</label></td>
-              <td> <input id="name" placeholder="Full Name" type="text" class="inputWideCustom bold"></td>
-            </tr>
-            <tr>
-              <td> <label for="age">Age:</label></td>
-              <td> <input id="age" type="number" class="inputCustom bold"></td>
-            </tr>
-            <tr>
-              <td> <label for="gender">Gender:</label></td>
-              <td> <select id="gender" class="selectCustom bold">
-                  <option value="M">Male</option>
-                  <option value="F">Female</option>
-                  <option value="O">Other</option>
-                </select></td>
-            </tr>
-            <tr>
-              <td><label for="identificationMarks">Identification Marks:</label></td>
-              <td><input id="identificationMarks" placeholder="Identification Marks" type="text" class="inputWideCustom bold"></td>
-            </tr>
-            <tr>
-              <td> <label for="country">Nationality:</label></td>
-              <td> <select id="country" class="selectHalfCustom bold">
-                </select></td>
-            </tr>
-            <tr>
-              <td> <label for="category">Category:</label></td>
-              <td> <select id="category" class="selectHalfCustom bold">
-                </select></td>
-            </tr>              
-          </tbody>
-        </table>
-      </fieldset>
-      <fieldset>
-        <legend>Interrogation Details</legend>
-        <table>
-          <tbody>
-            <tr>
-              <td><label for="remarks">Remarks:</label></td>
-              <td><input id="remarks" placeholder="Remarks/Notes" type="text" class="inputWideCustom bold"></td>
-            </tr>  
-          </tbody>
-        </table>
-      </fieldset>
-      <table>
-        <tbody>
-          <tr>
-            <td style="vertical-align: top;">
-              <fieldset class="fieldsetFullCustom">
-                <legend>Date/Time</legend>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td><label for="date">Date:</label></td>
-                      <td><input id="date" type="date" class="inputWideCustom bold"></td>
-                      <td><label for="time">Time:</label></td>
-                      <td><input id="time" type="time" class="inputWideCustom bold"></td>
-                    </tr>  
-                  </tbody>
-                </table>
-              </fieldset>        
-            </td>
-            <td style="vertical-align: top;">
-              <fieldset class="fieldsetFullCustom">
-                <legend>Location</legend>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td><label for="latitude">Latitude:</label></td>
-                      <td><input id="latitude" type="number" class="inputWideCustom bold"></td>
-                      <td><label for="longitude">Longitude:</label></td>
-                      <td><input id="longitude" type="number" class="inputWideCustom bold"></td>
-                    </tr>
-                    <tr>
-                      <td><label for="locationName">Vessel Details:</label></td>
-                      <td><input id="locationName" placeholder="Vessel Details (Type, Colour, Registration No)" type="text" class="inputWideCustom bold"></td>
-                    </tr>  
-                  </tbody>
-                </table>
-              </fieldset>        
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <fieldset class="fieldsetCustom">
-        <legend>Documents</legend>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <div class="highlightedSection row side-by-side" id="existingDocuments">
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><button id="btnToggleCamera" onclick="addDocuments();">Add Documents</button></td>
-            </tr>
-            <tr>
-              <td>
-                  <label for="documentType">Document Type:</label>
-                  <select id="documentType" class="selectHalfCustom bold">
-                  </select>
-              </td>
-            </tr>
-            <tr>
-              <td><img src="" alt="" id="originalPicture" style="margin-left: 15%;max-width: 70%;" /></td>
-            </tr>
-            <tr>
-              <td><button onclick="addDocumentToView();">Add</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </fieldset>
-      <div>
-        <h3>History of interrogations</h3>
+            </div>
+          </div>
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="country">Nationality</label>
+
+            </div>
+            <div class="col-8">
+              <select id="country" class="selectHalfCustom bold ms-1" style="width: 83% !important;">
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="latitude">Latitude</label>
+            </div>
+            <div class="col-8">
+              <input id="latitude" type="number" class="inputWideCustom bold ms-1">
+            </div>
+          </div>
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="longitude">Longitude</label>
+
+            </div>
+            <div class="col-8">
+              <input id="longitude" type="number" class="inputWideCustom bold ms-1">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="date">Date</label>
+            </div>
+            <div class="col-8 position-relative">
+              <input id="date" type="date" class="form-control bold ms-1" style="width: 79% !important;">
+              <span class="date-icon"><i class="ri-calendar-line"></i></span>
+            </div>
+          </div>
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="time">Time</label>
+            </div>
+            <div class="col-8 position-relative">
+              <input id="time" type="time" class="form-control bold ms-1" style="width: 79% !important;">
+              <span class="clock-icon"><i class="ri-time-line"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="identificationMarks">Identification Marks</label>
+            </div>
+            <div class="col-8">
+              <input id="identificationMarks" placeholder="Identification Marks" type="text"
+                class="inputWideCustom bold form-control ms-1">
+            </div>
+          </div>
+          <div class="col-6 d-flex">
+            <div class="col-4">
+              <label for="category">Category</label>
+            </div>
+            <div class="col-8">
+              <select id="category" class="selectHalfCustom bold ms-1" style="width: 83% !important;">
+              </select>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-12 d-flex mt-2" style="padding-left: 15px !important;">
+          <label for="locationName">Vessel Details</label>
+          <input id="locationName" placeholder="Vessel Details (Type, Colour, Registration No)" type="text"
+            style="width: 75% !important;" class="inputWideCustom  form-control bold ms-1">
+        </div>
+
+        <div class="col-12 d-flex mt-2" style="padding-left: 15px !important;">
+          <label for="remarks">Remarks</label>
+          <input id="remarks" placeholder="Remarks/Notes" type="text" class="inputRemarks bold form-control"
+            style="width: 75% !important; margin-left: 44px !important;">
+        </div>
+        <div class="col-12 mt-2" style="padding-left: 25px !important;">
+          <legend>Documents</legend>
+        </div>
+        <div class="col-12 d-flex mt-2">
+          <div class="highlightedSection side-by-side" id="existingDocuments">
+          </div>
+
+        </div>
+        <div class="col-12 d-flex mt-3" style="padding-left: 22px !important;">
+          <button id="btnToggleCamera" class="documents_btn" onclick="addDocuments();">Add Documents</button>
+
+        </div>
+        <div class="col-12 d-flex mt-4" style="padding-left: 20px !important;">
+          <label for="documentType">Document Type:</label>
+          <select id="documentType" class="selectHalfCustom bold ms-1">
+          </select>
+        </div>
+        <div class="col-12 d-flex mt-2">
+          <img src="" alt="" id="originalPicture" style="margin-left: 30%;max-width: 40%" />
+        </div>
+        <div class="col-12 mt-2">
+
+
+          <div class="hstack gap-2 justify-content-center d-flex">
+            <button class="documents_btn" onclick="addDocumentToView();">Save Document</button>
+          </div>
+
+
+        </div>
       </div>
-      <div id="interrogationsHistoryTable">
-      </div>
-      <!-- Save person -->
-      <div class="row side-by-side">
-        <button class="waves-effect waves-light btn" onclick="savePersonDetails()">
-          <i class="material-icons left">&#x1f4be; Save</i>
+    </div>
+
+
+
+    <div>
+      <h3 style="color: #fff; margin-left: 35px !important;">Interrogation History</h3>
+    </div>
+    <div id="interrogationsHistoryTable" class="table-responsive">
+    </div>
+    <div class="col-lg-12">
+      <div class="hstack gap-2 justify-content-center d-flex">
+        <button class="waves-effect waves-light btn save_btn " onclick="savePersonDetails()">
+          Save
         </button>
-        <button style="max-width: 100%;vertical-align: middle;" class="deleteButton" onclick="deletePersonDetails()">
-          <i style="font-size: large;" class="material-icons left">&#x2718; Delete</i>
+        <button style="max-width: 100%;vertical-align: middle;" class="waves-effect waves-light btn delete_btn ms-1"
+          onclick="deletePersonDetails()">
+          Delete
         </button>
       </div>
 
     </div>
   </div>
+  <footer class="footer">
+    <div class="frame-div">
+      <a href="./index.html"><i class="ri-home-7-fill" style="color: gray;"></i></a>
+      <p class="footer_text" style="color: gray !important;">Home</p>
+    </div>
+    <div class="frame-div">
+      <a href="./editDetails.html"><i class="ri-layout-grid-2-fill"></i></a>
+      <p class="footer_text">Respondents</p>
+    </div>
+    <div class="frame-div">
+      <a href="./settings.html"><i class="ri-settings-5-fill" style="color: gray;"></i></i></a>
+      <p class="footer_text" style="color: gray !important;">Settings</p>
+    </div>
+    <div class="frame-div">
+      <a href="./userDetails.html"><i class="ri-user-3-fill" style="color: gray;"></i></i></a>
+      <p class="footer_text" style="color: gray !important;">Users</p>
+    </div>
+    <!-- <div class="frame-div">
+      <a href="./webcamTest.html"><i class="ri-camera-fill" style="color: gray !important;"></i></a>
+      <p class="footer_text" style="color: gray !important;">Diagnostic</p>
+  </div> -->
 
-  <footer>
-    <img src="images/logo_36x36.png">
-    <span class="footer_area">Powered By INICAI and PTPL </span>
   </footer>
-
   <script src="cordova.js"></script>
-
+  <script src="fonts/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').setAttribute('max', today);
     let use_cordova_plugin = window.cordova;
     let faces_db = null;
     let person_db = null;
@@ -241,7 +410,7 @@
     }
 
     function addDocuments() {
-      if(isCameraOn) {
+      if (isCameraOn) {
         stopCamera();
         $('#btnToggleCamera').html('Add Documents');
         $('#originalPicture').hide();
@@ -262,12 +431,12 @@
         var base64Image = 'data:image/jpeg;base64,' + imgData;
         // Show captured image
         $('#originalPicture').attr('src', base64Image);
-        if(isCameraOn)
+        if (isCameraOn)
           setTimeout(() => takeSnapshot(), 35);
       };
       var errorCallback = function (pluginResult) {
         console.log('Error in taking snapshot: ' + pluginResult + '.');
-        if(isCameraOn)
+        if (isCameraOn)
           setTimeout(() => takeSnapshot(), 35);
       };
       CameraPreview.takeSnapshot(options, successCallback, errorCallback);
@@ -280,14 +449,14 @@
 
     async function deleteRegisteredFaceHandler(evt) {
       let confirmation = confirm('Do you want to remove the registered face?')
-      if(!confirmation) {
+      if (!confirmation) {
         console.log('Deleting face image not confirmed.')
         return;
       }
       let img_id = evt.target.getAttribute('data-image-id')
       $('#container_' + img_id).remove()
       // Remove from DB if it exists
-      if(!selectedPerson) {
+      if (!selectedPerson) {
         return;
       }
       let doc = await docExists(faces_db, selectedPerson._id)
@@ -300,14 +469,14 @@
 
     async function deleteDocHandler(evt) {
       let confirmation = confirm('Do you want to remove the document?')
-      if(!confirmation) {
+      if (!confirmation) {
         console.log('Deleting document not confirmed.')
         return;
       }
       let img_id = evt.target.getAttribute('data-image-id')
       $('#container_' + img_id).remove()
       // Remove from DB if it exists
-      if(!selectedPerson) {
+      if (!selectedPerson) {
         return;
       }
       let ret = await person_db.removeAttachment(selectedPerson._id, img_id, selectedPerson._rev)
@@ -327,7 +496,7 @@
       let docType = document.createElement('b')
       docType.innerHTML = $('#documentType').val()
       let button = document.createElement('button')
-      button.innerHTML = '&#x2718;'
+      button.innerHTML = '<i class="ri-close-line"></i>'
       button.className = 'deleteButton'
       button.setAttribute('data-image-id', img.id)
       button.onclick = deleteDocHandler
@@ -335,7 +504,10 @@
       span.appendChild(img)
       span.appendChild(button)
       $('#existingDocuments').append(span)
-      if(selectedPerson) {
+      if (selectedPerson) {
+        if(!selectedPerson._rev) {
+          await savePersonDetails()
+        }
         let ret = await person_db.putAttachment(selectedPerson._id, img.id, selectedPerson._rev, img.src.split('base64,')[1], 'image/jpeg');
         selectedPerson._rev = ret.rev
         console.log('Saved doc to DB.')
@@ -348,7 +520,7 @@
         console.log('No person selected')
         return
       }
-      if(!selectedPerson._attachments || Object.keys(selectedPerson._attachments).length == 0) {
+      if (!selectedPerson._attachments || Object.keys(selectedPerson._attachments).length == 0) {
         console.log(`${name} has no documents`)
         return
       }
@@ -366,7 +538,7 @@
         let last_ = a.lastIndexOf('_')
         docType.innerHTML = a.substring(first_ + 1, last_).replaceAll('_', ' ')
         let button = document.createElement('button')
-        button.innerHTML = '&#x2718;'
+        button.innerHTML = '<i class="ri-close-line"></i>'
         button.className = 'deleteButton'
         button.setAttribute('data-image-id', img.id)
         button.onclick = deleteDocHandler
@@ -378,20 +550,20 @@
     }
 
     function startCamera() {
-        // Initialize the CameraPreview
-        let cwidth = String(window.screen.width - 40);
-        let cheight = String(window.screen.width - 40); // same as width
-        let optCameraDirection = 'back';
-        CameraPreview.startCamera({x: '20', y: '20', width: cwidth, height: cheight, camera: optCameraDirection, tapPhoto: false, toBack: true, previewDrag: true});
-        document.addEventListener("backbutton", stopCamera, false);
-        isCameraOn = true;
-        let successCallback = function (pluginResult) {
-          console.log('Zoom success: ' + pluginResult + '.');
-        };
-        let errorCallback = function (pluginResult) {
-          console.log('Zoom error: ' + pluginResult + '.');
-        };
-        CameraPreview.setZoom(defaultZoomLevel, successCallback, errorCallback);
+      // Initialize the CameraPreview
+      let cwidth = String(window.screen.width - 40);
+      let cheight = String(window.screen.width - 40); // same as width
+      let optCameraDirection = 'back';
+      CameraPreview.startCamera({ x: '20', y: '20', width: cwidth, height: cheight, camera: optCameraDirection, tapPhoto: false, toBack: true, previewDrag: true });
+      document.addEventListener("backbutton", stopCamera, false);
+      isCameraOn = true;
+      let successCallback = function (pluginResult) {
+        console.log('Zoom success: ' + pluginResult + '.');
+      };
+      let errorCallback = function (pluginResult) {
+        console.log('Zoom error: ' + pluginResult + '.');
+      };
+      CameraPreview.setZoom(defaultZoomLevel, successCallback, errorCallback);
     }
 
     function stopCamera() {
@@ -400,9 +572,9 @@
       isCameraOn = false;
     }
 
-    window.onbeforeunload =  function(){
+    window.onbeforeunload = function () {
       console.log('before unload... stopping camera.')
-      if(use_cordova_plugin)
+      if (use_cordova_plugin)
         stopCamera();
     };
 
@@ -429,7 +601,7 @@
 
     async function savePersonDetails() {
       let name = $('#selectPerson').val();
-      if(!name) {
+      if (!name) {
         console.log('no person selected...');
         return;
       }
@@ -451,44 +623,68 @@
       selectedPerson.latestLatitude = $('#latitude').val()
       selectedPerson.latestLocationName = $('#locationName').val()
 
-      if(!selectedPerson.interrogationHistory) {
+      if (!selectedPerson.interrogationHistory) {
         selectedPerson.interrogationHistory = []
       }
       let loggedInUserDb = new PouchDB('faces_loggedin_user_db')
       let loggedInUser = await docExists(loggedInUserDb, 'loggedin_user')
-      if(selectedPerson.latestDate && selectedPerson.latestTime) {
+      if (selectedPerson.latestDate && selectedPerson.latestTime) {
         selectedPerson.interrogationHistory.push({
-            'date': selectedPerson.latestDate,
-            'time': selectedPerson.latestTime,
-            'latitude': selectedPerson.latestLatitude,
-            'longitude': selectedPerson.latestLongitude,
-            'locationName': selectedPerson.latestLocationName,
-            'interrogator': loggedInUser.username,
-            'remarks': selectedPerson.latestRemarks,
-            'documents': Array.from($('#existingDocuments b')).map(b => b.innerHTML).join(',')
-          })
+          'date': selectedPerson.latestDate,
+          'time': selectedPerson.latestTime,
+          'latitude': selectedPerson.latestLatitude,
+          'longitude': selectedPerson.latestLongitude,
+          'locationName': selectedPerson.latestLocationName,
+          'interrogator': loggedInUser.username,
+          'remarks': selectedPerson.latestRemarks,
+          'documents': Array.from($('#existingDocuments b')).map(b => b.innerHTML).join(',')
+        })
       }
 
       let ret = await person_db.put(selectedPerson)
       selectedPerson._rev = ret.rev
       console.log('Saved person data. Status:', ret)
+      $('#date').val('');
+      $('#time').val('');
       showInterrogationHistory(selectedPerson.interrogationHistory, selectedPerson.name, 'interrogationsHistoryTable')
+    }
+
+    function clearUIElements() {
+      $('#selectPerson').get(0).selectedIndex = -1
+      $('#registeredFaceImages').empty()
+      $('#interrogationsHistoryTable').empty()
+      $('#name').val('')
+      $('#age').val('')
+      $('#gender').get(0).selectedIndex = -1
+      $('#country').get(0).selectedIndex = -1
+      $('#category').get(0).selectedIndex = -1
+      $('#identificationMarks').val('')
+      $('#remarks').val('')
+      $('#date').val('')
+      $('#time').val('')
+      $('#longitude').val('')
+      $('#latitude').val('')
+      $('#locationName').val('')
+      $('#existingDocuments').empty()
+      $('#documentType').get(0).selectedIndex = -1
+      let numPersons = $('#selectPerson option').length
+      $('#selectedPersonLabel').html(`Respondents (${numPersons}):`)
     }
 
     async function deletePersonDetails() {
       let name = $('#selectPerson').val();
-      if(!name) {
+      if (!name) {
         console.log('no person selected...');
         return;
       }
       let confirmation = confirm(`Delete person ${name}?`)
-      if(!confirmation) {
+      if (!confirmation) {
         return;
       }
       console.log(`Deleting ${name} from DB.`)
       selectedPerson = await docExists(person_db, name)
       let ret = null;
-      if(selectedPerson) {
+      if (selectedPerson) {
         ret = await person_db.remove(name, selectedPerson._rev)
         console.log('Delete person status: ', ret)
       }
@@ -500,6 +696,8 @@
       console.log('Delete face status: ', ret)
       let deletedOpt = Array.from($('#selectPerson option')).filter(o => o.value == name)
       deletedOpt[0].remove()
+      clearUIElements()
+      selectedPerson = null
     }
 
     async function showRegisteredImages(name) {
@@ -521,7 +719,7 @@
         span.id = 'container_' + img.id
         span.className = 'buttons_and_image_container'
         let button = document.createElement('button')
-        button.innerHTML = '&#x2718;'
+        button.innerHTML = '<i class="ri-close-line"></i>'
         button.className = 'deleteButton'
         button.setAttribute('data-image-id', img.id)
         button.onclick = deleteRegisteredFaceHandler
@@ -533,20 +731,22 @@
 
     function addCellToRow(cellData, row) {
       let cell = document.createElement('td')
+      cell.className = 'tdstyle text-wrap'
       cell.innerHTML = cellData
       row.appendChild(cell)
     }
 
     function showInterrogationHistory(interrogationHistory, personName, parentDivName) {
-      if(!interrogationHistory) {
+      if (!interrogationHistory) {
         console.log("No interrogation history found for ", personName)
         $('#' + parentDivName).empty()
         return
       }
       let table = document.createElement('table')
+      table.className = 'table_style'
       let thead = document.createElement('thead')
       let headrow = document.createElement('tr')
-      let columnHeaders = ['Date', 'Time', 'Lat', 'Long', 'Vessel', 'Interrogator', 'Docs', 'Remarks']
+      let columnHeaders = ['Date', 'Time', 'Latitude', 'Longitude', 'Vessel', 'Interrogator', 'Documents', 'Remarks']
       columnHeaders.forEach(c => {
         let cell = document.createElement('td')
         cell.innerHTML = `<b>${c}</b>`
@@ -605,7 +805,7 @@
       $('#category').val('category' in selectedPerson ? selectedPerson.category : '')
       $('#remarks').val('latestRemarks' in selectedPerson ? selectedPerson.latestRemarks : '')
       $('#identificationMarks').val('identificationMarks' in selectedPerson ? selectedPerson.identificationMarks : '')
-      if(createFreshInterrogation) {
+      if (createFreshInterrogation) {
         // Do nothing. run function already entered fresh values
       }
       else {
@@ -654,7 +854,7 @@
         $('#locationName').val(settings.locationName ? settings.locationName : '')
         let d = new Date()
         let dd = ('0' + d.getDate()).slice(-2)
-        let mon = ('0' + d.getMonth()).slice(-2)
+        let mon = ('0' + (d.getMonth()+1)).slice(-2)
         $('#date').val(d.getFullYear() + '-' + mon + '-' + dd)
         let hh = ('0' + d.getHours()).slice(-2)
         let mm = ('0' + d.getMinutes()).slice(-2)
@@ -673,6 +873,7 @@
       })
       $('#selectPerson').get(0).selectedIndex = -1
       $('#selectPerson').on('change', onPersonSelected)
+      $('#selectedPersonLabel').html(`Respondents (${names.length}):`)
       //$('#selectPerson').material_select()
       person_db = new PouchDB('person_db')
       let params = getQueryParams()
@@ -703,9 +904,9 @@
       updateResults()
     };
 
-    window.onbeforeunload =  function(){
+    window.onbeforeunload = function () {
       console.log('before unload... stopping camera.')
-      if(use_cordova_plugin)
+      if (use_cordova_plugin)
         stopCamera();
     };
 
@@ -714,9 +915,10 @@
       console.log('unload... stopping camera.')
       stopCamera();
     };
-	*/
+  */
 
   </script>
 </body>
+
 
 </html>
